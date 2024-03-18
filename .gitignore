@@ -1,4 +1,5 @@
 __pycache__/
+.mypy_cache/
 Older versions/
 Launch options/
 Logo/
@@ -10,3 +11,4 @@ Mods/*
 !Mods/2015 UI
 !Mods/Bloxstrap theme
 !Mods/Kliko's mod
+.txt
