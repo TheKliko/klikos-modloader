@@ -1,0 +1,12 @@
+__pycache__/
+Older versions/
+Launch options/
+Logo/
+Version folder/*
+!Version folder/.gitkeep
+FastFlags/*
+!FastFlags/.gitkeep
+Mods/*
+!Mods/2015 UI
+!Mods/Bloxstrap theme
+!Mods/Kliko's mod
