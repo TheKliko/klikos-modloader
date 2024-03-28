@@ -1,1 +1,1 @@
-# Roblox modloader <img src="GitHub Files/Images/modloader.png" width="48"/>
+# Roblox modloader <img src="GitHub Files/Images/modloader.png" height="1em"/>
