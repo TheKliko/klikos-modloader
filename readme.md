@@ -1,7 +1,10 @@
 <img src="GitHub Files/Images/modloader.png" height="24"/> Roblox modloader
 ================================================================
 
-[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)](test)
+[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
+[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
+[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
+[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
 
 An open-source modloader for Roblox.
 
