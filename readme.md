@@ -13,7 +13,7 @@ This program was made to allow anyone to easily launch a modded copy of Roblox.
     Installation guide
 </h2>
 
-<kbd>CTRL</kbd>
+<kbd>1</kbd>-<kbd>inf</kbd>
 
 
 
