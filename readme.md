@@ -18,9 +18,9 @@ print('inline')
 ```
 
 <blockquote>
-    TEST
-    
-    yup
+TEST
+
+yup
 </blockquote>
 
 <h2>
