@@ -41,7 +41,10 @@ link to server goes here
     - Documentation
     - etc
 
+
+
 <h2>Inspiration</h2>
 
 This modloader was inspired by [Bloxstrap](https://github.com/pizzaboxer/bloxstrap), an open-source, alternative bootstrapper for Roblox.
+
 Bloxstrap is what introduced me to Roblox mods, and the community has given great feedback to help me improve my mods as much as possible.
