@@ -1,4 +1,4 @@
-<h1><img src="GitHub Files/Images/modloader.png" height="24"/> Roblox modloader</h1>
+<h1><img src="GitHub Files/Images/modloader.png" height="32"/> Roblox modloader</h1>
 
 An open-source modloader for <a href="https://www.roblox.com">Roblox</a>.
 
