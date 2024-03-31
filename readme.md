@@ -47,4 +47,4 @@ link to server goes here
 
 This modloader was inspired by [Bloxstrap](https://github.com/pizzaboxer/bloxstrap), an open-source, alternative bootstrapper for Roblox.
 
-Bloxstrap is what introduced me to the Roblox modding community, their discord members have given great feedback on my journey as a Roblox modder.
+Bloxstrap is what introduced me to the Roblox modding community, their discord members have given great feedback on my journey as a Roblox modder, none of this would have been possible without them.
