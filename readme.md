@@ -1,5 +1,5 @@
 <h1>
-    <img src="GitHub Files/Images/modloader.png" height="32" alt="logo"/> Roblox modloader
+    <img src="GitHub Files/Images/modloader.png" height="32" alt="logo" longdesc="w3html.txt"/> Roblox modloader
 </h1>
 
 An open-source modloader for <a href="https://www.roblox.com">Roblox</a>.
