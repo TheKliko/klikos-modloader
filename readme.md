@@ -32,9 +32,11 @@ link to server goes here
 - Get more people into modding
 - Make mods more accessible for everyone
 - Get more experience in Python
-    - Making API calls
+    - Code formatting
     - User Interface
+    - Making API calls
     - Error handling
-    - a
-- Get more experience in web development
-    - Making a website
+- Get experience in web development by adding a website
+    - Designing a home page
+    - Documentation
+    - etc
