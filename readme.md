@@ -19,7 +19,7 @@ This program was made to allow anyone to easily launch a modded copy of Roblox.
 </code>
 
 ```python
-> print('Hello World!')
+print('Hello World!')
 ```
 
 
