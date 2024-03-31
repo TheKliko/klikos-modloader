@@ -15,10 +15,6 @@ This program was made to allow anyone to easily launch a modded copy of Roblox.
 
 <kbd>1</kbd>-<kbd>inf</kbd>
 
-<```python
-print('fenced-off')
-```>
-
 ```python
 print('inline')
 ```
