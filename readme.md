@@ -2,7 +2,7 @@
 ================================================================
 
 [![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
-[![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
+[![License](https://img.shields.io/github/license/thekliko/roblox-modloader)]()
 [![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
 [![Github All Releases](https://img.shields.io/github/downloads/thekliko/roblox-modloader/total.svg)]()
 
