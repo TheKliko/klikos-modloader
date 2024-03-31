@@ -1,9 +1,9 @@
 <img src="GitHub Files/Images/modloader.png" height="24"/> Roblox modloader
 ================================================================
 
-    test
-    
-    test
+An open-source modloader for Roblox.
+
+This program was made to allow anyone to easily launch a modded copy of Roblox.
 
 
 Installation guide
