@@ -1,0 +1,18 @@
+{
+    "title":"Roblox modloader",
+    "author":"TheKliko",
+    "modloader_version":"3.0.0",
+    "required_directories":[
+        "Logs",
+        "Versions",
+        "Mods",
+        "FastFlags"
+    ],
+    "max_log_files":20,
+    "links":{
+        "GitHub":"https://github.com/TheKliko/roblox-modloader",
+        "Discord":"https://discord.gg/nEjUwdSP9P",
+        "Website":"https://thekliko.github.io/roblox-modloader"
+    },
+    "installed_roblox_version":""
+}
