@@ -1,7 +1,8 @@
 {
     "title": "Kliko's modloader",
+    "version": "1.3.0",
+    "description":"An open-source modloader for Roblox",
     "author": "TheKliko",
-    "modloader_version": "1.3.0",
     "user_directories": {
         "version_directory": "Versions",
         "mods_directory": "Mods",
@@ -13,5 +14,7 @@
         "Discord": "WIP",
         "Website": "https://thekliko.github.io/roblox-modloader"
     },
-    "installed_roblox_version": ""
+    "installed_roblox_version": "",
+    "selected_mod_profile":"",
+    "selected_fastflags_profile":""
 }
