@@ -9,11 +9,11 @@
     },
     "max_log_files": 10,
     "links": {
-        "github": "https://github.com/TheKliko/roblox-modloader",
+        "website": "WIP",
         "discord": "WIP",
-        "website": "WIP"
+        "github": "https://github.com/TheKliko/roblox-modloader"
     },
     "installed_roblox_version": "none",
-    "selected_mod_profile": "none",
+    "selected_mod_profile": "Default",
     "selected_fastflag_profile": "none"
 }
