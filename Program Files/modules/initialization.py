@@ -17,6 +17,11 @@ from modules import variables
 
 
 def start() -> None:
+    if not os.path.isdir(logging_directory):
+        try:
+            os.makedirs(logging_directory, exist_ok=True)
+        except:
+            pass
     initialize_logger()
 
     variables.create_file()
@@ -41,13 +46,15 @@ def start() -> None:
     create_user_directories()
 
     version_directory: str = variables.get(name='version_directory')
-    installed_roblox_version: str = get_json_value_from_input(config=config_json, key='installed_roblox_version')
-    if not os.path.isdir(os.path.join(version_directory, installed_roblox_version)):
-        installed_roblox_version: str = 'none'
+    installed_roblox_version = get_json_value_from_input(config=config_json, key='installed_roblox_version')
+    if not installed_roblox_version:
+        pass
+    elif not os.path.isdir(os.path.join(version_directory, installed_roblox_version)):
+        installed_roblox_version = 'none'
         update_json(
             path=os.path.join(config_directory, 'config.json'),
             key='installed_roblox_version',
-            value='none'
+            value=None
         )
         config_json['installed_roblox_version'] = 'none'
         variables.set(name='config_json', value=config_json)

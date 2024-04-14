@@ -169,6 +169,9 @@ def reinstall_section() -> None:
     interface.open(section='Reinstall Roblox')
     if interface.confirmation_prompt(prompt='Do you wish to reinstall Roblox?'):
         uninstall_roblox()
+        config = variables.get('config_new')
+        config['installed_roblox_version'] = None
+        variables.set(name='config_new', value=config)
         interface.print_message(message='Version folder removed!')
         interface.print_message(message='Roblox will install on next launch', spacing=0)
     interface.press_enter_to(message='return')
