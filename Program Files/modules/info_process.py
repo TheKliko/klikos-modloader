@@ -24,7 +24,8 @@ def start() -> None:
     
     project_links = get_json_value_from_input(config=config, key='links')
 
-    interface.open()
+    interface.clear_console()
+    interface.open(section='Info')
 
     interface.print_message(message=f'Project name: {project_name}')
     interface.print_message(message=f'Project author: {project_author}', spacing=0)

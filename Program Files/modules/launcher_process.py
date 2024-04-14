@@ -31,6 +31,7 @@ def start() -> None:
             value=False
         )
 
+    interface.clear_console()
     interface.open(section='Launcher')
     check_for_update()
 
