@@ -13,7 +13,7 @@
         "Website": "TO BE ADDED",
         "GitHub": "https://github.com/TheKliko/roblox-modloader"
     },
-    "installed_roblox_version": "none",
+    "installed_roblox_version": null,
     "selected_mod_profile": "Default",
     "selected_fastflag_profile": null,
     "launch_roblox_after_setup": false,
