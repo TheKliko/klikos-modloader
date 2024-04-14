@@ -9,9 +9,9 @@
     },
     "max_log_files": 10,
     "links": {
-        "website": "TO BE ADDED",
-        "discord": "TO BE ADDED",
-        "github": "https://github.com/TheKliko/roblox-modloader"
+        "Discord": "TO BE ADDED",
+        "Website": "TO BE ADDED",
+        "GitHub": "https://github.com/TheKliko/roblox-modloader"
     },
     "installed_roblox_version": "none",
     "selected_mod_profile": "Default",
