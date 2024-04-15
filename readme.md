@@ -1,4 +1,4 @@
-<h1><img src="GitHub Files/Images/modloader.png" height="32" alt="logo"/> Roblox modloader</h1>
+<h1><img src="GitHub Files/Images/logo.png" height="32" alt="logo"/> Roblox modloader</h1>
 
 <!-- [![Downloads](https://img.shields.io/github/downloads/thekliko/klikos-modloader/latest/total?color=981bfe)](https://github.com/thekliko/klikos-modloader/releases) -->
 
