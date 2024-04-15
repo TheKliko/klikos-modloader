@@ -1,4 +1,4 @@
-<h1><img src="GitHub Files/Images/logo.png" height="32" alt="logo"/> Roblox modloader</h1>
+<h1><img src="GitHub Files/Images/logo.png" height="32" alt="logo"/>Kliko's modloader</h1>
 
 <!-- [![Downloads](https://img.shields.io/github/downloads/thekliko/klikos-modloader/latest/total?color=981bfe)](https://github.com/thekliko/klikos-modloader/releases) -->
 
@@ -20,7 +20,7 @@ Follow these instructions to install Kliko's modloader.
         Open the (extracted) .zip file and move the folder inside it to where you wish to store this program.
         <ul>
             <li>
-                Recommended: <kbd>%localappdata%\Kliko's modloader</kbd>
+                Recommended: `%localappdata%\Kliko's modloader`
             </li>
         </ul>
     </li>
