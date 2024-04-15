@@ -1,12 +1,33 @@
-<h1><img src="GitHub Files/Images/modloader.png" height="32" alt="logo"/> Kliko's modloader [BETA]</h1>
+<h1><img src="readme_files/Images/modloader.png" height="32" alt="logo"/> Roblox modloader</h1>
 
-An open-source modloader for <a href="https://www.roblox.com">Roblox</a>.
+<!-- [![Downloads](https://img.shields.io/github/downloads/thekliko/klikos-modloader/latest/total?color=981bfe)](https://github.com/thekliko/klikos-modloader/releases) -->
 
-This program was made to allow anyone to easily launch a modded copy of Roblox.
+An open-source modloader for Roblox.
+
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. Python 3.12 is required to use this program.
 
 
 
 <h2>Installation guide</h2>
+
+Follow these instructions to install Kliko's modloader.
+
+<ol>
+    <li>
+        Download and extract the latest release.
+    </li>
+    <li>
+        Open the (extracted) .zip file and move the folder inside it to where you wish to store this program.
+        <ul>
+            <li>
+                Example: `%localappdata%\Kliko's modloader`
+            </li>
+        </ul>
+    </li>
+    <li>
+        Download and extract the latest release
+    </li>
+</ol>
 
 <kbd>1</kbd>-<kbd>inf</kbd>
 
