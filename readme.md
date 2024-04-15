@@ -6,10 +6,7 @@ An open-source modloader for Roblox.
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. Python 3.12 is required to use this program.
 
-<details>
-    <summary><h2>Installation Guide</h2></summary>
-    installation guide
-</details>
+
 
 <h2>Installation guide</h2>
 
@@ -23,12 +20,23 @@ Follow these instructions to install Kliko's modloader.
         Open the (extracted) .zip file and move the folder inside it to where you wish to store this program.
         <ul>
             <li>
-                Example: `%localappdata%\Kliko's modloader`
+                Recommended: <kbd>%localappdata%\Kliko's modloader</kbd>
             </li>
         </ul>
     </li>
     <li>
-        Download and extract the latest release
+        Search for the 'Launch Options' folder and choose which options you want to add to your desktop or pin to the start menu.
+        <ul>
+            <li>
+                Run the <kbd>Setup</kbd> shortcut to select a mod profile, change settings, and more.
+            </li>
+            <li>
+                Run the <kbd>Launcher</kbd> shortcut to launch roblox.
+            </li>
+            <li>
+                Run the <kbd>Info</kbd> shortcut to get info on your applied profiles and settings.
+            </li>
+        </ul>
     </li>
 </ol>
 
