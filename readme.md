@@ -8,6 +8,7 @@
 An open-source modloader for Roblox.
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. Python 3.12 is required to use this program.
+<button><a>Download now</a></button>
 
 
 
@@ -56,7 +57,7 @@ If you have any issues, found a bug, or want to share your mods, you are welcome
 This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
 Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods. Not being able to switch between custom mod profiles and mod priorities is what led to me creating my own modloader.
 <br></br>
-My goals for this project are the following:
+My goals for this project are:
 <ul>
     <li>
         Introducing more people to Roblox mods
