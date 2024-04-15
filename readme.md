@@ -11,7 +11,7 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 
 
 
-<h2>Installation guide</h2>
+<h2>Installation Guide</h2>
 
 Follow these instructions to install Kliko's modloader.
 
