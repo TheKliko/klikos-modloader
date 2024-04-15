@@ -40,43 +40,31 @@ Follow these instructions to install Kliko's modloader.
     </li>
 </ol>
 
-<kbd>1</kbd>-<kbd>inf</kbd>
 
-```python
-print('Hello World')
-```
 
-<blockquote>
-TEST
+<h2>Help & Support</h2>
 
-yup
-</blockquote>
+If you have any issues, found a bug, or want to share your mods, you are welcome to join our <a href='#'>discord server</a>
 
 
 
-<h2>Support</h2>
-link to server goes here
+<h2>Inspiration & Goals</h2>
 
-
-
-<h2>Goals</h2>
-
-- Get more people into modding
-- Make mods more accessible for everyone
-- Get more experience in Python
-    - Code formatting
-    - User Interface
-    - Making API calls
-    - Error handling
-- Get experience in web development by adding a website
-    - Designing a home page
-    - Documentation
-    - etc
-
-
-
-<h2>Inspiration</h2>
-
-This modloader was inspired by [Bloxstrap](https://github.com/pizzaboxer/bloxstrap), an open-source, alternative bootstrapper for Roblox.
-
-Bloxstrap is what introduced me to the Roblox modding community, their discord members have given great feedback on my journey as a Roblox modder, none of this would have been possible without them.
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
+Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods. Not being able to switch between custom mod profiles and mod priorities is what led to me creating my own modloader.
+<br></br>
+My goals for this project are the following:
+<ul>
+    <li>
+        Introducing more people to Roblox mods
+    </li>
+    <li>
+        Getting more experience with Python
+    </li>
+    <li>
+        Getting experience in managing discord servers
+    </li>
+    <li>
+        Learning how to make a website
+    </li>
+</ul>
