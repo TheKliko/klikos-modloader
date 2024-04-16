@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kliko's modloader</title>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="shortcut icon" href="Images/logo.png" type="image/x-icon">
+    <script src="JavaScript/main.js"></script>
+</head>
+<body>
+    <header>
+        <div id="title">
+            <img src="Images/logo.png" alt="logo">
+            <p id="header-title">Kliko's modloader</p>
+        </div>
+        <!-- <nav id="navigation" aria-label="primary menu">
+            <ul>
+                <li>
+                    <a class="button navigation-button" href="#" aria-current="page">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a class="button navigation-button" href="HTML/documentation.html">
+                        Documentation
+                    </a>
+                </li>
+                <li>
+                    <a class="button navigation-button" href="HTML/download.html">
+                        Download
+                    </a>
+                </li>
+                <li>
+                    <a class="button navigation-button" href="HTML/about.html">
+                        About
+                    </a>
+                </li>
+            </ul>
+        </nav> -->
+        <nav id="other" aria-label="secondary menu">
+            <ul>
+                <li>
+                    <a class="button button-primary" onclick="fetchLatestRelease()">
+                        Download now
+                    </a>
+                </li>
+                <li>
+                    <a class="button button-secondary" href="https://github.com/TheKliko/klikos-modloader" target="_blank">
+                        View on GitHub
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section-hero section-first">
+        <div class="grid-left">
+            <h1>Kliko's modloader</h1>
+            <p class="subtitle">An open-source modloader for Roblox.</p>
+            <p style="padding-left: 72px; padding-right: 72px;">
+                Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com" target="_blank">Roblox</a>.
+                It can be used to conveniently launch a modded copy of Roblox.
+                <a href="https://www.python.org" target="_blank">Python 3.12</a> and a PC running Windows is required to run this program.
+            </p>
+            <ul>
+                <li>
+                    <a class="button button-primary" onclick="fetchLatestRelease()">
+                        Download now
+                    </a>
+                </li>
+                <li>
+                    <a class="button button-secondary" href="https://github.com/TheKliko/klikos-modloader" target="_blank">
+                        View on GitHub
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="grid-right">
+            <img src="Images/logo.png" alt="logo">
+        </div>
+    </section>
+
+    <section class="section-secondary section-small section-columns triple-column">
+        <div class="grid-top">
+            <h2>Installation Guide</h2>
+            <p class="subtitle">Follow these instructions to install Kliko's modloader.</p>
+        </div>
+        <div class="grid-left">
+            <h3>step 1</h3>
+            <br>
+            <p>Download and extract the latest release.</p>
+            <ul>
+                <li>
+                    <p>The latest version can be found at:</p>
+                    <ul>
+                        <li>
+                            <p>
+                                The Download page of this website
+                            </p>
+                        </li>
+                        <li>
+                            <p>The official GitHub page</p>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="grid-middle">
+            <h3>step 2</h3>
+            <br>
+            <p>Open the (extracted) .zip file and move the folder inside it to where you wish to store this program.</p>
+            <ul>
+                <li>
+                    <p>Example: ("<span class="code">%localappdata%\Kliko's modloader</span>")</p>
+                </li>
+            </ul>
+        </div>
+        <div class="grid-right">
+            <h3>step 3</h3>
+            <br>
+            <p>Search for the 'Launch Options' folder and choose which options you want to add to your desktop or pin to the start menu.</p>
+            <ul>
+                <li>
+                    <p>Run the Setup shortcut to select a mod profile, reinstall Roblox, change settings, and more.</p>
+                </li>
+                <li>
+                    <p>Run the Launcher shortcut to launch roblox.</p>
+                </li>
+                <li>
+                    <p>Run the Info shortcut to get info on your applied profiles and settings.</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="section-primary default-grid">
+        <div class="grid-right" style="margin-top: -50px;">
+            <h2>Help & Support</h2>
+        </div>
+        <div id="support-image-wrapper" class="grid-left">
+            <img src="Images/17481-help-button-1-design-1303208712.png" alt="help & support">
+        </div>
+        <div id="support-text-wrapper" class="grid-right">
+            <p>If you have any issues, found a bug, or want to share your mods, you are welcome to join our discord server</p>
+            <ul>
+                <li>
+                    <a href="" class="button button-primary">Join our Discord server</a>
+                </li>
+                <li>
+                    <a href="https://github.com/TheKliko/klikos-modloader" target="_blank" class="button button-secondary">Go to GitHub</a>
+                </li>
+                <li>
+                    <a class="button button-secondary" onclick="alert_not_implemented()">List of known issues</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="goals-inspiration" class="section-secondary section-small section-columns double-column">
+        <div class="grid-top">
+            <h2>Goals & Inspiration</h2>
+        </div>
+        <div class="grid-left">
+            <h3>Goals</h3>
+            <br>
+            <p>My goals for this project are:</p>
+            <ul>
+                <li>
+                    <p>Introducing more people to Roblox mods</p>
+                </li>
+                <li>
+                    <p>Getting more experience with Python</p>
+                </li>
+                <li>
+                    <p>Getting experience in managing discord servers</p>
+                </li>
+                <li>
+                    <p>Learning how to make a website</p>
+                </li>
+            </ul>
+        </div>
+        <div class="grid-right">
+            <h3>Inspiration</h3>
+            <br>
+            <p>
+                This project was inspired by <a href="https://github.com/pizzaboxer/bloxstrap" target="_blank">Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
+                Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods.
+                Not being able to switch between custom mod profiles and mod priorities is what led to me creating my own modloader.
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="grid-top">
+            <p>epic footer lol</p>
+        </div>
+        <div class="grid-left">
+            <p class="code">Project name: Kliko's modlaoder</p>
+            <p class="code">Project author: TheKliko</p>
+        </div>
+        <div class="grid-middle">
+            <p><a href="https://github.com/TheKliko/klikos-modloader" target="_blank" class="code footer-hyperlink">View on GitHub</a></p>
+            <p><a class="code footer-hyperlink" onclick="alert_not_implemented()">Known issues</a></p>
+        </div>
+        <div class="grid-right">
+            <p><a href="https://github.com/TheKliko/klikos-modloader/blob/website/LICENSE" target="_blank" class="code footer-hyperlink">View License</a></p>
+            <p class="code">Website version: 2024-04-16</p>
+        </div>
+    </footer>
+</body>
+</html>
