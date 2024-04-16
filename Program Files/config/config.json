@@ -9,13 +9,13 @@
     },
     "max_log_files": 10,
     "links": {
-        "Discord": "TO BE ADDED",
-        "Website": "TO BE ADDED",
+        "Discord": "https://discord.gg/smWNvzaStz",
+        "Website": "https://thekliko.github.io/klikos-modloader",
         "GitHub": "https://github.com/TheKliko/roblox-modloader"
     },
-    "installed_roblox_version": "version-8950870ea20941f9",
-    "selected_mod_profile": "Kliko's Mod Profile",
-    "selected_fastflag_profile": "Kliko's FastFlag Profile",
-    "launch_roblox_after_setup": true,
+    "installed_roblox_version": null,
+    "selected_mod_profile": "Default",
+    "selected_fastflag_profile": null,
+    "launch_roblox_after_setup": false,
     "force_roblox_reinstallation": false
 }
