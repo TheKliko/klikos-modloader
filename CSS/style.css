@@ -28,6 +28,8 @@
     --header-height: 51.2px;
     --header-padding: 10px;
     --header-spacing: 19.2px;
+    --header-spacing: 12px;
+    --header-spacing-2: 19.2px;
     --header-border-radius: 10px;
     --header-background: #fcfcfc;
     --header-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -244,15 +246,12 @@ header {
 #header-left img {
     width: calc(var(--header-height) - 2*var(--header-padding));
 }
-#header-middle {
-
-}
 #header-right {
     justify-self: right;
     height: var(--header-height);
 }
 #behind-the-header {
-    padding-top: calc(var(--header-height) + 2*var(--header-padding) + 2*var(--header-spacing));
+    padding-top: calc(var(--header-height) + 2*var(--header-padding) + 2*var(--header-spacing-2));
 }
 
 
@@ -405,3 +404,23 @@ section{
     align-self: baseline;
     height: 150px;
 }
+
+
+
+
+
+
+/* @keyframes wobble {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
+}
+.rotating-image {
+    animation: wobble 25s ease-in-out infinite;
+} */
