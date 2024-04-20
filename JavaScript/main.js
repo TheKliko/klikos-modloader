@@ -1,6 +1,8 @@
+const min_width = 1610
+
 window.onload = function startup() {
-    if (window_width() < 1500) {
-        alert('Warning: This website was made for windows with a minimum width of 1400px. You have a window width of '+window_width()+'px. Things may not look as expected.')
+    if (window_width() < min_width) {
+        alert(`Warning: This website was made for windows with a minimum width of ${min_width}px. You have a window width of ${window_width()}px. Things may not look as expected.`)
     }
 }
 
