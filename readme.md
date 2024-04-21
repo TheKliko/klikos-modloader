@@ -124,3 +124,8 @@ We are always open to feedback. If you have a suggestion, found a bug or just wa
         </td>
     </tr>
 </table>
+
+
+
+<h2>Antivirus Disclaimer</h2>
+This project will most likely get flagged by your antivirus software. If you don't trust it, don't download it.
