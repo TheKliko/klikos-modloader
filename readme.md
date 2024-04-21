@@ -7,7 +7,50 @@
 
 An open-source modloader for Roblox.
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows is required to run this program.
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. <a href="https://www.python.org">Python 3.12</a> is required to use this program.
+
+
+
+<h2>Features</h2>
+
+<table>
+    <tr>
+        <th>
+            Mod Profiles
+        </th>
+        <th>
+            FastFlags support
+        </th>
+        <th>
+            Rich Presence
+        </th>
+    </tr>
+    <tr>
+        <td>
+            Quickly switch between pre-configured mod profiles through the modloader menu.
+        </td>
+        <td>
+            Set up multiple FastFlag profiles. For now, FastFlag profiles will have to be set up manually by editing the config file.
+        </td>
+        <td>
+            Show your friends on Discord that you are using Kliko's modloader.
+        </td>
+    </tr>
+</table>
+
+
+<h3>Mod Profiles</h3>
+Quickly switch between pre-configured mod profiles through the modloader menu.
+
+<br>
+
+<h3>FastFlags support</h3>
+Set up multiple FastFlag profiles. For now, FastFlag profiles will have to be set up manually by editing the config file.
+
+<br>
+
+<h3>Rich Presence</h3>
+Show your friends on Discord that you are using Kliko's modloader.
 
 
 
@@ -17,21 +60,13 @@ Follow these instructions to install Kliko's modloader.
 
 <ol>
     <li>
-        Download and extract the latest release.
+        Download and install the latest release.
     </li>
     <li>
-        Open the (extracted) .zip file and move the folder inside it to where you wish to store this program.
+        Open file explorer and go to "%localappdata%\Kliko's modloader". From here you can:
         <ul>
             <li>
-                Recommended: `%localappdata%\Kliko's modloader`
-            </li>
-        </ul>
-    </li>
-    <li>
-        Search for the 'Launch Options' folder and choose which options you want to add to your desktop or pin to the start menu.
-        <ul>
-            <li>
-                Run the <kbd>Setup</kbd> shortcut to select a mod profile, change settings, and more.
+                Run the <kbd>Modloader Menu</kbd> shortcut to select a mod profile, change settings, and more.
             </li>
             <li>
                 Run the <kbd>Launcher</kbd> shortcut to launch roblox.
@@ -40,6 +75,10 @@ Follow these instructions to install Kliko's modloader.
                 Run the <kbd>Info</kbd> shortcut to get info on your applied profiles and settings.
             </li>
         </ul>
+    </li>
+    <li>
+        (optional):
+        It is recommended that you pin the shortcuts to your desktop or start menu.
     </li>
 </ol>
 
