@@ -46,7 +46,7 @@ def main() -> None:
         launch_arguments = get_launch_arguments()
         if launch_arguments == 'launcher':
             run_launcher_process()
-        elif launch_arguments == 'setup':
+        elif launch_arguments == 'menu':
             run_setup_process()
         elif launch_arguments == 'info':
             run_info_process()
