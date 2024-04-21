@@ -229,13 +229,13 @@ header {
     backdrop-filter: blur(5px); */
 }
 /* NORMAL HEADER */
-/* header {
+header {
     top: 0;
     left: 0;
     width: calc(100% - 2*var(--header-padding));
     border-radius: 0;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.08), 0 2px 4px 0 rgba(0, 0, 0, 0.12);
-} */
+}
 #header-left {
     display: flex;
     flex-direction: row;
