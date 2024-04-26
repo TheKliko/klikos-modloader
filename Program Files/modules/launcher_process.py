@@ -56,7 +56,7 @@ def start() -> None:
 
     variables.set(name='rich_presence_details', value='Playing Roblox')
     variables.set(name='rich_presence_timestamp', value=int(time.time()))
-    variables.set(name='rich_presence_large_image', value=r'https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/GitHub%20Files/rpc-images/launcher.png')
+    variables.set(name='rich_presence_large_image', value=r'https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/GitHub%20Files/rpc-images/launcher-small.png')
     rich_presence.start()
 
     process.join(timeout=1)

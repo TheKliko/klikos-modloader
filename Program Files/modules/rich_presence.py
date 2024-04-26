@@ -8,6 +8,8 @@ from packages.pypresence import Presence
 from packages.pypresence import exceptions as pypresence_exceptions
 
 from modules import variables
+from modules.roblox_activity_watcher import update_roblox_activity_status
+from modules.request_handler import request_json
 
 client_id: str = '1229494846247665775'
 rpc = Presence(client_id)
@@ -28,22 +30,37 @@ def update() -> None:
     try:
         rpc.connect()
         while True:
+            update_roblox_activity_status()
             details = variables.get(name='rich_presence_details')
             timestamp = variables.get(name='rich_presence_timestamp')
             large_image = variables.get(name='rich_presence_large_image')
+            large_text = 'Kliko\'s modloader'
+            small_image = r'https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/GitHub%20Files/rpc-images/launcher-small.png'
+            game_id = variables.get(name='rich_presence_game_id')
+            if not game_id == 'not_in_game':
+                config = request_json(source=r'https://www.roblox.com/item-thumbnails?params=%5B%7BassetId:' + game_id + r'%7D%5D')
+                large_image = config[0]['thumbnailUrl']
+                large_text = config[0]['name']
+                details = f'Playing {config[0]['name']}'
             buttons = [{"label": "Learn more", "url": "https://thekliko.github.io/klikos-modloader"}]
             if not large_image:
                 large_image='logo'
-            if not details or not timestamp:
-                stop()
-                return None
+
+            if variables.get(name='in_game'):
+                timestamp = variables.get(name='in_game_timestamp')
+            elif not variables.get(name='in_menu'):
+                small_image = 'none'
+
             rpc.update(
                 details=details,
                 start=timestamp,
                 large_image=large_image,
-                large_text='Kliko\'s modloader',
-                buttons=buttons
+                large_text=large_text,
+                buttons=buttons,
+                small_image=small_image,
+                small_text='Kliko\'s modloader'
             )
+
             time.sleep(5)
     
     # Reconnect rpc after switching accounts. Gives EOFError if asking for input later, also breaks logging for some reason

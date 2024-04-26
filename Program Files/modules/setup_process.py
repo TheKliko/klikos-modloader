@@ -24,6 +24,7 @@ def start() -> None:
     variables.set(name='rich_presence_details', value='Modloader menu')
     variables.set(name='rich_presence_timestamp', value=int(time.time()))
     variables.set(name='rich_presence_large_image', value=r'https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/GitHub%20Files/rpc-images/menu.png')
+    variables.set(name='in_menu', value=True)
     rich_presence.start()
     while True:
         interface.clear_console()
@@ -246,6 +247,7 @@ def save_changes() -> None:
             key='launch_roblox_after_setup'
         ):
         variables.set(name='config_json', value=config)
+        variables.set(name='in_menu', value=False)
         from modules import launcher_process
         launcher_process.start()
 

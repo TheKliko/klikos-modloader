@@ -28,6 +28,9 @@ def start() -> None:
     if not config_json:
         config_json = load_default_config()
     variables.set(name='config_json', value=config_json)
+    variables.set(name='rich_presence_game_id', value='not_in_game')
+    variables.set(name='in_game', value=False)
+    variables.set(name='in_menu', value=False)
 
     # Change terminal title using https://stackoverflow.com/a/10229529
     title: str = get_json_value_from_input(config=config_json, key='title')
