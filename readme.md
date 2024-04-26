@@ -64,7 +64,7 @@ Follow these instructions to install Kliko's modloader.
     </li>
     <li>
         (optional):
-        It is recommended that you pin the shortcuts to your desktop or start menu.
+        It is recommended that you pin the shortcuts to your start menu for quick access.
     </li>
 </ol>
 
