@@ -23,7 +23,7 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
         <a href="#support-server">Support Server</a>
     </li>
     <li>
-        <a href="#goals-&-inspiration">Goals & Inspiration</a>
+        <a href="#goals-@26-inspiration">Goals & Inspiration</a>
     </li>
     <li>
         <a href="#antivirus-disclaimer">Antivirus Disclaimer</a>
