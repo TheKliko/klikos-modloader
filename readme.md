@@ -11,6 +11,27 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 
 
 
+<h2>Sections</h2>
+<ul>
+    <li>
+        <a href="#features">Features</a>
+    </li>
+    <li>
+        <a href="#installation-guide">Installation Guide</a>
+    </li>
+    <li>
+        <a href="#support-server">Support Server</a>
+    </li>
+    <li>
+        <a href="#goals-inspiration">Goals & Inspiration</a>
+    </li>
+    <li>
+        <a href="#antivirus-disclaimer">Antivirus Disclaimer</a>
+    </li>
+</ul>
+
+
+
 <h2>Features</h2>
 
 <table>
@@ -70,7 +91,7 @@ Follow these instructions to install Kliko's modloader.
 
 
 
-<h2>Support server</h2>
+<h2>Support Server</h2>
 
 <h3>Join our discord server</h3>
 
