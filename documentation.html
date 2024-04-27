@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kliko's modloader | Documentation</title>
+    <script src="JavaScript/main.js"></script>
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="shortcut icon" href="Images/logo.png" type="image/x-icon">
+
+    <!-- embed -->
+    <meta property="og:title" content="Kliko's modloader">
+    <meta property="og:description" content="An open-source modloader for Roblox">
+    <meta property="og:image" content="https://raw.githubusercontent.com/TheKliko/klikos-modloader/website/Images/open-graph-image.png">
+    <meta property="og:url" content="https://thekliko.github.io/klikos-modloader">
+    <meta property="og:type" content="website">
+</head>
+<body>
+    <header>
+        <div id="header-left" class="grid-left">
+            <img src="Images/logo.png" alt="logo">
+            <h1>Kliko's modloader</h1>
+        </div>
+        <nav id="header-middle" class="grid-middle" aria-label="primary menu">
+            <ul class="buttons">
+                <li>
+                    <a class="button button-navigation" href="index.html">Home</a>
+                </li>
+                <li>
+                    <a class="button button-navigation" href="#" aria-current="page">Documentation</a>
+                </li>
+                <li>
+                    <a class="button button-navigation" onclick="alert_not_implemented()">Changelog</a>
+                </li>
+            </ul>
+        </nav>
+        <nav id="header-right" class="grid-right" aria-label="secondary menu">
+            <ul class="buttons">
+                <li>
+                    <a class="button button-primary" onclick="fetch_latest_release()">Download now</a>
+                </li>
+                <li>
+                    <a class="button button-secondary" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="behind-the-header"></div>
+
+    <section class="section-primary grid-top-bottom section-small hero-section">
+        <div class="grid-top">
+            <h2>Documentation</h2>
+        </div>
+        <div id="quick-access" class="grid-bottom">
+            <p class="subtitle">Quick access</p>
+            <ul class="quick-access">
+                <li>
+                    <a href="#adding-mods">Adding mods</a>
+                </li>
+                <li>
+                    <a href="#adding-fastflags">Adding FastFlags</a>
+                </li>
+                <li>
+                    <a href="#selecting-profiles">Selecting Mod / FastFlag Profiles</a>
+                </li>
+                <li>
+                    <a href="#troubleshooting">Troubleshooting</a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="adding-mods" class="section-secondary grid-top-bottom section-small">
+        <div class="grid-top">
+            <h2>Adding Mods</h2>
+        </div>
+        <div class="grid-bottom section-features" style="flex-direction: row; gap: var(--gap-medium);">
+            <div style="display: flex; flex-direction: column; gap: var(--gap-medium);">
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Quick Guide
+                    </p>
+                    <ol>
+                        <li>
+                            Go to "%localappdata%\Kliko's modloader\Mod Profiles".
+                        </li>
+                        <li>
+                            Open the folder of the Mod Profile that you want to add your mod to, or create a new one.
+                        </li>
+                        <li>
+                            Run 'Modloader Menu' and make sure you have selected the right Mod Profile.
+                        </li>
+                    </ol>
+                </div>
+    
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Mod Formatting
+                    </p>
+                    <p>
+                        Mod Profiles should be made with the right file structure:
+                    </p>
+                    <ul class="directory-structure">
+                        <li>
+                            "%localappdata%\Kliko's modloader\Mod Profiles"
+                            <ul>
+                                <li>
+                                    Mod Profile
+                                    <ul>
+                                        <li>
+                                            Mod
+                                            <ul>
+                                                <li>
+                                                    content
+                                                </li>
+                                                <li>
+                                                    ExtraContent
+                                                </li>
+                                                <li>
+                                                    . . .
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Mod
+                                        </li>
+                                        <li>
+                                            . . .
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    Mod Profile
+                                </li>
+                                <li>
+                                    . . .
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--gap-medium);">
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Mod Priorities
+                    </p>
+                    <ol>
+                        <li>
+                            Go to "%localappdata%\Kliko's modloader\Program Files\config".
+                        </li>
+                        <li>
+                            Open mod_profiles.json.
+                        </li>
+                        <li>
+                            From here you can set up mod priorities, make sure to use the right format.
+                            <ul>
+                                <li>
+                                    Add a comma "<kbd>,</kbd>" after each Mod and Mod Profile except for the last one.
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Mod Priority Formatting
+                    </p>
+                    <p>Mod priorities should be entered with the following format:</p>
+                    <code class="json" style="margin-top: 5px;">{
+    "Mod Profile Name": {
+            "1": "Mod Name",
+            "2": "Mod Name"
+    },
+    "Mod Profile Name": {
+            "1": "Mod Name"
+    }
+}</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="adding-fastflags" class="section-primary grid-top-bottom section-small">
+        <div class="grid-top">
+            <h2>Adding FastFlags</h2>
+        </div>
+        <div class="grid-bottom section-features" style="flex-direction: row; gap: var(--gap-medium);">
+            <div style="display: flex; flex-direction: column; gap: var(--gap-medium);">
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Quick Guide
+                    </p>
+                    <ol>
+                        <li>
+                            Go to "%localappdata%\Kliko's modloader\Program Files\config".
+                        </li>
+                        <li>
+                            Open fastflag_profiles.json.
+                        </li>
+                        <li>
+                            From here you can edit your FastFlag profiles, make sure to follow the right format.
+                            <ul>
+                                <li>
+                                    Add a comma "<kbd>,</kbd>" after each FastFlag and FastFlag Profile except for the last one.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Run 'Modloader Menu' and make sure you have selected the right FastFlag Profile.
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Formatting
+                    </p>
+                    <p>FastFlag Profiles should be entered with the following format:</p>
+                    <code class="json" style="margin-top: 5px;">{
+    "FastFlag Profile Name": {
+            "FastFlag Name": "FastFlag Value",
+            "FastFlag Name": "FastFlag Value"
+    },
+    "FastFlag Profile Name": {
+            "FastFlag Name": "FastFlag Value"
+    }
+}</code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="selecting-profiles" class="section-secondary grid-top-bottom section-small">
+        <div class="grid-top">
+            <h2>Selecting Mod / FastFlag Profiles</h2>
+        </div>
+        <div class="grid-bottom section-features" style="flex-direction: row; gap: var(--gap-medium);">
+            <div style="display: flex; flex-direction: column; gap: var(--gap-medium);">
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Instructions
+                    </p>
+                    <ol>
+                        <li>
+                            Open the Modloader Menu.
+                        </li>
+                        <li>
+                            Choose 'Change Mod Profile' or 'Configure FastFlags'.
+                        </li>
+                        <li>
+                            Select the mod profile or FastFlags profile that you want to use.
+                        </li>
+                        <li>
+                            Go back and choose 'Save & Exit'.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="troubleshooting" class="section-primary grid-top-bottom section-small">
+        <div class="grid-top">
+            <h2>Troubleshooting (coming soon)</h2>
+            <p class="subtitle">didn't make this yet because I got a pretty bad headache</p>
+        </div>
+        <div class="grid-bottom section-features" style="/*temporary*/margin-top: 10px; flex-direction: row; gap: var(--gap-medium);">
+            <div style="display: flex; flex-direction: column; gap: var(--gap-medium);">
+                <div class="card-box" style="width: 500px; height: max-content; text-wrap: balance;">
+                    <p class="card-box-title">
+                        Template Title
+                    </p>
+                    <ol>
+                        <li>
+                            Template Item
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="grid-columns triple-column">
+        <div class="footer-license grid-left" style="justify-self: left;">
+            <a href="https://raw.githubusercontent.com/TheKliko/klikos-modloader/website/LICENSE" target="_blank">View license</a>
+        </div>
+        <div class="footer-contact grid-middle" style="text-align: center;">
+            <img src="Images/logo-white.png" alt="logo" style="width: 48px; display: block; margin-left: auto; margin-right: auto; margin-bottom: 12px;">
+            <div style="display: flex; gap: var(--gap-medium);">
+                <a href="https://discord.gg/nEjUwdSP9P" target="_blank">Join our Discord</a>
+                <p class="dont-select">|</p>
+                <a href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
+            </div>
+        </div>
+        <div class="footer-website-version grid-right" style="justify-self: right; text-align: right;">
+            <p id="website-version-container">website version: ???</p>
+        </div>
+    </footer>
+</body>
+</html>

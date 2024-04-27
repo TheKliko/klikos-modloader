@@ -1,9 +1,13 @@
 const min_width = 1610
+const website_version = "website version: 27-04-2024"
 
 window.onload = function startup() {
     if (window_width() < min_width) {
         alert(`Warning: This website was made for windows with a minimum width of ${min_width}px. You have a window width of ${window_width()}px. Things may not look as expected.`)
     }
+
+    var website_version_container = document.getElementById('website-version-container');
+    website_version_container.innerHTML = website_version;
 }
 
 function window_width() {
