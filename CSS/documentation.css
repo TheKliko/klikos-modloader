@@ -1,0 +1,184 @@
+/* VARIABLES */
+:root {
+    --min-width: 1610px;
+
+    --primary-color: #cc0037;
+    --complementary-color: #00CC95;
+
+    --text-color: #2c2c2c;
+
+
+    --main-font: 'Monsterrat';
+
+    --gap-small: 8px;
+    --gap-medium: 16px;
+    --gap-large: 32px;
+
+
+    --button-color: var(--primary-color);
+    --button-color-hover: #d61246;
+    --button-border: solid 3px var(--button-color);
+    --button-border-hover: solid 3px var(--button-color-hover);
+    --button-padding: 12px;
+    --button-border-radius: 10px;
+    --button-navigation-hover-background: rgba(200,200,200,0.3);
+
+
+
+    --section-primary-color: #fff;
+    --section-hero-background: linear-gradient(0deg, #cbcbcb, var(--section-primary-color)) no-repeat;
+    --section-secondary-color: #e70d47;
+    --section-padding: 72px;
+    --section-padding-horizontal: 228px;
+    --section-height: 55vh;
+    /* --section-small-height: 30vh; */
+
+
+
+    --card-box-width: 320px;
+    --card-box-height: 120px;
+    --card-box-background: #fff;
+    --card-box-text: var(--text-color);
+    --card-box-padding: 24px;
+    --card-box-border-radius: 10px;
+    --card-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+
+
+/* SECTIONS */
+section{
+    min-height: var(--section-height);
+    margin: 0;
+    padding: var(--section-padding);
+    padding-left: var(--section-padding-horizontal);
+    padding-right: var(--section-padding-horizontal);
+}
+.section-small {
+    /* min-height: var(--section-small-height); */
+    min-height: max-content;
+}
+.section-primary {
+    background: var(--section-primary-color);
+}
+.section-secondary {
+    background: var(--section-secondary-color);
+    color: #fff;
+}
+.hero-section {
+    background: var(--section-hero-background);
+}
+
+
+
+.quick-navigation, .quick-navigation li {
+    list-style-type: none;
+}
+
+.quick-navigation > li::before {
+    content: "→ ";
+    font-size: 1.5rem;
+    line-height: 1rem;
+}
+.quick-navigation a {
+    text-decoration: none;
+}
+
+.hero-section .quick-navigation a, .section-primary .quick-navigation a {
+    color: var(--text-color);
+}
+
+.section-secondary .quick-navigation a {
+    color: #fff;
+}
+
+
+
+
+/* idk sections i guess */
+.section-features {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-medium);
+}
+.card-box {
+    width: var(--card-box-width);
+    height: var(--card-box-height);
+    background: var(--card-box-background);
+
+    padding: var(--card-box-padding);
+    border-radius: var(--card-box-border-radius);
+    box-shadow: var(--card-box-shadow);
+
+    color: var(--card-box-text);
+}
+.section-installation {
+    flex-direction: column;
+}
+.card-box-installation {
+    height: max-content;
+}
+
+
+
+
+
+.file-structure {
+    font-family: 'Code';
+    font-size: 0.90rem;
+
+    /* display: flex; */
+    /* justify-content: center; */
+    padding: 10px !important;
+    width: max-content;
+    height: max-content;
+    border-radius: 8px;
+    border: solid 1px black;
+    box-shadow: var(--card-box-shadow);
+    background: rgba(255, 255, 255, 0.05);
+}
+.file-structure, .file-structure li {
+    list-style-type: none;
+    padding: 0;
+}
+
+.file-structure > li::before {
+    content: "ROOT ";
+    padding-right: 5px;
+}
+
+.file-structure li ul > li::before {
+    content: "├── ";
+    padding-right: 5px;
+}
+
+.file-structure li ul > li:last-child::before {
+    content: "└── ";
+}
+
+
+
+
+json {
+    font-family: 'Code';
+    font-size: 0.90rem;
+
+    padding: 10px !important;
+    display: block;
+    white-space: pre-wrap;
+
+
+    width: max-content;
+    height: max-content;
+    border-radius: 8px;
+    border: solid 1px black;
+    box-shadow: var(--card-box-shadow);
+    background: rgba(255, 255, 255, 0.05);
+    margin: 10px;
+}
+.matrix-code {
+    background: rgba(0, 0, 0, 1);
+    color: #0f0;
+    border: solid 2px #0f0;
+}
