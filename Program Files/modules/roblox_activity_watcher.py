@@ -36,33 +36,49 @@ def read_logs() -> list:
             data = log.read()
             log.close()
 
-
         if '[FLog::SingleSurfaceApp] unregisterMemoryPrioritizationCallback' in data:
             return ['gameleave']
-        # old_log = None
-        # old_log = [line for line in data.split('\n') if '[FLog::SingleSurfaceApp] unregisterMemoryPrioritizationCallback' in line]
+        
+        gamejoinleaves: list = [line for line in data.split('\n') if '[FLog::GameJoinLoadTime]' in line or '[FLog::SingleSurfaceApp] handleGameWillClose' in line]
 
-        # if old_log:
-        #     return ['gameleave']
-        
-        gamejoins = [line for line in data.split('\n') if '[FLog::GameJoinLoadTime]' in line]
-        gameleaves = [line for line in data.split('\n') if '[FLog::SingleSurfaceApp] handleGameWillClose' in line]
-        if len(gamejoins) == len(gameleaves):
+        if len(gamejoinleaves) == 0:
+            return ['gameleave']
+
+        if not '[FLog::GameJoinLoadTime]' in gamejoinleaves[-1]:
             return ['gameleave']
         
-        pattern = pattern = r'placeid:(\d+)'
-        match = re.search(pattern, gamejoins[-1])
-        if not match:
-            return ['gameleave']
-        
-        game_id = match.group(1)
-        value = ['gamejoin', game_id]
-        return value
+        skip: bool = False
+        for item in gamejoinleaves:
+            if '[FLog::SingleSurfaceApp] handleGameWillClose' in item:
+                skip = True
+
+        if not skip:
+            pattern = pattern = r'placeid:(\d+)'
+            match = re.search(pattern, gamejoinleaves[0])
+            if not match:
+                return ['gameleave']
+            game_id = match.group(1)
+            return['gamejoin', game_id]
+
+        i = len(gamejoinleaves) - 1
+        while True:
+            if i < 0:
+                print('debug fail')
+                return ['gameleave']
+            if '[FLog::SingleSurfaceApp] handleGameWillClose' in gamejoinleaves[i]:
+
+                pattern = pattern = r'placeid:(\d+)'
+                match = re.search(pattern, gamejoinleaves[i + 1])
+                if not match:
+                    return ['gameleave']
+                game_id = match.group(1)
+                return ['gamejoin', game_id]
+            i = i - 1
 
 
     except Exception as e:
         logging.error(f'An unexpected {type(e).__name__} occured: {str(e)}')
-    return None
+    return ['gameleave']
 
 
 
