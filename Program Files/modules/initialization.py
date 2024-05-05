@@ -27,6 +27,10 @@ def start() -> None:
     config_json = get_json_complete(path=os.path.join(config_directory, 'config.json'))
     if not config_json:
         config_json = load_default_config()
+    current_version = get_json_value_from_file(path=os.path.join(config_directory, 'version_info.json'), key='version')
+    if not current_version:
+        current_version = 'UNKNOWN_VERSION'
+    config_json['version'] = current_version
     variables.set(name='config_json', value=config_json)
     variables.set(name='rich_presence_game_id', value='not_in_game')
     variables.set(name='in_game', value=False)
