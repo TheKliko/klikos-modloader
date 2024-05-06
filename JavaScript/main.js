@@ -1,4 +1,4 @@
-const website_version = "website version: 0.4.1"
+const website_version = "website version: 0.5.0"
 const min_width = 1610
 
 window.onload = function startup() {

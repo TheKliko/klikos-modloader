@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kliko's modloader</title>
     <script src="JavaScript/main.js"></script>
+    <script src="JavaScript/darkmode-toggle.js"></script>
     <link rel="stylesheet" href="CSS/style.css">
     <link rel="stylesheet" href="CSS/home.css">
     <link rel="shortcut icon" href="Images/logo.png" type="image/x-icon">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <!-- embed -->
     <meta property="og:title" content="Kliko's modloader">
     <meta property="og:description" content="An open-source modloader for Roblox">
@@ -16,31 +17,40 @@
     <meta property="og:url" content="https://thekliko.github.io/klikos-modloader">
     <meta property="og:type" content="website">
 </head>
-<body>
-    <header>
+<body id="body" class="body">
+    <header class="darkmode-background">
         <div id="header-left" class="grid-left">
             <img src="Images/logo.png" alt="logo">
-            <h1>Kliko's modloader</h1>
+            <h1 class="darkmode-text">Kliko's modloader</h1>
         </div>
         <nav id="header-middle" class="grid-middle" aria-label="primary menu">
             <ul class="buttons">
                 <li>
-                    <a class="button button-navigation" href="#" aria-current="page">Home</a>
+                    <a class="button button-navigation darkmode-text" href="#" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a class="button button-navigation" href="documentation.html">Documentation</a>
+                    <a class="button button-navigation darkmode-text" href="documentation.html">Documentation</a>
                 </li>
                 <li>
-                    <a class="button button-navigation" onclick="alert_not_implemented()">Changelog</a>
+                    <a class="button button-navigation darkmode-text" onclick="alert_not_implemented()">Changelog</a>
                 </li>
             </ul>
         </nav>
         <ul id="header-right" class="buttons grid-right">
+            <li id="darkmode-toggle"> <!-- darkmode toggle using https://www.youtube.com/watch?v=MNf8DUej1Vo -->
+                <div id="darkmode-btn" class="darkmode-btn" onclick="darkmode_toggle()">
+                    <div id="darkmode-btn__indicator" class="darkmode-btn__indicator">
+                        <div id="darkmode-btn__icon-container" class="darkmode-btn__icon-container">
+                            <i id="darkmode-btn__icon" class="darkmode-btn__icon fa-solid fa-sun"></i>
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li>
                 <a class="button button-primary" onclick="fetch_latest_release()">Download now</a>
             </li>
             <li>
-                <a class="button button-secondary" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
+                <a class="button button-secondary darkmode-text" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
             </li>
         </ul>
     </header>
@@ -49,9 +59,9 @@
 
     <section class="section-primary hero-section grid-columns double-column">
         <div class="grid-left" style="text-align: center;">
-            <h2 id="hero-section-title">Kliko's modloader</h2>
-            <p class="subtitle" style="margin-top: 5px; font-family: 'Jura';">An open-source modloader for Roblox</p>
-            <p style="margin-top: 20px; margin-bottom: 30px; padding-left: 88px; padding-right: 88px;">
+            <h2 id="hero-section-title" class="darkmode-text">Kliko's modloader</h2>
+            <p class="subtitle darkmode-text" style="margin-top: 5px; font-family: 'Jura';">An open-source modloader for Roblox</p>
+            <p class="darkmode-text" style="margin-top: 20px; margin-bottom: 30px; padding-left: 88px; padding-right: 88px;">
                 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com/" target="_blank">Roblox</a>.
                 It can be used to conveniently launch a modded copy of Roblox.
                 <a href="https://www.python.org/" target="_blank">Python 3.12</a> and a PC running Windows is required to run this program.
@@ -61,7 +71,7 @@
                     <a class="button button-primary button-box-shadow" onclick="fetch_latest_release()">Download now</a>
                 </li>
                 <li>
-                    <a class="button button-secondary button-box-shadow" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
+                    <a class="button button-secondary button-box-shadow darkmode-text" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
                 </li>
             </ul>
         </div>
@@ -104,8 +114,8 @@
 
     <section class="section-primary grid-top-bottom" style="padding-left: 350px; padding-right: 350px;">
         <div class="grid-top">
-            <h2>Installation Guide</h2>
-            <p class="subtitle">Follow these instruction to install Kliko's modloader</p>
+            <h2 class="darkmode-text">Installation Guide</h2>
+            <p class="subtitle darkmode-text">Follow these instruction to install Kliko's modloader</p>
         </div>
         <div class="grid-bottom grid-columns double-column">
             <div class="section-features section-installation" style="justify-self: left; align-self: baseline;">
@@ -184,7 +194,7 @@
     </section>
 
     <section class="section-primary section-small">
-        <h2 style="margin-bottom: 24px;">Goals & Inspiration</h2>
+        <h2 class="darkmode-text" style="margin-bottom: 24px;">Goals & Inspiration</h2>
         <div style="display: flex; gap: var(--gap-large);">
             <div class="card-box goals-inspiration-box" style="justify-self: right; width: 545.55px;">
                 <p class="subtitle">Goals</p>
@@ -238,7 +248,7 @@
             </div>
         </div>
         <div class="footer-website-version grid-right" style="justify-self: right; text-align: right;">
-            <p id="website-version-container">website version: ???</p>
+            <p id="website-version-container">website version: ...</p>
         </div>
     </footer>
 </body>

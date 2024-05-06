@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kliko's modloader | Documentation</title>
     <script src="JavaScript/main.js"></script>
+    <script src="JavaScript/darkmode-toggle.js"></script>
     <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="CSS/documentation.css">
+    <link rel="stylesheet" href="CSS/home.css">
     <link rel="shortcut icon" href="Images/logo.png" type="image/x-icon">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <!-- embed -->
     <meta property="og:title" content="Kliko's modloader">
     <meta property="og:description" content="An open-source modloader for Roblox">
@@ -16,38 +17,47 @@
     <meta property="og:url" content="https://thekliko.github.io/klikos-modloader">
     <meta property="og:type" content="website">
 </head>
-<body>
-    <header>
+<body id="body" class="body">
+    <header class="darkmode-background">
         <div id="header-left" class="grid-left">
             <img src="Images/logo.png" alt="logo">
-            <h1>Kliko's modloader</h1>
+            <h1 class="darkmode-text">Kliko's modloader</h1>
         </div>
         <nav id="header-middle" class="grid-middle" aria-label="primary menu">
             <ul class="buttons">
                 <li>
-                    <a class="button button-navigation" href="index.html">Home</a>
+                    <a class="button button-navigation darkmode-text" href="index.html">Home</a>
                 </li>
                 <li>
-                    <a class="button button-navigation" href="#" aria-current="page">Documentation</a>
+                    <a class="button button-navigation darkmode-text" href="#" aria-current="page">Documentation</a>
                 </li>
                 <li>
-                    <a class="button button-navigation" onclick="alert_not_implemented()">Changelog</a>
+                    <a class="button button-navigation darkmode-text" onclick="alert_not_implemented()">Changelog</a>
                 </li>
             </ul>
         </nav>
         <ul id="header-right" class="buttons grid-right">
+            <li id="darkmode-toggle"> <!-- darkmode toggle using https://www.youtube.com/watch?v=MNf8DUej1Vo -->
+                <div id="darkmode-btn" class="darkmode-btn" onclick="darkmode_toggle()">
+                    <div id="darkmode-btn__indicator" class="darkmode-btn__indicator">
+                        <div id="darkmode-btn__icon-container" class="darkmode-btn__icon-container">
+                            <i id="darkmode-btn__icon" class="darkmode-btn__icon fa-solid fa-sun"></i>
+                        </div>
+                    </div>
+                </div>
+            </li>
             <li>
                 <a class="button button-primary" onclick="fetch_latest_release()">Download now</a>
             </li>
             <li>
-                <a class="button button-secondary" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
+                <a class="button button-secondary darkmode-text" href="https://github.com/TheKliko/klikos-modloader" target="_blank">View on GitHub</a>
             </li>
         </ul>
     </header>
 
     <div id="behind-the-header"></div>
 
-    <section class="hero-section section-small">
+    <section class="section-primary hero-section section-small darkmode-text">
         <h2>Documentation [WIP]</h2>
         <p class="subtitle">Quick navigation</p>
         <nav aria-label="secondary menu">
@@ -86,8 +96,8 @@
         </nav>
     </section>
     <section id="add-mods" class="section-primary section-small">
-        <h3>Adding Mods</h3>
-        <div>
+        <h3 class="darkmode-text">Adding Mods</h3>
+        <div class="darkmode-text">
             <ol>
                 <li>
                     Go to <code>"%localappdata%\Kliko's modloader\Mod Profiles"</code>.
@@ -172,7 +182,7 @@
             <p>It should be formatted like this: "<code>Mod\content\sounds\ouch.ogg</code>"</p>
         </div>
     </section>
-    <section id="priority-mods" class="section-primary section-small">
+    <section id="priority-mods" class="section-primary section-small darkmode-text">
         <h3>Mod Priorities</h3>
         <p><bold>Mod priorities allow your mods to get applied in a specific order.</bold></p>
         <div>
@@ -304,7 +314,7 @@
         </ol>
     </section>
 
-    <section id="menu" class="section-primary section-small">
+    <section id="menu" class="section-primary section-small darkmode-text">
         <h2>Modloader Menu</h2>
         <p class="subtitle">Quick navigation</p>
         <nav aria-label="tertiary menu">
@@ -321,7 +331,7 @@
     <section id="menu-1" class="section-secondary section-small">
         <h3>menu-1</h3>
     </section>
-    <section id="menu-2" class="section-primary section-small">
+    <section id="menu-2" class="section-primary section-small darkmode-text">
         <h3>menu-2</h3>
     </section>
 
@@ -339,7 +349,7 @@
             </ul>
         </nav>
     </section>
-    <section id="troubleshoot-1" class="section-primary section-small">
+    <section id="troubleshoot-1" class="section-primary section-small darkmode-text">
         <h3>troubleshoot-1</h3>
     </section>
     <section id="troubleshoot-2" class="section-secondary section-small">

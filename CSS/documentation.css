@@ -25,16 +25,6 @@
 
 
 
-    --section-primary-color: #fff;
-    --section-hero-background: linear-gradient(0deg, #cbcbcb, var(--section-primary-color)) no-repeat;
-    --section-secondary-color: #e70d47;
-    --section-padding: 72px;
-    --section-padding-horizontal: 228px;
-    --section-height: 55vh;
-    /* --section-small-height: 30vh; */
-
-
-
     --card-box-width: 320px;
     --card-box-height: 120px;
     --card-box-background: #fff;

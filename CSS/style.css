@@ -5,6 +5,7 @@
     --complementary-color: #00CC95;
 
     --text-color: #2c2c2c;
+    --darkmode-text-color: #fff;
 
 
     --main-font: 'Monsterrat';
@@ -37,6 +38,29 @@
     --footer-height: 100px;
     --footer-padding: 32px;
     --footer-background: #fcfcfc;
+
+
+    --section-primary-color: #fff;
+    --section-hero-background: linear-gradient(0deg, #cbcbcb, var(--section-primary-color)) no-repeat;
+    --section-secondary-color: #e70d47;
+    --section-padding: 72px;
+    --section-padding-horizontal: 228px;
+    --section-height: 55vh;
+    /* --section-small-height: 30vh; */
+
+
+
+
+    /* darkmode toggle using  */
+    --darkmode-toggle-dark-color: #2b2b2b;
+    --darkmode-toggle-dark-icon-color: #fff;
+    --darkmode-toggle-light-color: #f7f7f7;
+    --darkmode-toggle-light-icon-color: #FFDE59;
+    --darkmode-toggle-width: 70px;
+    --darkmode-toggle-height: calc(var(--darkmode-toggle-width)/2);
+    --darkmode-background: #393537;
+    --darkmode-background-gradient: linear-gradient(0deg, #272023, var(--darkmode-background)) no-repeat;
+    --darkmode-section-secondary: #c10034;
 }
 
 
@@ -115,6 +139,24 @@ bold {
 code {
     font-family: 'Code';
     font-size: 0.90rem;
+}
+.darkmode .darkmode-text {
+    color: var(--darkmode-text-color);
+}
+.darkmode .section-primary {
+    background: var(--darkmode-background);
+}
+.darkmode .section-secondary {
+    background: var(--darkmode-section-secondary);
+}
+.darkmode .hero-section {
+    background: var(--darkmode-background-gradient);
+}
+.darkmode .darkmode-background {
+    background: var(--darkmode-background);
+}
+body.darkmode {
+    background: var(--darkmode-background);
 }
 
 
@@ -208,7 +250,7 @@ header {
     user-select: none;
 
     /* BLUR EFFECT */
-    /* background: rgba(255,255,255,0.5);
+    /* background: rgba(255,255,255,0.5) !important;
     backdrop-filter: blur(5px); */
 }
 /* NORMAL HEADER */
@@ -302,4 +344,99 @@ footer a:visited {
     grid-template-columns: repeat(3, 1fr);
     grid-template-areas:
     'left middle right';
+}
+
+
+
+
+
+
+
+
+
+/* darkmode toggle using https://www.youtube.com/watch?v=MNf8DUej1Vo */
+
+/* -------------- BUTTON -------------- */
+.darkmode-btn{
+    background-color: #fff;
+    width: 15em;
+    height: 8em;
+
+    width: var(--darkmode-toggle-width);
+    height: var(--darkmode-toggle-height);
+
+    border-radius: 10em;
+    padding: 0 0.5em;
+
+    box-shadow: inset 0 8px 60px rgba(0,0,0, .1),
+                inset 0 8px 8px rgba(0,0,0, .1),
+                inset 0 -4px 4px rgba(0,0,0, .1);
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.darkmode-btn__indicator{
+    background-color: #fff;
+
+    width: calc(var(--darkmode-toggle-height)/8*7);
+    height: calc(var(--darkmode-toggle-height)/8*7);
+
+    border-radius: 50%;
+
+    position: absolute;
+    left: calc(var(--darkmode-toggle-height)/16*1.2);
+
+    box-shadow: 0 8px 40px rgba(0,0,0, .2);
+
+    transition: transform .3s ease;
+}
+
+.darkmode-btn__icon-container{
+    width: 100%;
+    height: 100%;
+
+    
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.darkmode-btn__icon{
+    color: var(--darkmode-toggle-light-icon-color);
+    font-size: calc(var(--darkmode-toggle-height)/8*4.2);
+}
+
+/* -------------- ANIMATION ------------ */
+.darkmode-btn__icon.animated{
+    animation: spin 0.5s;
+}
+
+@keyframes spin{
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* -------------- DARKMODE -------------- */
+.darkmode-toggle .darkmode-btn{
+box-shadow: inset 0 8px 60px rgba(0,0,0, .3),
+            inset 8px 0 8px rgba(0,0,0, .3),
+            inset 0 -4px 4px rgba(0,0,0, .3);
+}
+
+.darkmode-toggle .darkmode-btn__indicator{
+transform: translateX(calc(var(--darkmode-toggle-width) - (var(--darkmode-toggle-height)/8*4) - (var(--darkmode-toggle-height) / 16 * 0.8)));
+right: calc(var(--darkmode-toggle-height)/16);
+background-color: var(--darkmode-toggle-dark-color);
+box-shadow: 0 8px 40px rgba(0,0,0, .3);
+}
+
+.darkmode-toggle .darkmode-btn__icon{
+color: var(--darkmode-toggle-dark-icon-color);
 }
