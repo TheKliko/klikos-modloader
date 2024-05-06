@@ -60,7 +60,7 @@
     --darkmode-toggle-height: calc(var(--darkmode-toggle-width)/2);
     --darkmode-background: #121212;
     --darkmode-background-gradient: linear-gradient(0deg, #050505, var(--darkmode-background)) no-repeat;
-    --darkmode-section-secondary: #c10034;
+    --darkmode-section-secondary: #e4013d;
     --darkmode-cardbox: #151515;
 }
 
