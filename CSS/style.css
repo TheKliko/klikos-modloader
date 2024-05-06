@@ -58,9 +58,10 @@
     --darkmode-toggle-light-icon-color: #FFDE59;
     --darkmode-toggle-width: 70px;
     --darkmode-toggle-height: calc(var(--darkmode-toggle-width)/2);
-    --darkmode-background: #393537;
-    --darkmode-background-gradient: linear-gradient(0deg, #272023, var(--darkmode-background)) no-repeat;
+    --darkmode-background: #121212;
+    --darkmode-background-gradient: linear-gradient(0deg, #050505, var(--darkmode-background)) no-repeat;
     --darkmode-section-secondary: #c10034;
+    --darkmode-cardbox: #151515;
 }
 
 
@@ -154,6 +155,9 @@ code {
 }
 .darkmode .darkmode-background {
     background: var(--darkmode-background);
+}
+.darkmode .card-box {
+    background: var(--darkmode-cardbox);
 }
 body.darkmode {
     background: var(--darkmode-background);

@@ -78,6 +78,10 @@ section{
     color: var(--text-color);
 }
 
+.darkmode .hero-section .quick-navigation a, .darkmode .section-primary .quick-navigation a {
+    color: #ddd;
+}
+
 .section-secondary .quick-navigation a {
     color: #fff;
 }
