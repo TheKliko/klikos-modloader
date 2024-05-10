@@ -14,7 +14,8 @@
         "max_log_files": 10,
         "launch_roblox_after_setup": false,
         "auto_install_roblox_updates": false,
-        "auto_install_after_changes": true
+        "auto_install_after_changes": true,
+        "default_launch_arguments": "menu"
     },
     "user_directories": {
         "version_directory": "Versions",
