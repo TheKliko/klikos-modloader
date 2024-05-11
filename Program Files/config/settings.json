@@ -10,11 +10,12 @@
     "installed_roblox_version": null,
     "user_settings": {
         "selected_mod_profile": "Default",
-        "selected_fastflags_profile": "Default",
+        "selected_fastflag_profile": "Default",
         "max_log_files": 10,
         "launch_roblox_after_setup": false,
         "auto_install_roblox_updates": false,
         "auto_install_after_changes": true,
+        "discord_rpc": true,
         "default_launch_arguments": "menu"
     },
     "user_directories": {
