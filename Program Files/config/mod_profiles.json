@@ -1,5 +1,8 @@
 {
-    "Default": {
-        "1": "Kliko's mod"
-    }
+    "Default": [
+        "Default"
+    ],
+    "Old death sound": [
+        "Old death sound"
+    ]
 }
