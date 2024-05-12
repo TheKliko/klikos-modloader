@@ -9,7 +9,7 @@
     },
     "user_settings": {
         "max_log_files": {
-            "description": "The maximum number of log files that will be stored in the log directory",
+            "description": "The maximum number of log files that will be stored in the logs directory",
             "type": "number",
             "limit": {
                 "min": 1,
@@ -18,27 +18,27 @@
             "value": 10
         },
         "launch_roblox_after_setup": {
-            "description": "This setting decides whether Roblox should launch after exiting the modloader menu",
+            "description": "Launches Roblox after exiting the modloader menu",
             "type": "toggle",
             "value": false
         },
         "auto_install_roblox_updates": {
-            "description": "This setting decides whether Roblox should automatically update when an update is available",
+            "description": "Skips the confirmation prompt when installing Roblox updates",
             "type": "toggle",
             "value": false
         },
         "roblox_reinstall_after_changes": {
-            "description": "This setting decides whether Roblox should reinstall after selecting a different mod profile",
+            "description": "Reinstalls Roblox after selecting a different mod profile (recommended)",
             "type": "toggle",
             "value": true
         },
         "discord_rpc": {
-            "description": "This setting decides whether or not discord rich presence will be used",
+            "description": "This setting decides whether discord rich presence should be used",
             "type": "toggle",
             "value": true
         },
         "default_launch_arguments": {
-            "description": "This setting decides what the default launch arguments for this program should be",
+            "description": "Sets the default launch arguments for this program",
             "type": "choice",
             "options": [
                 "menu",
@@ -53,5 +53,5 @@
     },
     "selected_mod_profile": "Default",
     "selected_fastflag_profile": "Default",
-    "installed_roblox_version": "version-5e534e6db34e447e"
+    "installed_roblox_version": null
 }
