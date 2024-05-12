@@ -1,4 +1,4 @@
-const website_version = "website version: 0.5.2"
+const website_version = "website version: 0.6.0"
 const min_width = 1610
 
 window.onload = function load() {
