@@ -52,7 +52,7 @@ def check_for_update() -> None:
     logging.info('No updates found')
 
 
-def transfer_data() -> None:  # Specific to transfering data from v1.0.6 to v1.1.0
+def transfer_data() -> None:  # Specific to transfering data from v1.0.6 to v1.1.0 or from v1.0.6 to v1.1.1
     logging.info('Transferring data from older versions...')
     print('First launch detected!')
     print('Transferring data...')
