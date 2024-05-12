@@ -38,14 +38,15 @@ def check_for_updates() -> None:
 
     if INSTALLED_VERSION != LATEST_VERSION or not os.path.isdir(os.path.join(ROOT_DIRECTORY, VERSION_DIRECTORY, LATEST_VERSION)):
         logging.info(f'Roblox update available: {LATEST_VERSION}')
-        if not variables.get('auto_install_roblox_updates') or not (variables.get('auto_install_after_changes') and variables.get('mod_profile_changed')):
-            interface.text(f'A new Roblox version is available: {LATEST_VERSION}', spacing=0)
+        if not variables.get('auto_install_roblox_updates'):
+            if not (variables.get('roblox_reinstall_after_changes') and variables.get('mod_profile_changed')):
+                interface.text(f'A new Roblox version is available: {LATEST_VERSION}', spacing=0)
 
-            if interface.confirm('Do you wish to install this version?'):
-                update(LATEST_VERSION)
-            else:
-                logging.debug('Update declined!')
-                raise RobloxOutdatedError('Update declined!')
+                if interface.confirm('Do you wish to install this version?'):
+                    update(LATEST_VERSION)
+                else:
+                    logging.debug('Update declined!')
+                    raise RobloxOutdatedError('Update declined!')
         
         else:
             update(LATEST_VERSION)
