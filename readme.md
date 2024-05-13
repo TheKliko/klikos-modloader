@@ -12,9 +12,7 @@
 
 An open-source modloader for Roblox.
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>.
-It serves as a wrapper for the default launcher, allowing users to easily run a modded copy of Roblox.
-<a href="https://www.python.org">Python 3.12</a> and a PC running Windows is required to run this program.
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It serves as a wrapper for the default launcher, allowing users to easily run a modded copy of Roblox. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows is required to run this program.
 
 
 
@@ -32,38 +30,23 @@ It serves as a wrapper for the default launcher, allowing users to easily run a 
     <li>
         <a href="#goals-inspiration">Goals & Inspiration</a>
     </li>
+    <li>
+        <a href="#disclaimer">Disclaimer</a>
+    </li>
 </ul>
 
 
 
 <h2 id="features">Features</h2>
 
-<table>
-    <tr>
-        <th>
-            Mod Profiles
-        </th>
-        <th>
-            FastFlags support
-        </th>
-        <th>
-            Rich Presence (Discord)
-        </th>
-    </tr>
-    <tr>
-        <td>
-            Set up different mod profiles and seamlessly switch between them through the modloader menu,
-            make use of mod priorities to make sure your mods are applied in the right order.
-        </td>
-        <td>
-            Adds the ability to configure custom FastFlag profiles.
-        </td>
-        <td>
-            Replace Roblox's default rich presence to show the game you are playing within Roblox,
-            along with the time spent within that game.
-        </td>
-    </tr>
-</table>
+<h3>Mod Profiles</h3>
+Set up different mod profiles and seamlessly switch between them through the modloader menu, make use of mod priorities to make sure your mods are applied in the right order.
+
+<h3>FastFlags support</h3>
+Adds the ability to configure custom FastFlag profiles.
+
+<h3>Rich Presence (Discord)</h3>
+Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
 
 
 
@@ -93,8 +76,7 @@ This is the official support server for Kliko's modloader, join our community to
 
 <h3>Support</h3>
 
-Are you having issues during setup? Have you encountered a bug? Do you need help with your mods? Or do you have another issue related to this program?
-We are happy to assist you, join our server and open a ticket or ask for help in on of the channels.
+Are you having issues during setup? Have you encountered a bug? Do you need help with your mods? Or do you have another issue related to this program? We are happy to assist you, join our server and open a ticket or ask for help in on of the channels.
 
 <h3>Feedback</h3>
 
@@ -108,40 +90,32 @@ Find more mods — or share your own — in our #mod-sharing channel.
 
 <h2 id="goals-inspiration">Goals & Inspiration</h2>
 
-<table>
-    <tr>
-        <th>
-            Goals
-        </th>
-        <th>
-            Inspiration
-        </th>
-    </tr>
-    <tr>
-        <td>
-            My goals for this project are:
-            <ul>
-                <li>
-                    Getting more experienced with Python
-                </li>
-                <li>
-                    Introducing more people to Roblox mods
-                </li>
-                <li>
-                    Learning more about managing discord servers
-                </li>
-                <li>
-                    Making a website
-                </li>
-            </ul>
-        </td>
-        <td>
-            This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods. Not being able to quickly switch between custom mod profiles and set mod priorities is what led to me creating my own modloader.
-        </td>
-    </tr>
-</table>
+<h3>Goals</h3>
+My goals for this project are:
+<ul>
+    <li>
+        Getting more experienced with Python
+    </li>
+    <li>
+        Introducing more people to Roblox mods
+    </li>
+    <li>
+        Learning more about managing discord servers
+    </li>
+    <li>
+        Making a website
+    </li>
+</ul>
+
+<h3>Inspiration</h3>
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods. Not being able to quickly switch between custom mod profiles and set mod priorities is what led to me creating my own modloader.
 
 
 
-<h2>Antivirus Disclaimer</h2>
+<h2 id="disclaimer">Disclaimer</h2>
+
+<h3>Antivirus Disclaimer</h3>
 This project will most likely get flagged by your antivirus software. If you don't trust it, don't download it.
+
+<h3>Work In Progress</h3>
+This project is still a work in progres, things can *and will* change over time.
