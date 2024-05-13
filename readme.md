@@ -118,4 +118,4 @@ This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>B
 This project will most likely get flagged by your antivirus software. If you don't trust it, don't download it.
 
 <h3>Work In Progress</h3>
-This project is still a work in progres, things can *and will* change over time.
+This project is still a work in progres, things can <em>and will</em> change over time.
