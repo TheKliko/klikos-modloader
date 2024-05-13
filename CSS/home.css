@@ -126,7 +126,14 @@ section{
     color: #a5a5a7;
 }
 .goals-inspiration-box {
-    width: auto;
     align-self: baseline;
-    height: 150px;
+    height: fit-content;
+}
+#card-box-goals {
+    justify-self: right;
+    width: calc(454.55px - 48px);
+}
+#card-box-inspiration {
+    justify-self: left;
+    width: calc(1447px  - (454.55px - 48px) - 48px - var(--gap-large));
 }

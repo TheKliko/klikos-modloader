@@ -62,8 +62,9 @@
             <h2 id="hero-section-title" class="darkmode-text">Kliko's modloader</h2>
             <p class="subtitle darkmode-text" style="margin-top: 5px; font-family: 'Jura';">An open-source modloader for Roblox</p>
             <p class="darkmode-text" style="margin-top: 20px; margin-bottom: 30px; padding-left: 88px; padding-right: 88px;">
-                Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com/" target="_blank">Roblox</a>.
-                It can be used to conveniently launch a modded copy of Roblox.
+                Kliko's modloader is a modloader for <a href="https://www.roblox.com/" target="_blank">Roblox</a>.
+                It serves as a wrapper for the default launcher,
+                allowing users to easily run a modded copy of Roblox.
                 <a href="https://www.python.org/" target="_blank">Python 3.12</a> and a PC running Windows is required to run this program.
             </p>
             <ul class="buttons" style="justify-content: center; gap: var(--gap-medium);">
@@ -90,7 +91,7 @@
                     Mod Profiles
                 </p>
                 <p>
-                    Set up different mod profiles and quickly switch between them through the modloader menu, use mod priorities to make sure your mods get applied in the right order.
+                    Set up different mod profiles and seamlessly switch between them through the modloader menu, make use of mod priorities to make sure your mods are applied in the right order.
                 </p>
             </div>
             <div class="card-box darkmode-text">
@@ -106,7 +107,7 @@
                     Rich Presence (Discord)
                 </p>
                 <p>
-                    Overwrites Roblox's default rich presence to show what game you are playing on Roblox, and the time spent within that game.
+                    Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
                 </p>
             </div>
         </div>
@@ -132,7 +133,7 @@
                         Step two
                     </p>
                     <p>
-                        Run the 'Modloader Menu' shortcut to change settings or configure your mod and FastFlag profiles.
+                        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod and FastFlag profiles.
                     </p>
                 </div>
                 <div class="card-box card-box-installation darkmode-text">
@@ -140,13 +141,12 @@
                         Step three
                     </p>
                     <p>
-                        Run the 'Launcher' shortcut to launch your modded copy of Roblox.
+                        Launch your modded copy of Roblox by running the 'Launcher' shortcut.
                     </p>
                 </div>
             </div>
             <div style="justify-self: left;">
                 <iframe id="installation-video" src="https://www.youtube-nocookie.com/embed/T0OXCoxAc6s" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <!-- <iframe id="installation-video" src="coming-soon.txt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
             </div>
         </div>
     </section>
@@ -168,21 +168,26 @@
                 <br>
                 <p class="subtitle">Support</p>
                 <p>
-                    Need help with your mods?
-                    Are you having issues with setting things up?
-                    Or are you receiving an error message and you don't know how to fix it?
+                    Are you having issues during setup?
+                    Have you encountered a bug?
+                    Do you need help with your mods?
+                    Or do you have another issue related to this program?
+                </p>
+                <p style="margin-top: 7px;">
                     We are happy to assist you,
                     join our server and open a ticket or ask for help in on of the channels.
                 </p>
-                <br>
-                <p class="subtitle">Mod sharing</p>
-                <p>Showcase your mods in our #mod-sharing channel.</p>
                 <br>
                 <p class="subtitle">Feedback</p>
                 <p>
                     We are always open to feedback.
                     If you have a suggestion, found a bug or just want to share your thoughts,
                     please join the server and let us know.
+                </p>
+                <br>
+                <p class="subtitle">Mod sharing</p>
+                <p>
+                    Find more mods — or share your own — in our #mod-sharing channel.
                 </p>
                 <ul class="buttons" style="margin-top: 32px;">
                     <li>
@@ -195,20 +200,20 @@
 
     <section class="section-primary section-small">
         <h2 class="darkmode-text" style="margin-bottom: 24px;">Goals & Inspiration</h2>
-        <div c style="display: flex; gap: var(--gap-large);">
-            <div class="card-box goals-inspiration-box darkmode-text" style="justify-self: right; width: 545.55px;">
+        <div style="display: flex; gap: var(--gap-large);">
+            <div id="card-box-goals" class="card-box goals-inspiration-box darkmode-text">
                 <p class="subtitle">Goals</p>
                 <p style="margin-top: 16px;">
                     My goals for this project are:
-                    <ul style="margin-top: 8px;">
+                    <ul style="margin-top: 8px; margin-bottom: 0;">
                         <li>
                             <p>
-                                Introducing more people to Roblox mods
+                                Getting more experienced with Python
                             </p>
                         </li>
                         <li>
                             <p>
-                                Getting more experience with Python
+                                Introducing more people to Roblox mods
                             </p>
                         </li>
                         <li>
@@ -224,12 +229,22 @@
                     </ul>
                 </p>
             </div>
-            <div class="card-box goals-inspiration-box darkmode-text" style="justify-self: left; width: 715.5px;">
+            <div id="card-box-inspiration" class="card-box goals-inspiration-box darkmode-text">
                 <p class="subtitle">Inspiration</p>
                 <p style="margin-top: 16px;">
                     This project was inspired by <a href="https://github.com/pizzaboxer/bloxstrap" target="_blank">Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
-                    Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods.
-                    Not being able to quickly switch between custom mod profiles and set mod priorities is what led to me creating my own modloader.
+                    Bloxstrap is what introduced me to Roblox modding and it's community has taught me a lot about creating my own mods.
+                    
+                    <!-- Not being able to quickly switch between custom mod profiles and set mod priorities is what led to me creating my own modloader. -->
+                </p>
+                <p style="margin-top: 5px;">
+                    Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic.
+                    Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
+                </p>
+                <p style="margin-top: 5px;">
+                    This might not have been an issue for most people, but it can be annoying to work with when developing multiple mods at the same time.
+                    Rather than waiting for an update, I decided to challenge myself by making my own modloader from scratch,
+                    which is something that I've been wanting to do for a while now.
                 </p>
             </div>
         </div>
