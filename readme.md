@@ -3,15 +3,40 @@
     Kliko's modloader
 </h1>
 
-<!-- [![Downloads](https://img.shields.io/github/downloads/thekliko/klikos-modloader/latest/total?color=981bfe)](https://github.com/thekliko/klikos-modloader/releases) -->
+[<img alt="Website" src="https://img.shields.io/badge/website-555?style=for-the-badge&logo=html5&logoColor=fff&labelColor=cc0037&color=555">](https://thekliko.github.io/klikos-modloader)
+[<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/thekliko/klikos-modloader/total?style=for-the-badge&labelColor=cc0037&color=555555">](https://github.com/thekliko/klikos-modloader/releases)
+[<img alt="GitHub Release" src="https://img.shields.io/github/v/release/thekliko/klikos-modloader?filter=!v*.*.*-beta&style=for-the-badge&labelColor=cc0037&color=555">](https://github.com/thekliko/klikos-modloader/releases/latest)
+[<img alt="GitHub License" src="https://img.shields.io/github/license/thekliko/klikos-modloader?style=for-the-badge&labelColor=cc0037&color=555">](https://github.com/TheKliko/klikos-modloader/blob/main/LICENSE)
+[<img alt="Discord" src="https://img.shields.io/discord/1205938827437412422?style=for-the-badge&logo=discord&logoColor=fff&label=discord&labelColor=5865f2&color=555">](https://discord.gg/nEjUwdSP9P)
+
 
 An open-source modloader for Roblox.
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It can be used to conveniently launch a modded copy of Roblox. <a href="https://www.python.org">Python 3.12</a> is required to use this program.
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>.
+It serves as a wrapper for the default launcher, allowing users to easily run a modded copy of Roblox.
+<a href="https://www.python.org">Python 3.12</a> and a PC running Windows is required to run this program.
 
 
 
-<h2>Features</h2>
+<h2>Quick Access</h2>
+<ul>
+    <li>
+        <a href="#features">Features</a>
+    </li>
+    <li>
+        <a href="#installation-guide">Installation Guide</a>
+    </li>
+    <li>
+        <a href="#support-server">Support Server</a>
+    </li>
+    <li>
+        <a href="#goals-inspiration">Goals & Inspiration</a>
+    </li>
+</ul>
+
+
+
+<h2 id="features">Features</h2>
 
 <table>
     <tr>
@@ -22,55 +47,45 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
             FastFlags support
         </th>
         <th>
-            Rich Presence
+            Rich Presence (Discord)
         </th>
     </tr>
     <tr>
         <td>
-            Quickly switch between pre-configured mod profiles through the modloader menu.
+            Set up different mod profiles and seamlessly switch between them through the modloader menu,
+            make use of mod priorities to make sure your mods are applied in the right order.
         </td>
         <td>
-            Set up multiple FastFlag profiles. For now, FastFlag profiles will have to be set up manually by editing the config file.
+            Adds the ability to configure custom FastFlag profiles.
         </td>
         <td>
-            Show your friends on Discord that you are using Kliko's modloader.
+            Replace Roblox's default rich presence to show the game you are playing within Roblox,
+            along with the time spent within that game.
         </td>
     </tr>
 </table>
 
 
 
-<h2>Installation Guide</h2>
+<h2 id="installation-guide">Installation Guide</h2>
 
-Follow these instructions to install Kliko's modloader. <a href="https://www.youtube.com/watch?v=T0OXCoxAc6s">(Video tutorial)</a>
+Follow these instructions to install Kliko's modloader.
 
 <ol>
     <li>
-        Download and install the latest release.
+        Download and install the <a href="https://github.com/TheKliko/klikos-modloader/releases/latest">latest release</a>.
     </li>
     <li>
-        Open file explorer and go to "%localappdata%\Kliko's modloader". From here you can:
-        <ul>
-            <li>
-                Run the <kbd>Modloader Menu</kbd> shortcut to select a mod profile, change settings, and more.
-            </li>
-            <li>
-                Run the <kbd>Launcher</kbd> shortcut to launch roblox.
-            </li>
-            <li>
-                Run the <kbd>Info</kbd> shortcut to get info on your applied profiles and settings.
-            </li>
-        </ul>
+        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod and FastFlag profiles.
     </li>
     <li>
-        (optional):
-        It is recommended that you pin the shortcuts to your start menu for quick access.
+        Launch your modded copy of Roblox by running the 'Launcher' shortcut.
     </li>
 </ol>
 
 
 
-<h2>Support Server</h2>
+<h2 id="support-server">Support Server</h2>
 
 <h3>Join our discord server</h3>
 
@@ -78,19 +93,20 @@ This is the official support server for Kliko's modloader, join our community to
 
 <h3>Support</h3>
 
-Need help with your mods? Are you having issues with setting things up? Or are you receiving an error message and you don't know how to fix it? We are happy to assist you, join our server and open a ticket or ask for help in on of the channels.
-
-<h3>Mod sharing</h3>
-
-Showcase your mods in our #mod-sharing channel.
+Are you having issues during setup? Have you encountered a bug? Do you need help with your mods? Or do you have another issue related to this program?
+We are happy to assist you, join our server and open a ticket or ask for help in on of the channels.
 
 <h3>Feedback</h3>
 
 We are always open to feedback. If you have a suggestion, found a bug or just want to share your thoughts, please <a href='https://discord.gg/nEjUwdSP9P'>join the server</a> and let us know.
 
+<h3>Mod sharing</h3>
+
+Find more mods — or share your own — in our #mod-sharing channel.
 
 
-<h2>Goals & Inspiration</h2>
+
+<h2 id="goals-inspiration">Goals & Inspiration</h2>
 
 <table>
     <tr>
@@ -106,13 +122,13 @@ We are always open to feedback. If you have a suggestion, found a bug or just wa
             My goals for this project are:
             <ul>
                 <li>
+                    Getting more experienced with Python
+                </li>
+                <li>
                     Introducing more people to Roblox mods
                 </li>
                 <li>
-                    Getting more experience with Python
-                </li>
-                <li>
-                    Learning more about managing Discord servers
+                    Learning more about managing discord servers
                 </li>
                 <li>
                     Making a website
