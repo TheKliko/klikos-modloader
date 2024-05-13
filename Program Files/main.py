@@ -64,7 +64,7 @@ def main() -> None:
         interface.text(
             [
                 'Currently, this program is only available for Windows.',
-                'Try running it on a Windows PC instead, or consider using a virtual machine for Windows emulation.'
+                'Try running it on a Windows PC instead.'
             ]
         )
     
