@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="Images/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <!-- embed -->
-    <meta property="og:title" content="Kliko's modloader">
+    <meta property="og:title" content="Kliko's modloader | Documentation">
     <meta property="og:description" content="An open-source modloader for Roblox">
     <meta property="og:image" content="https://raw.githubusercontent.com/TheKliko/klikos-modloader/website/Images/open-graph-image.png">
     <meta property="og:url" content="https://thekliko.github.io/klikos-modloader">
@@ -56,26 +56,220 @@
 
     <div id="behind-the-header"></div>
 
-    <section class="section-primary hero-section section-small darkmode-text">
-        <h2>Documentation [WIP]</h2>
-        <p class="subtitle">Quick navigation</p>
-        <nav aria-label="secondary menu">
-            <ul class="quick-navigation">
-                <li>
-                    <a href="#mods">Mods</a>
-                </li>
-                <li>
-                    <a href="#fastflags">FastFlags</a>
-                </li>
-                <li>
-                    <a href="#menu">Modloader Menu</a>
-                </li>
-                <li>
-                    <a href="#troubleshooting">Troubleshooting</a>
-                </li>
-            </ul>
-        </nav>
+    <section class="section-primary hero-section grid-top-bottom darkmode-text section-small">
+        <div class="grid-top">
+            <h2 style="text-align: center;">Documentation [WIP]</h2>
+            <p class="subtitle" style="text-align: center;">Quick access</p>
+        </div>
+        <div class="grid-bottom">
+            <nav aria-label="secondary menu">
+                <ul class="documentation-navigation-wrapper">
+                    <li>
+                        <a href="#modloader-menu">
+                            <div class="card-box documentation-navigation-card-box darkmode-text">
+                                <div id="menu-image" class="img"></div>
+                                <p>Modloader menu</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#mods">
+                            <div class="card-box documentation-navigation-card-box darkmode-text">
+                                <div id="mods-image" class="img"></div>
+                                <p>Mods</p>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#troubleshooting">
+                            <div class="card-box documentation-navigation-card-box darkmode-text">
+                                <div id="troubleshoot-image" class="img"></div>
+                                <p>Troubleshooting</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </section>
+
+    <section id="modloader-menu" class="section-secondary">
+        <h2>Modloader menu</h2>
+        <div class="inner-section first-inner-section">
+            <h3>Explanation</h3>
+            <p>to be added</p>
+        </div>
+        <div class="inner-section">
+            <h3>Setting up Mod Profiles</h3>
+            <p>to be added</p>
+        </div>
+        <div class="inner-section">
+            <h3>Setting up FastFlag Profiles</h3>
+            <p>to be added</p>
+        </div>
+        <div class="inner-section">
+            <h3>Changing Settings</h3>
+            <p>to be added</p>
+        </div>
+    </section>
+
+    <section id="mods" class="section-primary darkmode-text">
+        <h2>Mods</h2>
+        <div class="inner-section first-inner-section">
+            <h3>Downloading Mods</h3>
+            <p>
+                You can find Roblox mods on sites like <a href="https://gamebanana.com/games/2879" target="_blank">GameBanana</a>,
+                in our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">Discord server</a> or in servers for other programs that share the same functionality
+                (example: <a href="https://github.com/pizzaboxer/bloxstrap" target="_blank">Bloxstrap</a>).
+                <br>
+                The mods you've downloaded should be in the form of a .zip file. Follow these instructions to install them:
+                <ol style="margin: 0; margin-top: 8px;">
+                    <li>
+                        Download and extract the .zip file
+                    </li>
+                    <li>
+                        Open 'File Explorer' and go to <code>"%localappdata%\Kliko's modloader\Mods"</code>
+                    </li>
+                    <li>
+                        Drag and drop the (extracted) .zip file into your mods folder
+                    </li>
+                </ol>
+                <br>
+                To verify that your downloaded mods will get applied correctly, please make sure that they follow the right format as stated in 'Mod Formatting'.
+            </p>
+        </div>
+        <div class="inner-section">
+            <h3>Mod Profiles</h3>
+            <p>to be added</p>
+        </div>
+        <div class="inner-section">
+            <h3>Mod Priorities</h3>
+            <p>to be added</p>
+        </div>
+        <div class="inner-section">
+            <h3>Mod Formatting</h3>
+            <p>
+                Mods should be added to your mods folder with the following file structure:
+                <ul class="file-structure">
+                    <li>
+                        ("%localappdata%\Kliko's modloader\Mods")
+                        <ul>
+                            <li>
+                                Mod
+                                <ul>
+                                    <li>
+                                        content
+                                    </li>
+                                    <li>
+                                        ExtraContent
+                                    </li>
+                                    <li>
+                                        . . .
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                Mod
+                            </li>
+                            <li>
+                                . . .
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <bold>example:</bold> You have a mod that changes the death sounds
+                <br>
+                It should be formatted like this: "<code>Mod\content\sounds\ouch.ogg</code>"
+            </p>
+        </div>
+    </section>
+
+    <section id="troubleshooting" class="section-secondary">
+        <h2>Troubleshooting</h2>
+        <div id="SystemError" class="inner-section first-inner-section">
+            <h3>SystemError</h3>
+            <p>
+                As of writing this, Kliko's modloader is only supported on Windows platforms, with no plans of adding support for macOS.
+                <br>
+                Because of this, users attempting to launch this program on an unsupported OS will receive this error message.
+            </p>
+        </div>
+        <div id="NotFoundError" class="inner-section">
+            <h3>SettingsNotFoundError / VersionInfoNotFoundError</h3>
+            <p>
+                This error occurs when required config files could not be found.
+                <br>
+                Reinstalling the program should fix this issue.
+            </p>
+        </div>
+        <div id="UpdateAvailableError" class="inner-section">
+            <h3>UpdateAvailableError</h3>
+            <p>
+                This error message is shown when a newer version of Kliko's modloader is available, the url to the latest release will automatically be openede in your default browser.
+                <br>
+                If, for any reason, you do not want to update, there are two ways to bypass this error.
+                <ul>
+                    <li>
+                        <p class="subtitle">Temporary solution</p>
+                        Open 'File Explorer' and go to <code>"%localappdata%\Kliko's modloader\Program Files\config"</code>, open the file named <code>version.json</code>.
+                        <br>
+                        Change the value of <code>"version"</code> to that of the <a href="https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/Program%20Files/config/version.json" target="_blank">latest version</a>,
+                        this will prevent the exception from happening until another update is released.
+                    </li>
+                    <li style="margin-top: var(--gap-medium);">
+                        <p class="subtitle">Permanent solution</p>
+                        Open 'File Explorer' and go to <code>"%localappdata%\Kliko's modloader\Program Files\modules\utils"</code>, open the file named <code>startup.py</code>.
+                        <br>
+                        Comment out the following lines of code:
+                        <ul class="codeblock">
+                            <li>
+                                <line-number-code>47&nbsp;&nbsp;&nbsp;</line-number-code><purple-code>try</purple-code>:
+                            </li>
+                            <li>
+                                <line-number-code>48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</line-number-code><green-code>updater</green-code>.<yellow-code>check_for_update</yellow-code><yellow-code-bracket>()</yellow-code-bracket>
+                            </li>
+                            <li>
+                                <line-number-code>49</line-number-code>
+                            </li>
+                            <li>
+                                <line-number-code>50&nbsp;&nbsp;&nbsp;</line-number-code><purple-code>except</purple-code> <green-code>LatestVersionNotFoundError</green-code> <purple-code>as</purple-code> <unused-variable-code>e</unused-variable-code>:
+                            </li>
+                            <li>
+                                <line-number-code>51&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</line-number-code><green-code>logging</green-code>.<yellow-code>warning</yellow-code><yellow-code-bracket>(</yellow-code-bracket><orange-code>'Failed to get the latest version'</orange-code><yellow-code-bracket>)</yellow-code-bracket>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </p>
+        </div>
+        <div id="RobloxOutdatedError" class="inner-section">
+            <h3>RobloxOutdatedError</h3>
+            <p>This error occurs when the user refuses to update to a newer Roblox version</p>
+        </div>
+        <div id="LaunchArgumentError" class="inner-section">
+            <h3>LaunchArgumentError</h3>
+            <p>This happens when the user tries to launch Kliko's modloader with invalid launch arguments.</p>
+        </div>
+        <div id="NotImplementedError" class="inner-section">
+            <h3>NotImplementedError</h3>
+            <p>
+                If you receive this error message, it means that I have accidentally released an incomplete version of Kliko's modloader,
+                please join the <a href="https://discord.gg/nEjUwdSP9P" target="_blank">discord server</a> to report this issue.
+            </p>
+        </div>
+        <div id="UnexpectedError" class="inner-section">
+            <h3>Unexpected errors</h3>
+            <p>
+                Unexpected errors are any errors not listed above.
+                <br>
+                To get more information on what caused this error, please read the latest log file in <code>"%localappdata%\Kliko's modloader\Logs"</code>.
+                <br>
+                If you need any assistance, you are welcome to join our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">support server</a> and let us know.
+            </p>
+        </div>
+    </section>
+
+    <p class="darkmode-text">BEGIN OLD SHIT</p>
 
     <section id="mods" class="section-secondary section-small">
         <h2>Mods</h2>
@@ -311,48 +505,6 @@
                 Go back and choose 'Save & Exit'.
             </li>
         </ol>
-    </section>
-
-    <section id="menu" class="section-primary section-small darkmode-text">
-        <h2>Modloader Menu</h2>
-        <p class="subtitle">Quick navigation</p>
-        <nav aria-label="tertiary menu">
-            <ul class="quick-navigation">
-                <li>
-                    <a href="#menu-1">menu-1</a>
-                </li>
-                <li>
-                    <a href="#menu-2">menu-2</a>
-                </li>
-            </ul>
-        </nav>
-    </section>
-    <section id="menu-1" class="section-secondary section-small">
-        <h3>menu-1</h3>
-    </section>
-    <section id="menu-2" class="section-primary section-small darkmode-text">
-        <h3>menu-2</h3>
-    </section>
-
-    <section id="troubleshooting" class="section-secondary section-small">
-        <h2>Troubleshooting</h2>
-        <p class="subtitle">Quick navigation</p>
-        <nav aria-label="tertiary menu">
-            <ul class="quick-navigation">
-                <li>
-                    <a href="#troubleshoot-1">troubleshoot-1</a>
-                </li>
-                <li>
-                    <a href="#troubleshoot-2">troubleshoot-2</a>
-                </li>
-            </ul>
-        </nav>
-    </section>
-    <section id="troubleshoot-1" class="section-primary section-small darkmode-text">
-        <h3>troubleshoot-1</h3>
-    </section>
-    <section id="troubleshoot-2" class="section-secondary section-small">
-        <h3>tourbleshoot-2</h3>
     </section>
 
     <footer class="grid-columns triple-column">

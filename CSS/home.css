@@ -47,31 +47,6 @@
     margin-bottom: calc(0.5*var(--card-box-padding));
 }
 
-
-
-/* SECTIONS */
-section{
-    min-height: var(--section-height);
-    margin: 0;
-    padding: var(--section-padding);
-    padding-left: var(--section-padding-horizontal);
-    padding-right: var(--section-padding-horizontal);
-}
-.section-small {
-    /* min-height: var(--section-small-height); */
-    min-height: max-content;
-}
-.section-primary {
-    background: var(--section-primary-color);
-}
-.section-secondary {
-    background: var(--section-secondary-color);
-    color: #fff;
-}
-.hero-section {
-    background: var(--section-hero-background);
-}
-
 /* idk sections i guess */
 .section-features {
     display: flex;
@@ -127,13 +102,13 @@ section{
 }
 .goals-inspiration-box {
     align-self: baseline;
-    height: fit-content;
+    height: calc(231px - 2 * var(--card-box-padding));
 }
 #card-box-goals {
     justify-self: right;
-    width: calc(454.55px - 48px);
+    width: calc(454.55px - 2 * var(--card-box-padding));
 }
 #card-box-inspiration {
     justify-self: left;
-    width: calc(1447px  - (454.55px - 48px) - 48px - var(--gap-large));
+    width: calc(985px - 2 * var(--card-box-padding));
 }
