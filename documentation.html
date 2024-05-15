@@ -95,27 +95,123 @@
 
     <section id="modloader-menu" class="section-secondary">
         <h2>Modloader menu</h2>
+
         <div class="inner-section first-inner-section">
             <h3>Explanation</h3>
             <p>to be added</p>
         </div>
+
         <div class="inner-section">
             <h3>Setting up Mod Profiles</h3>
-            <p>to be added</p>
+            <p>
+                to be added
+            </p>
+            <br>
+            <h4>Creating Mod Profiles</h4>
+            <p>
+                to be added
+            </p>
+            <br>
+            <h4>Adding / Removing Mods</h4>
+            <p>
+                <bold>Adding mods</bold>
+                <br>
+                to be added
+                <br>
+                <br>
+                <bold>Removing mods</bold>
+                <br>
+                to be added
+            </p>
+            <br>
+            <h4>Mod Priorities</h4>
+            <p>
+                Mod priorities are what makes sure your mods get applied in the right order.
+                <br>
+                <br>
+                Mods get applied in the following order: high → low
+                <ul style="margin: 0; margin-top: 5px;">
+                    <li>
+                        Mods with a higher priority number get applied first
+                    </li>
+                    <li>
+                        Mods with a low priority number get applied last
+                    </li>
+                </ul>
+                <br>
+                Mod priorities can be set to any number, including negative numbers.
+            </p>
         </div>
+
         <div class="inner-section">
             <h3>Setting up FastFlag Profiles</h3>
-            <p>to be added</p>
+            <p>
+                FastFlags are settings that can be used to quickly change the way that the client functions, mainly intended to be used by Roblox engineers.
+                <br>
+                Due to a majority of people abusing this feature to gain unfair advantages in games, Roblox plans to disable the ability to set FastFlags locally.
+                <br>
+                When this change happens, the ability to set up FastFlag profiles in Kliko's modloader will be removed as well.
+            </p>
+            <br>
+            <h4>Creating FastFlag Profiles</h4>
+            <p>
+                Creating FastFlag profiles can be done directly through the modloader menu. To do so open the menu and navigate to FastFlags > Configure FastFlag Profiles > Create New Profile.
+                <br>
+                Enter the name you want to give to this profile and press <kbd>ENTER</kbd>.
+            </p>
+            <br>
+            <h4>Adding FastFlags</h4>
+            <p>
+                To add FastFlags to your profile, go to FastFlags > Configure FastFlag Profiles and select the profile that you want to add your fflags to.
+                <br>
+                Now, choose Add FastFlags. First you will be asked to enter the name of your fastflags, after that you can enter it's value.
+                <br>
+                Disclaimer: Do not blindly add flags if you do not know what they change.
+            </p>
         </div>
+
         <div class="inner-section">
             <h3>Changing Settings</h3>
-            <p>to be added</p>
+            <p>
+                Settings can be changed through the modloader menu by navigating to the Settings section.
+                <br>
+                <br>
+                Currently, the following settings are available:
+                <ul style="margin: 0; margin-top: 4px;">
+                    <li>
+                        <code>max_log_files</code>: The maximum number of log files that will be stored in the logs directory
+                    </li>
+                    <li>
+                        <code>launch_roblox_after_setup</code>: Launches Roblox after exiting the modloader menu
+                    </li>
+                    <li>
+                        <code>auto_install_roblox_updates</code>: Skips the confirmation prompt when installing Roblox updates
+                    </li>
+                    <li>
+                        <code>roblox_reinstall_after_changes</code>: Reinstalls Roblox after selecting a different mod profile (recommended)
+                    </li>
+                    <li>
+                        <code>discord_rpc</code>: This setting decides whether discord rich presence should be used
+                    </li>
+                    <li>
+                        <code>default_launch_arguments</code>: Sets the default launch arguments for this program
+                    </li>
+                </ul>
+            </p>
         </div>
     </section>
 
     <section id="mods" class="section-primary darkmode-text">
         <h2>Mods</h2>
+
         <div class="inner-section first-inner-section">
+            <h3>What Are Mods?</h3>
+            <p>
+                to be added
+            </p>
+        </div>
+
+        <div class="inner-section">
             <h3>Downloading Mods</h3>
             <p>
                 You can find Roblox mods on sites like <a href="https://gamebanana.com/games/2879" target="_blank">GameBanana</a>,
@@ -138,14 +234,7 @@
                 To verify that your downloaded mods will get applied correctly, please make sure that they follow the right format as stated in 'Mod Formatting'.
             </p>
         </div>
-        <div class="inner-section">
-            <h3>Mod Profiles</h3>
-            <p>to be added</p>
-        </div>
-        <div class="inner-section">
-            <h3>Mod Priorities</h3>
-            <p>to be added</p>
-        </div>
+
         <div class="inner-section">
             <h3>Mod Formatting</h3>
             <p>
@@ -186,6 +275,7 @@
 
     <section id="troubleshooting" class="section-secondary">
         <h2>Troubleshooting</h2>
+        
         <div id="SystemError" class="inner-section first-inner-section">
             <h3>SystemError</h3>
             <p>
@@ -194,6 +284,7 @@
                 Because of this, users attempting to launch this program on an unsupported OS will receive this error message.
             </p>
         </div>
+
         <div id="NotFoundError" class="inner-section">
             <h3>SettingsNotFoundError / VersionInfoNotFoundError</h3>
             <p>
@@ -202,6 +293,7 @@
                 Reinstalling the program should fix this issue.
             </p>
         </div>
+
         <div id="UpdateAvailableError" class="inner-section">
             <h3>UpdateAvailableError</h3>
             <p>
@@ -242,14 +334,17 @@
                 </ul>
             </p>
         </div>
+
         <div id="RobloxOutdatedError" class="inner-section">
             <h3>RobloxOutdatedError</h3>
             <p>This error occurs when the user refuses to update to a newer Roblox version</p>
         </div>
+
         <div id="LaunchArgumentError" class="inner-section">
             <h3>LaunchArgumentError</h3>
             <p>This happens when the user tries to launch Kliko's modloader with invalid launch arguments.</p>
         </div>
+
         <div id="NotImplementedError" class="inner-section">
             <h3>NotImplementedError</h3>
             <p>
@@ -257,6 +352,7 @@
                 please join the <a href="https://discord.gg/nEjUwdSP9P" target="_blank">discord server</a> to report this issue.
             </p>
         </div>
+
         <div id="UnexpectedError" class="inner-section">
             <h3>Unexpected errors</h3>
             <p>
