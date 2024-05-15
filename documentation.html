@@ -58,7 +58,7 @@
 
     <section class="section-primary hero-section grid-top-bottom darkmode-text section-small">
         <div class="grid-top">
-            <h2 style="text-align: center;">Documentation [WIP]</h2>
+            <h2 style="text-align: center;">Documentation</h2>
             <p class="subtitle" style="text-align: center;">Quick access</p>
         </div>
         <div class="grid-bottom">
@@ -95,35 +95,43 @@
 
     <section id="modloader-menu" class="section-secondary">
         <h2>Modloader menu</h2>
-
-        <div class="inner-section first-inner-section">
-            <h3>Explanation</h3>
-            <p>to be added</p>
-        </div>
+        <p>
+            The modloader menu is where you can choose and/or configure your mod profiles and FastFlag profiles. You can also use it adjust settings and access helpful information.
+        </p>
 
         <div class="inner-section">
             <h3>Setting up Mod Profiles</h3>
             <p>
-                to be added
+                Mod profiles can be configured directly through the modloader menu. All you have to do is navigate to Mods > Configure Mod Profiles.
+                From here, you can create and configure your profiles.
+                After selecting a profile, you can view all mods, add/remove mods, change mod priorities and rename or delete the mod profile.
             </p>
+
             <br>
+
             <h4>Creating Mod Profiles</h4>
             <p>
-                to be added
+                To create a mod profile, open the menu and navigate to Mods > Configure Mod Profiles > Create New Profile.
+                Now, enter the name of your profile, if a profile with the same name does not exist, a new one will be created.
             </p>
+
             <br>
+
             <h4>Adding / Removing Mods</h4>
+            <bold>Adding mods</bold>
+            <p style="margin-bottom: var(--gap-small);">
+                To add a mod from to Profile, navigate to Mods > Configure Mod Profiles and select a profile,
+                now choose 'Add Mods' and you will see a list of every mod found in your mods folder that is not already in the selected profile.
+                From here, simple enter the number corresponding to your mod and it will automatically be added with the first available priority number (starting with 1).
+            </p>
+            <bold>Removing mods</bold>
             <p>
-                <bold>Adding mods</bold>
-                <br>
-                to be added
-                <br>
-                <br>
-                <bold>Removing mods</bold>
-                <br>
-                to be added
+                To remove a mod from your Profile, navigate to Mods > Configure Mod Profiles and select a profile,
+            now choose 'Remove Mods' and you will see a list of every mod in the selected profile.
+            From here, simple enter the number corresponding to your mod and it will be removed from your profile.
             </p>
             <br>
+
             <h4>Mod Priorities</h4>
             <p>
                 Mod priorities are what makes sure your mods get applied in the right order.
@@ -152,14 +160,18 @@
                 <br>
                 When this change happens, the ability to set up FastFlag profiles in Kliko's modloader will be removed as well.
             </p>
+
             <br>
+
             <h4>Creating FastFlag Profiles</h4>
             <p>
                 Creating FastFlag profiles can be done directly through the modloader menu. To do so open the menu and navigate to FastFlags > Configure FastFlag Profiles > Create New Profile.
                 <br>
                 Enter the name you want to give to this profile and press <kbd>ENTER</kbd>.
             </p>
+
             <br>
+
             <h4>Adding FastFlags</h4>
             <p>
                 To add FastFlags to your profile, go to FastFlags > Configure FastFlag Profiles and select the profile that you want to add your fflags to.
@@ -207,7 +219,37 @@
         <div class="inner-section first-inner-section">
             <h3>What Are Mods?</h3>
             <p>
-                to be added
+                Mods are a way to customize the appearance of your Roblox Player.
+                They are quite limited in what you can change, but — if you know what you're doing — you can make it look awesome.
+            </p>
+            <p style="margin-top: 4px;">
+                The most common mods are those that affect UI elements and character sounds, as showcased below.
+            </p>
+
+            <br>
+            
+            <div style="display: flex; gap: var(--gap-large);">
+                <p>
+                    <a href="Images/mods/klikos-mod-1.png" target="_blank">
+                        <img src="Images/mods/klikos-mod-1.png" alt="" width="500px">
+                    </a>
+                    <br>
+                    <em>
+                        V1 (2015) escape menu with (left) and without (right) Kliko's mod
+                    </em>
+                </p>
+                <p>
+                    <a href="Images/mods/discord-ui-1.png" target="_blank">
+                        <img src="Images/mods/discord-ui-1.png" alt="" width="500px">
+                    </a>
+                    <br>
+                    <em>
+                        V1 (2015) escape menu with (left) and without (right) Discord UI
+                    </em>
+                </p>
+            </div>
+            <p>
+                
             </p>
         </div>
 
@@ -230,8 +272,9 @@
                         Drag and drop the (extracted) .zip file into your mods folder
                     </li>
                 </ol>
-                <br>
-                To verify that your downloaded mods will get applied correctly, please make sure that they follow the right format as stated in 'Mod Formatting'.
+            </p>
+            <p>
+                To verify that your downloaded mods will get applied correctly, please make sure that they follow the right format as stated below under 'Mod Formatting'.
             </p>
         </div>
 
@@ -358,7 +401,7 @@
             <p>
                 Unexpected errors are any errors not listed above.
                 <br>
-                To get more information on what caused this error, please read the latest log file in <code>"%localappdata%\Kliko's modloader\Logs"</code>.
+                To get more information on why you received this error message, please read the latest log file in <code>"%localappdata%\Kliko's modloader\Logs"</code>.
                 <br>
                 If you need any assistance, you are welcome to join our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">support server</a> and let us know.
             </p>

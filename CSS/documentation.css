@@ -75,8 +75,6 @@
     width: calc(419.34px - 2 * var(--card-box-padding));
     height: calc(232.02px - 2 * var(--card-box-padding));
     background: linear-gradient(15deg, #cbcbcb, #ffffff) no-repeat;
-    /* width: fit-content;
-    height: fit-content; */
 }
 .darkmode .documentation-navigation-card-box {
     background: linear-gradient(15deg, var(--darkmode-background), #222) no-repeat;
@@ -85,7 +83,7 @@
     filter: brightness(1.05);
 }
 .darkmode .documentation-navigation-card-box:hover {
-    filter: brightness(1.5);
+    filter: brightness(1.2);
 }
 .documentation-navigation-card-box p {
     font-family: 'Jura';
@@ -196,92 +194,4 @@ line-number-code {
 }
 .file-structure li ul > li:last-child::before {
     content: "└── ";
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.quick-navigation, .quick-navigation li {
-    list-style-type: none;
-}
-
-.quick-navigation > li::before {
-    content: "→ ";
-    font-size: 1.5rem;
-    line-height: 1rem;
-}
-.quick-navigation a {
-    text-decoration: none;
-}
-
-.hero-section .quick-navigation a, .section-primary .quick-navigation a {
-    color: var(--text-color);
-}
-
-.darkmode .hero-section .quick-navigation a, .darkmode .section-primary .quick-navigation a {
-    color: #ddd;
-}
-
-.section-secondary .quick-navigation a {
-    color: #fff;
-}
-
-
-
-
-/* idk sections i guess */
-.section-features {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--gap-medium);
-}
-.section-installation {
-    flex-direction: column;
-}
-.card-box-installation {
-    height: max-content;
-}
-
-
-
-
-
-
-
-
-
-
-json {
-    font-family: 'Code';
-    font-size: 0.90rem;
-
-    padding: 10px !important;
-    display: block;
-    white-space: pre-wrap;
-
-
-    width: max-content;
-    height: max-content;
-    border-radius: 8px;
-    border: solid 1px black;
-    box-shadow: var(--card-box-shadow);
-    background: rgba(255, 255, 255, 0.05);
-    margin: 10px;
-}
-.matrix-code {
-    background: rgba(0, 0, 0, 1);
-    color: #0f0;
-    border: solid 2px #0f0;
 }
