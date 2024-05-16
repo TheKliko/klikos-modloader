@@ -110,9 +110,9 @@ My goals for this project are:
 
 <h3>Inspiration</h3>
 This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods.
-
+<br>
 Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic. Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
-
+<br>
 This might not have been an issue for most people, but it can be annoying to work with when developing multiple mods at the same time. Rather than waiting for an update, I decided to challenge myself by making my own modloader from scratch, which is something that I've been wanting to do for a while now.
 
 
