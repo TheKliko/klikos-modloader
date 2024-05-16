@@ -13,15 +13,17 @@ sys.path.append(os.path.join(PROGRAM_FILES_DIRECTORY, 'libs'))
 
 from modules.presence import presence
 from modules.processes import launcher
+from modules.processes import launcher_studio
 from modules.processes import menu
 from modules.utils import interface
-from modules.utils import shutdown
-from modules.utils import startup
+from modules.processes import shutdown
+from modules.processes import startup
 from modules.utils import variables
 
-from modules.utils.startup import SettingsNotFoundError, VersionInfoNotFoundError
+from modules.processes.startup import ConfigNotFoundError
 from modules.utils.updater import UpdateAvailableError
 from modules.roblox.updater import RobloxOutdatedError
+from modules.roblox.updater_studio import StudioOutdatedError
 
 
 CONFIG_DIRECTORY: str = os.path.join(PROGRAM_FILES_DIRECTORY, 'config')
@@ -68,7 +70,7 @@ def main() -> None:
             ]
         )
     
-    except (SettingsNotFoundError, VersionInfoNotFoundError) as e:  # Settings or version info config file could not be found
+    except ConfigNotFoundError as e:  # Settings or version info config file could not be found
         interface.open(section='An error occured!')
         logging.error(f'A {type(e).__name__} occured: {e}')
         interface.text(f'A {type(e).__name__} occured: {e}', spacing=0)
@@ -84,7 +86,7 @@ def main() -> None:
         interface.text(
             [
                 f'{e}',
-                'Please install the latest version and try again.'
+                'The URL to the latest version will now open in your default browser.'
             ]
         )
         variables.set(name='exception_code_bypass', value=True)
@@ -92,7 +94,7 @@ def main() -> None:
         variables.set(name='error_type', value=type(e).__name__)
 
         print()
-        input('Press enter to exit . . .')
+        input('Press enter to continue . . .')
         webbrowser.open(LATEST_RELEASE_URL, new=2)
 
     except RobloxOutdatedError as e:  # User refused to install a Roblox update
@@ -102,6 +104,17 @@ def main() -> None:
                 f'A {type(e).__name__} occured: {e}',
                 'This is a standard exception caused by choosing not to update Roblox.',
                 'To fix this, choose to accept when prompted to update Roblox.'
+            ]
+        )
+        variables.set(name='error_type', value=type(e).__name__)
+
+    except StudioOutdatedError as e:  # User refused to install a Roblox Studio update
+        interface.open(section='An error occured!')
+        interface.text(
+            [
+                f'A {type(e).__name__} occured: {e}',
+                'This is a standard exception caused by choosing not to update Roblox Studio.',
+                'To fix this, choose to accept when prompted to update Roblox Studio.'
             ]
         )
         variables.set(name='error_type', value=type(e).__name__)
@@ -203,6 +216,9 @@ def launch_main_program() -> None:
 
     if LAUNCH_ARGUMENTS == 'launcher':
         launcher.start()
+
+    elif LAUNCH_ARGUMENTS == 'studio':
+        launcher_studio.start()
 
     elif LAUNCH_ARGUMENTS == 'menu':
         menu.start()
