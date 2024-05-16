@@ -43,8 +43,8 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 <h3>Mod Profiles</h3>
 Set up different mod profiles and seamlessly switch between them through the modloader menu, make use of mod priorities to make sure your mods are applied in the right order.
 
-<h3>FastFlags support</h3>
-Adds the ability to configure custom FastFlag profiles.
+<h3>Roblox Studio</h3>
+Kliko's modloader is not only available for the Roblox Player client, it can also be used to add your favourite mods to Roblox Studio.
 
 <h3>Rich Presence (Discord)</h3>
 Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
@@ -109,7 +109,11 @@ My goals for this project are:
 </ul>
 
 <h3>Inspiration</h3>
-This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods. Not being able to quickly switch between custom mod profiles and set mod priorities is what led to me creating my own modloader.
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods.
+
+Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic. Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
+
+This might not have been an issue for most people, but it can be annoying to work with when developing multiple mods at the same time. Rather than waiting for an update, I decided to challenge myself by making my own modloader from scratch, which is something that I've been wanting to do for a while now.
 
 
 
