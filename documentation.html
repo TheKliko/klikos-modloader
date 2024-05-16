@@ -329,52 +329,18 @@
         </div>
 
         <div id="NotFoundError" class="inner-section">
-            <h3>SettingsNotFoundError / VersionInfoNotFoundError</h3>
+            <h3>ConfigNotFound</h3>
             <p>
-                This error occurs when required config files could not be found.
+                This error occurs when one (or more) of the required config files could not be found.
                 <br>
-                Reinstalling the program should fix this issue.
+                Simply reinstalling Kliko's modloader should fix this issue.
             </p>
         </div>
 
         <div id="UpdateAvailableError" class="inner-section">
             <h3>UpdateAvailableError</h3>
             <p>
-                This error message is shown when a newer version of Kliko's modloader is available, the url to the latest release will automatically be openede in your default browser.
-                <br>
-                If, for any reason, you do not want to update, there are two ways to bypass this error.
-                <ul>
-                    <li>
-                        <p class="subtitle">Temporary solution</p>
-                        Open 'File Explorer' and go to <code>"%localappdata%\Kliko's modloader\Program Files\config"</code>, open the file named <code>version.json</code>.
-                        <br>
-                        Change the value of <code>"version"</code> to that of the <a href="https://raw.githubusercontent.com/TheKliko/klikos-modloader/main/Program%20Files/config/version.json" target="_blank">latest version</a>,
-                        this will prevent the exception from happening until another update is released.
-                    </li>
-                    <li style="margin-top: var(--gap-medium);">
-                        <p class="subtitle">Permanent solution</p>
-                        Open 'File Explorer' and go to <code>"%localappdata%\Kliko's modloader\Program Files\modules\utils"</code>, open the file named <code>startup.py</code>.
-                        <br>
-                        Comment out the following lines of code:
-                        <ul class="codeblock">
-                            <li>
-                                <line-number-code>47&nbsp;&nbsp;&nbsp;</line-number-code><purple-code>try</purple-code>:
-                            </li>
-                            <li>
-                                <line-number-code>48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</line-number-code><green-code>updater</green-code>.<yellow-code>check_for_update</yellow-code><yellow-code-bracket>()</yellow-code-bracket>
-                            </li>
-                            <li>
-                                <line-number-code>49</line-number-code>
-                            </li>
-                            <li>
-                                <line-number-code>50&nbsp;&nbsp;&nbsp;</line-number-code><purple-code>except</purple-code> <green-code>LatestVersionNotFoundError</green-code> <purple-code>as</purple-code> <unused-variable-code>e</unused-variable-code>:
-                            </li>
-                            <li>
-                                <line-number-code>51&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</line-number-code><green-code>logging</green-code>.<yellow-code>warning</yellow-code><yellow-code-bracket>(</yellow-code-bracket><orange-code>'Failed to get the latest version'</orange-code><yellow-code-bracket>)</yellow-code-bracket>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                This error message is shown when the user chooses to update to a newer version of Kliko's modloader, the URL to the latest release will automatically open in your default browser.
             </p>
         </div>
 
