@@ -53,5 +53,6 @@
     },
     "selected_mod_profile": "Default",
     "selected_fastflag_profile": "Default",
-    "installed_roblox_version": null
+    "installed_roblox_version": null,
+    "installed_studio_version": null
 }

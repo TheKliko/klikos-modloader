@@ -1,8 +1,5 @@
 {
-    "Default": [
-        "Default"
-    ],
-    "Old death sound": [
-        "Old death sound"
-    ]
+    "Default": {
+        "1": "Old death sound"
+    }
 }

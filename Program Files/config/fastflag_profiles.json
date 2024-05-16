@@ -1,4 +1,11 @@
 {
+    "Chrome UI": {
+        "FFlagEnableInGameMenuChrome": "True",
+        "FFlagEnableReportAbuseMenuRoactABTest2": "True",
+        "FFlagChromeBetaFeature": "True",
+        "FFlagEnableInGameMenuChromeABTest2": "True",
+        "FFlagEnableChromePinnedChat": "True"
+    },
     "Default": {
         "FFlagDisableNewIGMinDUA": "True",
         "FFlagEnableInGameMenuControls": "False",
@@ -17,15 +24,8 @@
         "FFlagFixGraphicsQuality": "True",
         "DFFlagTextureQualityOverrideEnabled": "True",
         "DFIntTextureQualityOverride": "3",
-        "FFlagEnableFavoriteButtonForUgc":"True",
-        "FFlagEnableNavBarLabels3":"False",
+        "FFlagEnableFavoriteButtonForUgc": "True",
+        "FFlagEnableNavBarLabels3": "False",
         "FFlagDisablePlayerListDisplayCloseBtn": "True"
-    },
-    "Chrome UI": {
-        "FFlagEnableInGameMenuChrome": "True",
-        "FFlagEnableReportAbuseMenuRoactABTest2": "True",
-        "FFlagChromeBetaFeature": "True",
-        "FFlagEnableInGameMenuChromeABTest2": "True",
-        "FFlagEnableChromePinnedChat": "True"
     }
 }
