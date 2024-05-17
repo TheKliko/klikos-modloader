@@ -103,6 +103,7 @@
 .goals-inspiration-box {
     align-self: baseline;
     height: calc(231px - 2 * var(--card-box-padding));
+    height: fit-content;
 }
 #card-box-goals {
     justify-self: right;

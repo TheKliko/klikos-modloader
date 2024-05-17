@@ -1,5 +1,5 @@
-const website_version = "website version: 0.8.1"
-const min_width = 1920
+const website_version = "website version: 0.8.2"
+const min_width = 1610
 
 window.onload = function load() {
     const website_version_container = document.getElementById('website-version-container');
