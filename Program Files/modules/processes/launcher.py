@@ -46,13 +46,17 @@ def start() -> None:
 
 def apply_mods() -> None:
     logging.info('Applying mods...')
+    SELECTED_PROFILE: str = variables.get('selected_mod_profile')
+
+    if not SELECTED_PROFILE:
+        logging.info('No mod profile selected.')
+        return None
 
     MOD_DIRECTORY: str = variables.get('mod_directory')
     VERSION_DIRECTORY: str = variables.get('version_directory')
     LATEST_VERSION: str = variables.get('latest_version')
     TARGET_DIRECTORY: str = os.path.join(VERSION_DIRECTORY, LATEST_VERSION)
 
-    SELECTED_PROFILE: str = variables.get('selected_mod_profile')
     MOD_PROFILES_FILEPATH: str = variables.get('mod_profiles_filepath')
     MODS: dict = read_json.value(filepath=MOD_PROFILES_FILEPATH, key=SELECTED_PROFILE)
 
@@ -78,12 +82,16 @@ def apply_mods() -> None:
 
 def apply_fastflags() -> None:
     logging.info('Applying FastFlags...')
+    SELECTED_PROFILE: str = variables.get('selected_fastflag_profile')
+
+    if not SELECTED_PROFILE:
+        logging.info('No FastFlag profile selected.')
+        return None
 
     VERSION_DIRECTORY: str = variables.get('version_directory')
     LATEST_VERSION: str = variables.get('latest_version')
     CLIENTSETTINGS_FILEPATH: str = os.path.join(VERSION_DIRECTORY, LATEST_VERSION, 'ClientSettings', 'ClientAppSettings.json')
 
-    SELECTED_PROFILE: str = variables.get('selected_fastflag_profile')
     FASTFLAG_PROFILES_FILEPATH: str = variables.get('fastflag_profiles_filepath')
     FASTFLAGS: dict = read_json.value(filepath=FASTFLAG_PROFILES_FILEPATH, key=SELECTED_PROFILE)
 
