@@ -90,7 +90,7 @@ def apply_fastflags() -> None:
 
     VERSION_DIRECTORY: str = variables.get('version_directory')
     LATEST_VERSION: str = variables.get('latest_studio_version')
-    CLIENTSETTINGS_FILEPATH: str = os.path.join(VERSION_DIRECTORY, LATEST_VERSION, 'ClientSettings', 'ClientAppSettings.json')
+    CLIENTSETTINGS_FILEPATH: str = os.path.join(VERSION_DIRECTORY, LATEST_VERSION, 'ClientSettings', 'StudioAppSettings.json')
 
     FASTFLAG_PROFILES_FILEPATH: str = variables.get('fastflag_profiles_filepath')
     FASTFLAGS: dict = read_json.value(filepath=FASTFLAG_PROFILES_FILEPATH, key=SELECTED_PROFILE)
