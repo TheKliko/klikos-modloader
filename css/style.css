@@ -73,6 +73,7 @@
     --footer-link-visited: #959595;
 
     /* Other */
+    --minimum-width: 1200px;
 }
 
 .darkmode {
@@ -94,6 +95,7 @@ body {
     font-family: var(--text-font);
     font-weight: 400;
     background-color: var(--background);
+    min-width: var(--minimum-width);
 }
 
 a {
@@ -269,6 +271,7 @@ header {
     height: var(--header-height);
     background-color: var(--header-background);
     box-shadow: var(--drop-shadow);
+    box-sizing: border-box;
     user-select: none;
 }
 .behind-the-header {
