@@ -9,11 +9,10 @@
 [<img alt="GitHub License" src="https://img.shields.io/github/license/thekliko/klikos-modloader?style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/TheKliko/klikos-modloader/blob/main/LICENSE)
 [<img alt="Discord" src="https://img.shields.io/discord/1205938827437412422?style=for-the-badge&logo=discord&logoColor=fff&label=discord&labelColor=5865f2&color=353639">](https://discord.gg/nEjUwdSP9P)
 
-<!-- [<img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/thekliko/klikos-modloader/total?style=for-the-badge&labelColor=cc0037&color=353639353639">](https://github.com/thekliko/klikos-modloader/releases) -->
-
 An open-source modloader for Roblox.
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It serves as a wrapper for the default launcher, allowing users to easily run a modded copy of Roblox. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows is required to run this program.
+
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It serves as a wrapper around Roblox's default launcher, allowing users to safely launch a modded copy without any risk of getting their account suspended. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
 
 
 
@@ -41,12 +40,12 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 <h2 id="features">Features</h2>
 
 <h3>Mod Profiles</h3>
-Set up different mod profiles and seamlessly switch between them through the modloader menu, make use of mod priorities to make sure your mods are applied in the right order.
+Set up different mod profiles and seamlessly switch between them through the modloader menu, use mod priorities to make sure your mods are applied in the right order.
 
-<h3>Roblox Studio</h3>
+<h3>Rich Presence</h3>
 Kliko's modloader is not only available for the Roblox Player client, it can also be used to add your favourite mods to Roblox Studio.
 
-<h3>Rich Presence (Discord)</h3>
+<h3>Studio Support</h3>
 Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
 
 
@@ -60,7 +59,7 @@ Follow these instructions to install Kliko's modloader.
         Download and install the <a href="https://github.com/TheKliko/klikos-modloader/releases/latest">latest release</a>.
     </li>
     <li>
-        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod and FastFlag profiles.
+        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod profiles.
     </li>
     <li>
         Launch your modded copy of Roblox by running the 'Launcher' shortcut.
@@ -101,15 +100,15 @@ My goals for this project are:
         Introducing more people to Roblox mods
     </li>
     <li>
-        Learning more about managing discord servers
+        Making a website
     </li>
     <li>
-        Making a website
+        Learning more about managing Discord servers
     </li>
 </ul>
 
 <h3>Inspiration</h3>
-This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community and where I learned many different ways to improve my mods.
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to Roblox modding, it's community has taught me a lot about creating my own mods.
 <br><br>
 Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic. Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
 <br><br>
