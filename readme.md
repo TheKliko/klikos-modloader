@@ -30,9 +30,6 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
     <li>
         <a href="#goals-inspiration">Goals & Inspiration</a>
     </li>
-    <li>
-        <a href="#disclaimer">Disclaimer</a>
-    </li>
 </ul>
 
 
@@ -113,13 +110,3 @@ This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>B
 Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic. Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
 <br><br>
 This might not have been an issue for most people, but it can be annoying to work with when developing multiple mods at the same time. Rather than waiting for an update, I decided to challenge myself by making my own modloader from scratch, which is something that I've been wanting to do for a while now.
-
-
-
-<h2 id="disclaimer">Disclaimer</h2>
-
-<h3>Antivirus Disclaimer</h3>
-This project will most likely get flagged by your antivirus software. If you don't trust it, don't download it.
-
-<h3>Work In Progress</h3>
-This project is still a work in progres, things can <em>and will</em> change over time.
