@@ -1,0 +1,107 @@
+section.hero {
+    text-align: center;
+}
+section.hero .subtitle {
+    margin-top: 0;
+}
+section.hero .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+section.hero .card-wrapper {
+    margin-top: var(--gap-lg);
+}
+section.hero .card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-md);
+    width: 300px;
+    height: 200px;
+    text-decoration: none;
+    transition: scale 100ms ease-in-out;
+}
+section.hero .card p {
+    width: min-content;
+}
+section.hero .card:hover {
+    scale: 1.02;
+}
+section.hero p:not(.subtitle) {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+section.hero img {
+    width: 88px;
+    height: 88px;
+    display: none;
+}
+section.hero #menu-light:not(.darkmode img), section.hero #mods-light:not(.darkmode img), section.hero #troubleshoot-light:not(.darkmode img) {
+    display: block;
+}
+section.hero #menu-dark:not(.darkmode img), section.hero #mods-dark:not(.darkmode img), section.hero #troubleshoot-dark:not(.darkmode img) {
+    display: none;
+}
+
+.darkmode section.hero #menu-light, .darkmode section.hero #mods-light, .darkmode section.hero #troubleshoot-light {
+    display: none;
+}
+.darkmode section.hero #menu-dark, .darkmode section.hero #mods-dark, .darkmode section.hero #troubleshoot-dark {
+    display: block;
+}
+
+
+
+.header {
+    text-align: center;
+}
+.section {
+    width: calc(var(--section-content-width) * 0.80);
+}
+.section:not(.first) {
+    margin-top: var(--gap-lg);
+}
+.section.first {
+    margin-top: var(--gap-md);
+}
+.sub-section {
+    margin-top: var(--gap-sm);
+}
+.section ul, .section ol {
+    margin: 0;
+    margin-top: calc(0.5 * var(--gap-sm));
+    margin-bottom: var(--gap-sm);
+}
+
+
+
+#mods img {
+    width: calc(var(--section-content-width) * 0.80 / 2 - var(--gap-sm));
+}
+#mods .card-wrapper {
+    margin-top: var(--gap-sm);
+}
+.mod-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mod-showcase img {
+    box-shadow: var(--card-shadow);
+    border-radius: var(--gap-sm);
+}
+#mods a:has(img) {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: scale 200ms ease-in-out;
+}
+#mods a:has(img):hover {
+    scale: 1.01;
+}
+#mods .file-structure {
+    margin-top: var(--gap-sm);
+}
