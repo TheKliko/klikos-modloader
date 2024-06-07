@@ -42,7 +42,7 @@ Set up different mod profiles and seamlessly switch between them through the mod
 <h3>Rich Presence</h3>
 Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
 
-<h3>Studio Support</h3>
+<h3>Studio Support [BETA]</h3>
 Kliko's modloader is not only available for the Roblox Player client, it can also be used to add your favourite mods to Roblox Studio.
 
 
