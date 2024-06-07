@@ -29,6 +29,11 @@ section.hero ul {
 #explanation p {
     width: calc(var(--section-content-width) * 0.60)
 }
+#modloader-menu-image {
+    border-radius: var(--gap-md);
+    margin-top: var(--gap-md);
+    box-shadow: var(--card-shadow);
+}
 
 #installation .subtitle {
     margin-bottom: var(--gap-md);

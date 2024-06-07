@@ -165,7 +165,13 @@ kbd {
 img {
     user-select: none;
 }
+.image-description {
+    user-select: none;
+}
 br {
+    user-select: none;
+}
+iframe {
     user-select: none;
 }
 
