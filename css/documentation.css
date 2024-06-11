@@ -105,3 +105,8 @@ section.hero #menu-dark:not(.darkmode img), section.hero #mods-dark:not(.darkmod
 #mods .file-structure {
     margin-top: var(--gap-sm);
 }
+
+#troubleshooting img {
+    width: 50%;
+    margin-top: var(--gap-sm);
+}

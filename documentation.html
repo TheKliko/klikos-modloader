@@ -278,6 +278,29 @@
                     <p class="subtitle">Troubleshooting Guide</p>
                 </div>
                 <div class="section">
+                    <h4>Program crashes immediately (no error message)</h4>
+                    <p>
+                        Make sure that Python is installed before trying to launch Kliko's modloader.
+                        If Python is already installed, and this issue still happens, please follow these steps:
+                    </p>
+                    <ul>
+                        <li>
+                            Open file explorer and go to "%localappdata%\Kliko's modloader"
+                        </li>
+                        <li>
+                            Right click anywhere, select open in terminal and type the following command: <kbd>python "Program Files\main.py"</kbd>
+                        </li>
+                        <li>
+                            It will now show the error message without instantly closing the terminal.
+                        </li>
+                    </ul>
+                    <p>
+                        <b>"Python was not found"</b><br>
+                        This means that windows does not recognize the python command. Please reinstall python and make sure to check the box that says 'Add python.exe to PATH', as shown in the image below.
+                        <img src="images/troubleshoot/add-to-path.png" alt="image">
+                    </p>
+                </div>
+                <div class="section">
                     <h4>SystemError</h4>
                     <p>
                         As of writing this, Kliko's modloader is only supported on Windows platforms, with no plans of adding support for other systems.

@@ -1,4 +1,4 @@
-const WEBSITE_VERSION = '1.1.2';
+const WEBSITE_VERSION = '1.2.1';
 const MINIMUM_WIDTH = 1280;
 
 window.onload = function onload() {
