@@ -107,6 +107,9 @@ def launch_roblox() -> None:
     VERSION_DIRECTORY: str = variables.get('version_directory')
     LATEST_VERSION: str = variables.get('latest_version')
     COMMAND: str = f'"{os.path.join(ROOT_DIRECTORY, VERSION_DIRECTORY, LATEST_VERSION, 'RobloxPlayerBeta.exe')}"'
+    ACTIVE_LAUNCH_ARGUMENTS: str = variables.get('active_launch_arguments')
+    if ACTIVE_LAUNCH_ARGUMENTS:
+        COMMAND = f'{COMMAND} {ACTIVE_LAUNCH_ARGUMENTS}'
     subprocess.run(COMMAND)
 
 

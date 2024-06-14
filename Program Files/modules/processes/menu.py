@@ -20,6 +20,8 @@ from modules.utils import write_json
 from modules.utils.request_handler import request
 from modules.roblox.updater import remove_version_directory
 
+from tkinter.filedialog import askopenfilenames
+
 
 def start() -> None:
     """Function called to begin the menu process"""
@@ -36,7 +38,7 @@ def start() -> None:
 
         if 'exit' in response.lower():
             interface.open('Save & Exit')
-            if interface.confirm(prompt='Save changes and exit program?'):
+            if interface.confirm('Save changes and exit program?'):
                 save_changes()
                 time.sleep(0.15)
                 break
@@ -362,7 +364,7 @@ def fastflag_section_configure() -> None:
 
 
 def configure_fastflag_profile(profile) -> None:
-    SECTIONS: list[str] = ['Go Back', 'View FastFlags', 'Add FastFlags', 'Remove FastFlags', 'Rename FastFlag Profile', 'Delete FastFlag Profile']
+    SECTIONS: list[str] = ['Go Back', 'View FastFlags', 'Add FastFlags', 'Remove FastFlags', 'Import FastFlags', 'Rename FastFlag Profile', 'Delete FastFlag Profile']
 
     CONFIG_DIRECTORY: str = variables.get('config_directory')
     FASTFLAG_PROFILES_FILEPATH: str = os.path.join(CONFIG_DIRECTORY, 'fastflag_profiles.json')
@@ -412,6 +414,42 @@ def configure_fastflag_profile(profile) -> None:
                 fastflags.pop(response)
                 write_json.value(filepath=FASTFLAG_PROFILES_FILEPATH, key=profile, value=fastflags)
                 logging.info(f'Removed FastFlag {response} from {profile}')
+        
+        elif 'import' in response.lower(): # Import FastFlags to profile
+            interface.open(f'Import FastFlags to {profile}')
+            interface.text([
+                'CAUTION: This is an experimental feature.',
+                '\u2022 The FastFlags must be formatted correctly in a .json file',
+                '\u2022 Importing duplicate FastFlags will overwrite their current value'
+            ])
+            if interface.confirm('Do you want to continue?'):
+                logging.debug('Attempt to import FastFlags')
+
+                try:
+                    filepaths = askopenfilenames(
+                        title = f'Select a .json file to import to {profile}',
+                        initialdir = os.path.join(os.getenv('USERPROFILE'), 'Downloads')
+                    )
+
+                    fastflags: dict = read_json.value(filepath=FASTFLAG_PROFILES_FILEPATH, key=profile)
+
+                    for path in filepaths:
+                        config: dict = read_json.complete(path)
+                        for key, value in config.items():
+                            fastflags[key] = value
+
+                        write_json.value(filepath=FASTFLAG_PROFILES_FILEPATH, key=profile, value=fastflags)
+                
+                except Exception as e:
+                    logging.error(f'An unexpected {type(e).__name__} occured: {str(e)}')
+                    interface.text([
+                        '!!! WARNING !!!',
+                        'Failed to import FastFlags!',
+                        f'An unexpected {type(e).__name__} occured: {str(e)}'
+                    ])
+
+                print()
+                input('Press ENTER to continue . . .')
 
         elif 'rename' in response.lower():  # Rename FastFlag profile
             SETTINGS_FILEPATH: str = variables.get('settings_filepath')

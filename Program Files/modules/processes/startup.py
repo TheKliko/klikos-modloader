@@ -9,11 +9,13 @@ import glob
 import time
 import logging
 import os
+import winreg
 
 from modules.utils import read_json
 from modules.utils import updater
 from modules.utils import variables
 from modules.utils import write_json
+# from modules.utils.registry_editor import set_registry_key
 from modules.utils.request_handler import request
 
 
@@ -37,6 +39,8 @@ def start() -> None:
     os.system(f'title {variables.get('project_name')}')
 
     updater.check_for_update()
+
+    # set_registry_key()
 
     logging.info('End startup process')
 
