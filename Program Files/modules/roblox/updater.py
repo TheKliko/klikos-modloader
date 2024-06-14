@@ -16,6 +16,7 @@ from modules.utils import interface
 from modules.utils import variables
 from modules.utils import write_json
 
+# from modules.utils.registry_editor import set_registry_key
 from modules.utils.request_handler import request
 
 
@@ -46,12 +47,14 @@ def check_for_updates() -> None:
 
             if interface.confirm('Do you wish to install this version?'):
                 update(LATEST_VERSION)
+                # set_registry_key()
             else:
                 logging.debug('Update declined!')
                 raise RobloxOutdatedError('Update declined!')
         
         else:
             update(LATEST_VERSION)
+            # set_registry_key()
     
     else:
         logging.info('No updates found!')
@@ -61,7 +64,7 @@ def check_for_updates() -> None:
 
 
 def latest_roblox_version() -> str:
-    USER_CHANNEL_URL: str = r'https://clientsettings.roblox.com/v2/user-channel'
+    USER_CHANNEL_URL: str = r'https://clientsettings.roblox.com/v2/user-channel?binaryType=WindowsPlayer'
     USER_CHANNEL: str = request(url=USER_CHANNEL_URL, request_type='json_value', json_key='channelName')
     VERSION_URL: str = r'https://clientsettingscdn.roblox.com/v2/client-version/windowsplayer/channel/'+USER_CHANNEL
     VERSION: str = request(url=VERSION_URL, request_type='json_value', json_key='clientVersionUpload')
