@@ -38,14 +38,23 @@ def check_for_update() -> None:
         print('Failed to find the latest version!')
         logging.warning('Failed to find the latest version!')
         return None
+    
+    if not update_available(CURRENT_VERSION, LATEST_VERSION):
+        logging.info('No updates found!')
+        return None
 
-    if CURRENT_VERSION != LATEST_VERSION:
-        interface.text(f'A newer version is available: version {LATEST_VERSION}')
-        if interface.confirm(prompt='Do you wish to update?'):
-            raise UpdateAvailableError(f'A newer version is available: version {LATEST_VERSION}')
+    interface.text(f'A newer version is available: version {LATEST_VERSION}')
+    if interface.confirm(prompt='Do you wish to update?'):
+        raise UpdateAvailableError(f'A newer version is available: version {LATEST_VERSION}')
 
-    else:
-        logging.info('No updates found')
+
+def update_available(current: str, latest: str) -> bool:
+    """Returns True if the current version is less than the latest version, otherwise False"""
+    current = current.removesuffix('-dev')
+    info_current = [int(i) for i in current.removesuffix('-dev').split('.')]
+    info_latest = [int(i) for i in latest.split('.')]
+
+    return info_current < info_latest
 
 
 def main() -> None:
