@@ -9,7 +9,7 @@
 [<img alt="GitHub License" src="https://img.shields.io/github/license/thekliko/klikos-modloader?style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/TheKliko/klikos-modloader/blob/main/LICENSE)
 [<img alt="Discord" src="https://img.shields.io/discord/1205938827437412422?style=for-the-badge&logo=discord&logoColor=fff&label=discord&labelColor=5865f2&color=353639">](https://discord.gg/nEjUwdSP9P)
 
-An open-source modloader for Roblox.
+<h3>Roblox mods made easy</h3>
 
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It serves as a wrapper around Roblox's default launcher, allowing users to safely launch a modded copy without any risk of getting their account suspended. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
