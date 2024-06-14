@@ -28,11 +28,14 @@ def update() -> None:
 
     if 'in_game' in status:  # Playing {game}
         game_id = status[1]
-        url = 'https://www.roblox.com/item-thumbnails?params=%5B%7BassetId:'+game_id+'%7D%5D'
+        url = f'https://games.roblox.com/v1/games?universeIds={game_id}'
         game_info = request(url=url)
-        game_name = game_info[0]['name']
-        game_thumbnail = game_info[0]['thumbnailUrl']
-        game_url = game_info[0]['url']
+        game_name = game_info['data'][0]['name']
+        game_url = f'https://www.roblox.com/games/{game_info['data'][0]['rootPlaceId']}/'
+
+        game_thumbnail_url = f'https://thumbnails.roblox.com/v1/games/icons?universeIds={game_id}&returnPolicy=PlaceHolder&size=512x512&format=Png&isCircular=false'
+        game_thumbnail_info = request(url=game_thumbnail_url)
+        game_thumbnail = game_thumbnail_info['data'][0]['imageUrl']
 
         if not variables.get('rpc_playing_timestamp'):
             variables.set(name='rpc_playing_timestamp', value=int(time.time()))
@@ -97,15 +100,17 @@ def read_logs() -> list | None:
 
         if not variables.get('rpc_state') == 'playing':
             variables.set(name='rpc_timestamp', value=int(time.time()))
-        variables.set(name='rpc_state', value='playing')
+            variables.set(name='rpc_state', value='playing')
 
-        gamejoinleaves: list = [line for line in data.split('\n') if '[FLog::GameJoinLoadTime]' in line or '[FLog::SingleSurfaceApp] handleGameWillClose' in line]
+        gamejoin: str = '[FLog::GameJoinLoadTime]'
+        gameleave: str = '[FLog::SingleSurfaceApp] handleGameWillClose'
+        gamejoinleaves: list = [line for line in data.split('\n') if gamejoin in line or gameleave in line]
         if not gamejoinleaves:  # Player is not in-game
             return None
 
         first_join = True
         for item in gamejoinleaves:
-            if '[FLog::SingleSurfaceApp] handleGameWillClose' in item:
+            if gameleave in item:
                 first_join = False
         if not first_join:
             i = len(gamejoinleaves) - 1
@@ -113,7 +118,7 @@ def read_logs() -> list | None:
                 if i < 0:
                     return None
 
-                if '[FLog::SingleSurfaceApp] handleGameWillClose' in gamejoinleaves[i]:
+                if gameleave in gamejoinleaves[i]:
                     pattern = pattern = r'placeid:(\d+)'
                     match = re.search(pattern, gamejoinleaves[i + 1])
                     if not match:
@@ -125,7 +130,7 @@ def read_logs() -> list | None:
                 i = i - 1
 
         else:  # if first_join:
-            pattern = pattern = r'placeid:(\d+)'
+            pattern = pattern = r'universeid:(\d+)'
             match = re.search(pattern, gamejoinleaves[0])
             if not match:
                 return None
