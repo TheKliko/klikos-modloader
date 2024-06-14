@@ -3,14 +3,14 @@ import subprocess
 import sys
 
 
-def main():  # 
-    try:  # Retrieve launch arguments from command-line arguments
-        path = os.path.join('Program Files', 'main.py')  # Path to main.py
-        launch_arguments = ' '.join(sys.argv[1:])  # Join all arguments except the first (which is the script name)
+def main():
+    try:
+        path = os.path.join(os.path.dirname(sys.executable), 'Program Files', 'main.py')
+        launch_arguments = ' '.join(sys.argv[1:])
         command = f'python "{path}" {launch_arguments}'
         if not launch_arguments:
             command = f'python "{path}"'
-        subprocess.run(command)  # Run the command
+        subprocess.run(command)
 
 
     except Exception as e:
