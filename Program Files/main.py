@@ -152,9 +152,6 @@ def main() -> None:
         interface.text(f'An unexpected {type(e).__name__} occured: {str(e)}', spacing=0)
         variables.set(name='error_type', value=type(e).__name__)
     
-    else: # The following code executes if no exception occured
-        return None
-    
     # The following code executes only if an exception occured.
     if not variables.get_silent('exception_code_bypass'):
         variables.set(name='rpc_state', value='error')
@@ -212,27 +209,31 @@ def initialize_logger() -> None:
 
 
 def launch_main_program() -> None:
-    LAUNCH_ARGUMENTS = get_launch_arguments()
+    LAUNCH_ARGUMENTS: str = get_launch_arguments()
 
-    if LAUNCH_ARGUMENTS == 'launcher':
+    if LAUNCH_ARGUMENTS == '-launcher':
         launcher.start()
 
-    elif LAUNCH_ARGUMENTS == 'studio':
+    elif LAUNCH_ARGUMENTS == '-studio':
         launcher_studio.start()
 
-    elif LAUNCH_ARGUMENTS == 'menu':
+    elif LAUNCH_ARGUMENTS == '-menu':
         menu.start()
+    
+    elif LAUNCH_ARGUMENTS.startswith('roblox-player'):
+        variables.set(name='active_launch_arguments', value=LAUNCH_ARGUMENTS)
+        launcher.start()
 
     else:
         raise LaunchArgumentError(f'Invalid launch argument(s): {LAUNCH_ARGUMENTS}')
 
 
-def get_launch_arguments() -> str | None:
+def get_launch_arguments() -> str:
     try:
-        launch_argument = str(sys.argv[1][1:])
+        launch_argument = str(sys.argv[1])
     
     except:
-        launch_argument = variables.get('default_launch_arguments')
+        launch_argument = f'-{variables.get('default_launch_arguments')}'
     
     return launch_argument.lower()
 
