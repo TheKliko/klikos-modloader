@@ -1,5 +1,5 @@
-const WEBSITE_VERSION = '1.2.1';
-const MINIMUM_WIDTH = 1280;
+const WEBSITE_VERSION = '1.2.2';
+const MINIMUM_WIDTH = 640;
 
 window.onload = function onload() {
     const BODY = document.getElementsByTagName('body')[0];

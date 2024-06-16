@@ -1,0 +1,136 @@
+section.hero .content {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+}
+section.hero .content > div:has(img) {
+    order: 0;
+}
+section.hero .content > div:not(div:has(img)) {
+    order: 1;
+}
+section.hero img {
+    width: 410px;
+    filter: drop-shadow(4px 6px 5px #222);
+}
+section.hero .content div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--gap-md);
+}
+section.hero ul {
+    margin-top: var(--gap-md);
+}
+
+#explanation .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#explanation {
+    text-align: center;
+}
+#explanation p {
+    width: calc(var(--section-content-width) * 0.925);
+    text-align: justify;
+}
+#modloader-menu-image {
+    border-radius: var(--gap-sm);
+    margin-top: var(--gap-md);
+    box-shadow: var(--card-shadow);
+    width: var(--section-content-width);
+}
+
+#installation .subtitle {
+    margin-bottom: var(--gap-md);
+}
+#installation .content > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+}
+#installation .card-wrapper {
+    flex-direction: row;
+    width: var(--section-content-width);
+}
+#installation .card {
+    box-sizing: border-box;
+    width: calc((var(--section-content-width) - 2 * var(--gap-md)) / 3);
+    height: auto;
+}
+#installation-video {
+    min-width: calc((560 / 560) * var(--section-content-width));
+    min-height: calc((315 / 560) * var(--section-content-width));
+    box-shadow: var(--card-shadow);
+    border-radius: var(--gap-md);
+}
+
+#features .card-wrapper {
+    flex-direction: column;
+}
+#features .card {
+    width: auto;
+    height: fit-content;
+}
+
+#support .content div:not(.content div div) {
+    display: flex;
+    gap: var(--gap-md);
+}
+#support .content div .subtitle {
+    margin: 0;
+}
+#support p {
+    width: calc(var(--section-content-width) * 0.925);
+    text-align: justify;
+}
+#support .button-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: var(--gap-md);
+}
+#discord-button {
+    width: 250px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    padding-left: var(--gap-lg);
+    padding-right: var(--gap-lg);
+    padding-top: calc(1.5 * var(--gap-md));
+    padding-bottom: calc(1.5 * var(--gap-md));
+    margin-top: var(--gap-md);
+    background-color: #353639;
+    border-color: #353639;
+    color: #fff;
+    transition: background 150ms ease-in-out, border 150ms ease-in-out, color 150ms ease-in-out, scale 100ms ease-in-out;
+}
+#discord-button:hover {
+    background-color: #2c2d30;
+    border-color: #2c2d30;
+    color: #a5a5a7;
+    scale: 1.01;
+}
+#discord-widget {
+    box-shadow: var(--card-shadow);
+    border-radius: var(--gap-sm);
+    display: none;
+}
+
+#goals .card-wrapper {
+    flex-direction: column;
+}
+#goals .card.goals {
+    width: var(--section-content-width);
+    height: auto;
+}
+#goals .card.inspiration {
+    width: var(--section-content-width);
+    height: auto;
+}
+#goals ul {
+    margin: 0;
+    padding-bottom: 0;
+}

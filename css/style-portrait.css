@@ -58,8 +58,8 @@
     --section-accent-color: var(--accent-color-2);
     --section-hero-background: linear-gradient(0deg, #cbcbcb, var(--background)) no-repeat;
     --section-height: max-content;
-    --section-hero-height: 75vh;
-    --section-content-width: 1280px;
+    --section-hero-height: 55vh;
+    --section-content-width: 640px;
 
     /* Header */
     --header-height: 72px;
@@ -73,7 +73,7 @@
     --footer-link-visited: #959595;
 
     /* Other */
-    --minimum-width: 1280px;
+    --minimum-width: 640px;
 }
 
 .darkmode {
@@ -272,7 +272,7 @@ header {
     z-index: 200;
     position: fixed;
     display: grid;
-    grid-template-columns: 354px 1fr 340px;
+    grid-template-columns: 50px 1fr 340px;
     width: 100%;
     height: var(--header-height);
     background-color: var(--header-background);
@@ -299,9 +299,7 @@ header {
     height: 42px;
 }
 #header-branding p {
-    font-size: 2rem;
-    font-weight: 700;
-    font-family: 'Jura';
+    display: none;
 }
 
 #header-action {
