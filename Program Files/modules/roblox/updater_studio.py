@@ -5,6 +5,7 @@ it's purpose is to take care of Roblox updates.
 """
 
 
+import json
 import logging
 import os
 import shutil
@@ -37,21 +38,21 @@ def check_for_updates() -> None:
     VERSION_DIRECTORY: str = variables.get('version_directory')
 
     if variables.get('roblox_reinstall_after_changes') and variables.get('mod_profile_changed'):
-        update(LATEST_VERSION)
+        update()
 
     elif INSTALLED_VERSION != LATEST_VERSION or not os.path.isdir(os.path.join(ROOT_DIRECTORY, VERSION_DIRECTORY, LATEST_VERSION)):
-        logging.info(f'Roblox update available: {LATEST_VERSION}')
+        logging.info(f'Studio update available: {LATEST_VERSION}')
         if not variables.get('auto_install_roblox_updates'):
             interface.text(f'A new Roblox Studio version is available: {LATEST_VERSION}', spacing=0)
 
             if interface.confirm('Do you wish to install this version?'):
-                update(LATEST_VERSION)
+                update()
             else:
                 logging.debug('Update declined!')
                 raise StudioOutdatedError('Update declined!')
         
         else:
-            update(LATEST_VERSION)
+            update()
     
     else:
         logging.info('No updates found!')
@@ -60,6 +61,11 @@ def check_for_updates() -> None:
 
 def latest_studio_version() -> str:
     # I tried using a 'cleaner' method using this api: https://clientsettingscdn.roblox.com/v2/client-version/windowsstudio, but it seems to return an older version :(
+    # DEPLOY_HISTORY_URL: str = r'https://clientsettingscdn.roblox.com/v2/client-version/windowsstudio'
+    # VERSION: str = request(url=DEPLOY_HISTORY_URL, request_type='json_value', json_key='clientVersionUpload')
+    # variables.set(name='latest_studio_version', value=VERSION)
+    # return VERSION
+
     DEPLOY_HISTORY_URL: str = r'https://setup.rbxcdn.com/DeployHistory.txt'
     DEPLOY_HISTORY: str = request(url=DEPLOY_HISTORY_URL, request_type='text')
     for deployment in reversed(DEPLOY_HISTORY.splitlines()):
@@ -72,16 +78,7 @@ def latest_studio_version() -> str:
     return None
 
 
-# def latest_studio_version() -> str:
-#     USER_CHANNEL_URL: str = r'https://clientsettings.roblox.com/v2/user-channel'
-#     USER_CHANNEL: str = request(url=USER_CHANNEL_URL, request_type='json_value', json_key='channelName')
-#     VERSION_URL: str = r'https://clientsettingscdn.roblox.com/v2/client-version/windowsstudio/channel/'+USER_CHANNEL
-#     VERSION: str = request(url=VERSION_URL, request_type='json_value', json_key='clientVersionUpload')
-#     variables.set(name='latest_studio_version', value=VERSION)
-#     return VERSION
-
-
-def update(version) -> None:
+def update() -> None:
     logging.info('Updating Roblox Studio...')
     interface.text('Updating Roblox Studio...')
 
@@ -92,7 +89,29 @@ def update(version) -> None:
     start_roblox_studio_installer()
     thread.join()
 
-    copy_version_directory(version)
+    version = variables.get('latest_studio_version')
+    try:
+        copy_version_directory(version)
+
+    except:
+        DEPLOY_HISTORY_URL: str = r'https://setup.rbxcdn.com/DeployHistory.txt'
+        DEPLOY_HISTORY: str = request(url=DEPLOY_HISTORY_URL, request_type='text')
+        versions: list = []
+        for deployment in reversed(DEPLOY_HISTORY.splitlines()):
+            if  'Studio64' in deployment:
+                for item in deployment.split():
+                    if item.startswith('version-'):
+                        versions.append(item)
+            if len(versions) >= 10:
+                break
+        for version in versions:
+            try:
+                copy_version_directory(version)
+                write_json.value(filepath=SETTINGS_FILEPATH,key='installed_studio_version',value=version)
+                variables.set(name='latest_studio_version', value=version)
+                return
+            except:
+                pass
 
     write_json.value(filepath=SETTINGS_FILEPATH,key='installed_studio_version',value=version)
 
