@@ -8,6 +8,7 @@
 [<img alt="GitHub Release" src="https://img.shields.io/github/v/release/thekliko/klikos-modloader?filter=!v*.*.*-beta&style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/thekliko/klikos-modloader/releases/latest)
 [<img alt="GitHub License" src="https://img.shields.io/github/license/thekliko/klikos-modloader?style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/TheKliko/klikos-modloader/blob/main/LICENSE)
 [<img alt="Discord" src="https://img.shields.io/discord/1205938827437412422?style=for-the-badge&logo=discord&logoColor=fff&label=discord&labelColor=5865f2&color=353639">](https://discord.gg/nEjUwdSP9P)
+[![pypresence](https://img.shields.io/badge/using-pypresence-00bb88.svg?style=for-the-badge&logo=discord&logoWidth=20)](https://github.com/qwertyquerty/pypresence)
 
 <h3>Roblox mods made easy</h3>
 
