@@ -1,0 +1,101 @@
+{
+    "project_data": {
+        "name": "Kliko's modloader",
+        "description": "Roblox mods made easy",
+        "author": "TheKliko",
+        "version": "1.3.0"
+    },
+    "troubleshooting_urls": {
+        "discord": "https://discord.gg/nEjUwdSP9P",
+        "website": "https://thekliko.github.io/klikos-modloader",
+        "github": "https://github.com/TheKliko/klikos-modloader",
+        "latest_release": "https://github.com/TheKliko/klikos-modloader/releases/latest",
+        "secret": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    "user_directories": {
+        "mods": "{ROOT}\\Mods",
+        "versions": "{ROOT}\\Versions"
+    },
+    "user_settings": {
+        "max_log_files": {
+            "name": "Log file limit",
+            "description": "The maximum number of log files stored in the logging directory",
+            "value": 10,
+            "default": 10,
+            "type": "integer",
+            "range": {
+                "min": 1,
+                "max": null
+            }
+        },
+        "priorities_in_mod_view": {
+            "name": "Show priorities in mod view",
+            "description": "Show mod priorities when viewing mods in a selected profile",
+            "value": false,
+            "default": false,
+            "type": "boolean"
+        },
+        "show_short_license": {
+            "name": "Hide license details",
+            "description": "Only show the name and type of each license",
+            "value": true,
+            "default": true,
+            "type": "boolean"
+        },
+        "roblox_reinstall_after_changes": {
+            "name": "Reinstall Roblox after changes",
+            "description": "Force Roblox to reinstall after selecting a different mod profile",
+            "value": true,
+            "default": true,
+            "type": "boolean"
+        },
+        "roblox_force_reinstall": {
+            "name": "Force Roblox reinstallation",
+            "description": "Force Roblox to reinstall on next launch",
+            "value": false,
+            "default": false,
+            "type": "boolean"
+        },
+        "check_for_updates": {
+            "name": "Check for updates",
+            "description": "Check for updates when launching {project_name}",
+            "value": true,
+            "default": true,
+            "type": "boolean"
+        },
+        "discord_rpc": {
+            "name": "Discord RPC",
+            "description": "Show your friends on Discord that you're using this program",
+            "value": true,
+            "default": true,
+            "type": "boolean"
+        }
+    },
+    "licenses": {
+        "{project_name}": {
+            "type": "MIT License",
+            "text": [
+                "MIT License",
+                "Copyright (c) 2024 TheKliko",
+                "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+                "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+                "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+            ]
+        },
+        "pypresence": {
+            "type": "MIT License",
+            "text": [
+                "MIT License",
+                "Copyright (c) 2022 qwertyquerty",
+                "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+                "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+                "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+            ]
+        }
+    },
+    "launch_configuration": {
+        "selected_mod_profile": null,
+        "selected_fastflag_profile": null,
+        "force_roblox_reinstallation": false
+    }
+}
