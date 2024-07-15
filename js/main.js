@@ -1,4 +1,4 @@
-const website_version = '2.0.0';
+const website_version = '2.0.1';
 
 // window.onload = function onload() {
 document.addEventListener("DOMContentLoaded", function() {
