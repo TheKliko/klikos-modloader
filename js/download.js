@@ -2,10 +2,8 @@ window.onload = function onload() {
     if (mobile_device()) {
         mobile_specific();
     }
-
-    else {
-        desktop_specific();
-    };
+    
+    load_releases();
 };
 
 function hamburger_menu_toggle() {
