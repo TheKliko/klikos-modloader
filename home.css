@@ -1,0 +1,242 @@
+@font-face {
+    font-family: "Monsterrat";
+    src: url("../fonts/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Jura";
+    src: url("../fonts/Jura/Jura-VariableFont_wght.ttf");
+}
+
+:root {
+    --theme-color: #f20041;
+
+    --header-color: #fcfcfc;
+    --header-height: 32px;
+    --header-padding: 16px;
+
+
+    --footer-color: #25262b;
+    --footer-text: #fcb652;
+    --footer-url: #959595;
+    --footer-url-hover: #c9c9c9;
+    --footer-padding: 64px;
+
+
+    --section-padding-x: 88px;
+    --section-padding-y: 64px;
+    --section-color: #fcfcfc;
+
+
+
+    --text-color: #333;
+    --text-color-2: #ededed;
+    --text-secondary-color: #9c9b99;
+    --font: "Monsterrat";
+
+    --icon-shadow: rgba(98, 101, 105, 0.2) 0px 4px 4px;
+    --button-shadow: rgba(0, 0, 0, 0.35) 0px 4px 4px;
+    --card-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+
+
+#hero-section {
+    height: 65vh;
+    background: linear-gradient(15deg, #cbcbcb, var(--section-color)) no-repeat;
+}
+.darkmode #hero-section {
+    background: linear-gradient(15deg, #050505, var(--section-color)) no-repeat;
+}
+#hero-section .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+#hero-section h2 {
+    margin-bottom: 12px;
+    font-size: 2.5rem;
+}
+#hero-section p {
+    margin: 0;
+    text-align: center;
+}
+#hero-section img {
+    width: 410px;
+    height: 410px;
+    filter: drop-shadow(rgb(34, 34, 34) -8px -4px 4px);
+}
+#hero-section .button-list {
+    margin-top: 26px;
+}
+#hero-section .content > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+#description .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "right top""right bottom";
+    gap: 16px;
+}
+#description h3 {
+    grid-area: top;
+}
+#description p {
+    margin-top: 48px;
+    grid-area: top;
+}
+#description div:has(.card-list) {
+    grid-area: bottom;
+}
+#description .content > div:has(img) {
+    grid-area: right;
+}
+#description img {
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+    transition: scale 300ms ease;
+}
+#description img:hover {
+    scale: 1.01;
+}
+#description .card-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+#description .card {
+    font-weight: 600;
+    background-color: #e7e6e6;
+    color: var(--text-secondary-color);
+}
+.darkmode #description .card {
+    background-color: #1a1a1a;
+    color: var(--text-secondary-color);
+}
+#description i {
+    width: 100%;
+    text-align: center;
+}
+
+
+
+#features .card img {
+    margin-top: 8px;
+    width: 100%;
+    border-radius: 8px;
+    transition: scale 300ms ease;
+}
+#features .card img:hover {
+    scale: 1.01;
+}
+#features .card-list {
+    gap: 16px;
+}
+#features .card {
+    width: calc(100%/3 - 32px);
+    height: fit-content;
+}
+#features p {
+    margin-top: 4px;
+}
+
+
+
+#install-guide .content {
+    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "left right";
+    align-items: center;
+    justify-items: center;
+    height: fit-content;
+}
+#install-guide .card-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#install-guide .card {
+    width: 100%;
+}
+#install-video {
+    justify-self: right;
+    grid-area: left;
+    height: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+
+
+#support {
+    background-color: #313338;
+    color: #fff;
+}
+#support .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0 1fr;
+    grid-template-areas: "top right""bottom right";
+    gap: 48px;
+}
+#support .button {
+    color: #fff !important;
+}
+#discord-widget {
+    grid-area: right;
+    align-self: center;
+}
+#support h3 {
+    grid-area: top;
+    margin: 0;
+}
+#support .content > div {
+    grid-area: bottom;
+    margin-top: -4px;
+}
+#support p {
+    margin-top: 4px;
+}
+
+
+
+#inspiration .content {
+    display: grid;
+    grid-template-columns: 390px 322px;
+    grid-template-rows: fit-content 1fr;
+    grid-template-areas: "top top""left right";
+}
+#inspiration h3 {
+    grid-area: top;
+}
+#inspiration div:nth-of-type(1) {
+    grid-area: left;
+    justify-self: right;
+}
+#inspiration div:nth-of-type(2) {
+    grid-area: right;
+    justify-self: left;
+}
+#inspiration p {
+    margin: 0;
+    margin-top: 8px;
+}
+#inspiration div:nth-of-type(2) p {
+    margin-top: 4px;
+}
+#inspiration div:nth-of-type(1) ul {
+    margin: 0;
+}
+#inspiration .card {
+    height: fit-content;
+}
