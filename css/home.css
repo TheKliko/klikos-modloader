@@ -190,7 +190,7 @@
     gap: 48px;
 }
 #support .button {
-    color: #fff;
+    color: #fff !important;
 }
 #discord-widget {
     grid-area: right;
