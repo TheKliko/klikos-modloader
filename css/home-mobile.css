@@ -1,0 +1,141 @@
+@font-face {
+    font-family: "Monsterrat";
+    src: url("../fonts/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Jura";
+    src: url("../fonts/Jura/Jura-VariableFont_wght.ttf");
+}
+
+:root {
+    --theme-color: #f20041;
+
+    --header-color: #fcfcfc;
+    --header-height: 32px;
+    --header-padding: 16px;
+
+
+    --footer-color: #25262b;
+    --footer-text: #fcb652;
+    --footer-url: #959595;
+    --footer-url-hover: #c9c9c9;
+    --footer-padding: 16px;
+
+
+    --section-padding-x: 24px;
+    --section-padding-y: 48px;
+    --section-color: #fcfcfc;
+
+
+    --text-color: #333;
+    --text-color-2: #ededed;
+    --text-secondary-color: #9c9b99;
+    --font: "Monsterrat";
+
+    --icon-shadow: rgba(98, 101, 105, 0.2) 0px 4px 4px;
+    --button-shadow: rgba(0, 0, 0, 0.35) 0px 2px 2px;
+    --card-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+
+
+#hero-section {
+    background: linear-gradient(15deg, #cbcbcb, var(--section-color)) no-repeat;
+}
+.darkmode #hero-section {
+    background: linear-gradient(15deg, #050505, var(--section-color)) no-repeat;
+}
+#hero-section .content {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse;
+}
+#hero-section h2 {
+    margin-bottom: 12px;
+}
+#hero-section p {
+    margin: 0;
+}
+#hero-section img {
+    width: 164px;
+    height: 164px;
+    margin-bottom: var(--section-padding-y);
+    filter: drop-shadow(rgb(34, 34, 34) -8px -4px 4px);
+}
+#hero-section .button-list {
+    margin-top: 26px;
+}
+
+
+#description .card-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+#description .card {
+    font-weight: 600;
+    background-color: #e7e6e6;
+    color: var(--text-secondary-color);
+}
+.darkmode #description .card {
+    background-color: #1a1a1a;
+    color: var(--text-secondary-color);
+}
+#description .content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+#description h3 {
+    margin: 0;
+}
+#description p {
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+
+
+#features .card {
+    width: auto;
+    height: fit-content;
+}
+#features .card img {
+    width: 100%;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+#features p {
+    margin: 0;
+    margin-top: 4px;
+}
+
+
+
+#install-guide .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+#install-guide .card {
+    width: auto;
+}
+#install-video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+
+
+#support {
+    background-color: #313338;
+    color: #fff;
+}
+
+
+
+#inspiration .card {
+    width: auto;
+}

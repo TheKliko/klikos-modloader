@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f20041">
+
+    <meta property="og:title" content="Kliko's modloader">
+    <meta property="og:description" content="Roblox mods made easy">
+    <meta property="og:url" content="https://thekliko.github.io/klikos-modloader/">
+    <meta property="og:image" content="/images/embed/open-graph.png">
+    <meta property="og:type" content="website">
+
+    <title>Kliko's modloader | Documentation</title>
+    <link rel="shortcut icon" href="images/logo/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/style.css" media="only screen and (min-width: 769px)">
+    <link rel="stylesheet" href="css/documentation.css" media="only screen and (min-width: 769px)">
+    <link rel="stylesheet" href="css/mobile.css" media="only screen and (max-width: 768px)">
+    <link rel="stylesheet" href="css/documentation-mobile.css" media="only screen and (max-width: 768px)">
+    <script src="js/main.js"></script>
+
+    
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body class="">
+    <button id="desktop-darkmode-toggle" class="darkmode-toggle mobile-hidden" onclick="toggle_darkmode()">
+        <svg id="sun-hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/></svg>
+        <svg id="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M375.7 19.7c-1.5-8-6.9-14.7-14.4-17.8s-16.1-2.2-22.8 2.4L256 61.1 173.5 4.2c-6.7-4.6-15.3-5.5-22.8-2.4s-12.9 9.8-14.4 17.8l-18.1 98.5L19.7 136.3c-8 1.5-14.7 6.9-17.8 14.4s-2.2 16.1 2.4 22.8L61.1 256 4.2 338.5c-4.6 6.7-5.5 15.3-2.4 22.8s9.8 13 17.8 14.4l98.5 18.1 18.1 98.5c1.5 8 6.9 14.7 14.4 17.8s16.1 2.2 22.8-2.4L256 450.9l82.5 56.9c6.7 4.6 15.3 5.5 22.8 2.4s12.9-9.8 14.4-17.8l18.1-98.5 98.5-18.1c8-1.5 14.7-6.9 17.8-14.4s2.2-16.1-2.4-22.8L450.9 256l56.9-82.5c4.6-6.7 5.5-15.3 2.4-22.8s-9.8-12.9-17.8-14.4l-98.5-18.1L375.7 19.7zM269.6 110l65.6-45.2 14.4 78.3c1.8 9.8 9.5 17.5 19.3 19.3l78.3 14.4L402 242.4c-5.7 8.2-5.7 19 0 27.2l45.2 65.6-78.3 14.4c-9.8 1.8-17.5 9.5-19.3 19.3l-14.4 78.3L269.6 402c-8.2-5.7-19-5.7-27.2 0l-65.6 45.2-14.4-78.3c-1.8-9.8-9.5-17.5-19.3-19.3L64.8 335.2 110 269.6c5.7-8.2 5.7-19 0-27.2L64.8 176.8l78.3-14.4c9.8-1.8 17.5-9.5 19.3-19.3l14.4-78.3L242.4 110c8.2 5.7 19 5.7 27.2 0zM256 368a112 112 0 1 0 0-224 112 112 0 1 0 0 224zM192 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"/></svg>
+        <svg id="moon-hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/></svg>
+        <svg id="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M144.7 98.7c-21 34.1-33.1 74.3-33.1 117.3c0 98 62.8 181.4 150.4 211.7c-12.4 2.8-25.3 4.3-38.6 4.3C126.6 432 48 353.3 48 256c0-68.9 39.4-128.4 96.8-157.3zm62.1-66C91.1 41.2 0 137.9 0 256C0 379.7 100 480 223.5 480c47.8 0 92-15 128.4-40.6c1.9-1.3 3.7-2.7 5.5-4c4.8-3.6 9.4-7.4 13.9-11.4c2.7-2.4 5.3-4.8 7.9-7.3c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-3.7 .6-7.4 1.2-11.1 1.6c-5 .5-10.1 .9-15.3 1c-1.2 0-2.5 0-3.7 0c-.1 0-.2 0-.3 0c-96.8-.2-175.2-78.9-175.2-176c0-54.8 24.9-103.7 64.1-136c1-.9 2.1-1.7 3.2-2.6c4-3.2 8.2-6.2 12.5-9c3.1-2 6.3-4 9.6-5.8c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-3.6-.3-7.1-.5-10.7-.6c-2.7-.1-5.5-.1-8.2-.1c-3.3 0-6.5 .1-9.8 .2c-2.3 .1-4.6 .2-6.9 .4z"/></svg>
+    </button>
+    <header>
+        <div id="header-branding">
+            <img class="darkmode-hidden" src="images/logo/logo.png" alt="Logo">
+            <img class="lightmode-hidden" src="images/logo/logo-white.png" alt="Logo">
+            <p class="mobile-hidden">Kliko's modloader</p>
+        </div>
+
+        <nav id="header-navigation" aria-label="primary menu">
+            <svg width="0" height="0">
+              <filter id="icon-shadow-filter">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(98, 101, 105, 0.2)" />
+              </filter>
+            </svg>
+            <ul class="button-list">
+                <li>
+                    <a class="button navigation" href="index.html">
+                        <p>Home</p>
+                        <svg class="desktop-hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="button navigation" href="" aria-current="page">
+                        <p>Documentation</p>
+                        <svg class="desktop-hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
+                    </a>
+                </li>
+                <li>
+                    <a class="button navigation" href="https://github.com/TheKliko/klikos-modloader/releases/" target="_blank">
+                        <p>Changelog</p>
+                        <svg class="desktop-hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z"/></svg>
+                    </a>
+                </li>
+                <li class="desktop-hidden button navigation">
+                    <button id="mobile-darkmode-toggle" class="darkmode-toggle" onclick="toggle_darkmode()">
+                        <svg id="mobile-sun-hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/></svg>
+                        <svg id="mobile-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M375.7 19.7c-1.5-8-6.9-14.7-14.4-17.8s-16.1-2.2-22.8 2.4L256 61.1 173.5 4.2c-6.7-4.6-15.3-5.5-22.8-2.4s-12.9 9.8-14.4 17.8l-18.1 98.5L19.7 136.3c-8 1.5-14.7 6.9-17.8 14.4s-2.2 16.1 2.4 22.8L61.1 256 4.2 338.5c-4.6 6.7-5.5 15.3-2.4 22.8s9.8 13 17.8 14.4l98.5 18.1 18.1 98.5c1.5 8 6.9 14.7 14.4 17.8s16.1 2.2 22.8-2.4L256 450.9l82.5 56.9c6.7 4.6 15.3 5.5 22.8 2.4s12.9-9.8 14.4-17.8l18.1-98.5 98.5-18.1c8-1.5 14.7-6.9 17.8-14.4s2.2-16.1-2.4-22.8L450.9 256l56.9-82.5c4.6-6.7 5.5-15.3 2.4-22.8s-9.8-12.9-17.8-14.4l-98.5-18.1L375.7 19.7zM269.6 110l65.6-45.2 14.4 78.3c1.8 9.8 9.5 17.5 19.3 19.3l78.3 14.4L402 242.4c-5.7 8.2-5.7 19 0 27.2l45.2 65.6-78.3 14.4c-9.8 1.8-17.5 9.5-19.3 19.3l-14.4 78.3L269.6 402c-8.2-5.7-19-5.7-27.2 0l-65.6 45.2-14.4-78.3c-1.8-9.8-9.5-17.5-19.3-19.3L64.8 335.2 110 269.6c5.7-8.2 5.7-19 0-27.2L64.8 176.8l78.3-14.4c9.8-1.8 17.5-9.5 19.3-19.3l14.4-78.3L242.4 110c8.2 5.7 19 5.7 27.2 0zM256 368a112 112 0 1 0 0-224 112 112 0 1 0 0 224zM192 256a64 64 0 1 1 128 0 64 64 0 1 1 -128 0z"/></svg>
+                        <svg id="mobile-moon-hover" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/></svg>
+                        <svg id="mobile-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M144.7 98.7c-21 34.1-33.1 74.3-33.1 117.3c0 98 62.8 181.4 150.4 211.7c-12.4 2.8-25.3 4.3-38.6 4.3C126.6 432 48 353.3 48 256c0-68.9 39.4-128.4 96.8-157.3zm62.1-66C91.1 41.2 0 137.9 0 256C0 379.7 100 480 223.5 480c47.8 0 92-15 128.4-40.6c1.9-1.3 3.7-2.7 5.5-4c4.8-3.6 9.4-7.4 13.9-11.4c2.7-2.4 5.3-4.8 7.9-7.3c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-3.7 .6-7.4 1.2-11.1 1.6c-5 .5-10.1 .9-15.3 1c-1.2 0-2.5 0-3.7 0c-.1 0-.2 0-.3 0c-96.8-.2-175.2-78.9-175.2-176c0-54.8 24.9-103.7 64.1-136c1-.9 2.1-1.7 3.2-2.6c4-3.2 8.2-6.2 12.5-9c3.1-2 6.3-4 9.6-5.8c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-3.6-.3-7.1-.5-10.7-.6c-2.7-.1-5.5-.1-8.2-.1c-3.3 0-6.5 .1-9.8 .2c-2.3 .1-4.6 .2-6.9 .4z"/></svg>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+
+        <a id="header-hamburger" class="desktop-hidden" onclick="hamburger_menu_toggle()">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </a>
+
+        <div id="header-action">
+            <ul class="button-list">
+                <li class="mobile-hidden">
+                    <a class="button action fill" onclick="download_now()">Download Now</a>
+                </li>
+                <li>
+                    <a class="button action mobile-url" href="https://github.com/TheKliko/klikos-modloader/">View on GitHub</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+
+    <section id="documentation">
+        <div class="content">
+            <h2>Documentation</h2>
+            <div class="card-list">
+                <a href="#menu" class="card button action">
+                    <img class="darkmode-hidden" src="images/icons/light/logo.png" alt="Image">
+                    <img class="lightmode-hidden" src="images/icons/dark/logo.png" alt="Image">
+                    <p>Modloader</p>
+                </a>
+                <a href="#mods" class="card button action">
+                    <img class="darkmode-hidden" src="images/icons/light/mods.png" alt="Image">
+                    <img class="lightmode-hidden" src="images/icons/dark/mods.png" alt="Image">
+                    <p>Mods</p>
+                </a>
+                <a href="#troubleshooting" class="card button action">
+                    <img class="darkmode-hidden" src="images/icons/light/error.png" alt="Image">
+                    <img class="lightmode-hidden" src="images/icons/dark/error.png" alt="Image">
+                    <p>Errors</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="menu">
+        <div class="content">
+            <div>
+                <h3>Modloader Menu</h3>
+                <p>The modloader menu is the place where you manage your mods and configure your settings.</p>
+            </div>
+            <div>
+                <b>Mod Profiles</b>
+                <p>Mod profiles can be configured directly through the modloader menu. After selecting a profile, you can view all mods, add/remove mods, change mod priorities and rename or delete the mod profile.</p>
+            </div>
+            <div>
+                <b>Creating Mod Profiles</b>
+                <p>To create a mod profile, open the menu and navigate to Configure Mod Profiles > Create New Profile. Now, enter the name of your profile. If a profile with the same name does not exist, a new one will be created.</p>
+            </div>
+            <div>
+                <b>Adding Mods</b>
+                <p>To add a mod from to Profile, navigate to Configure Mod Profiles and select a profile. Choose 'Add Mods' and you will see a list of every mod found in your mods folder that is not already in the selected profile. From here, simple enter the number corresponding to your mod and it will automatically be added with the first available priority number (starting with 1). Removing mods works similarly, except you choose the 'Remove Mods' option to see a list of every mod in the selected profile. </p>
+            </div>
+            <div>
+                <b>Mod Priorities</b>
+                <p>
+                    Mod priorities are what makes sure your mods get applied in the right order.
+                    <ul>
+                        <li>
+                            Mods with a higher priority number will get applied first
+                        </li>
+                        <li>
+                            Mods with a lower priority number will get applied later and may overwrite mods with higher priority numbers
+                        </li>
+                    </ul>
+                    Mod priorities can be set to any integer number, including negative numbers. 
+                </p>
+            </div>
+            <div>
+                <b>FastFlag Profiles</b>
+                <p>FastFlags are settings that can be used to quickly change the way that the client functions, mainly intended to be used by Roblox engineers. Due to a majority of people abusing this feature to gain unfair advantages in games, Roblox plans to disable the ability to set FastFlags locally. When this change happens, the ability to set up FastFlag profiles in Kliko's modloader will be removed as well.</p>
+            </div>
+            <div>
+                <b>Creating FastFlag Profiles</b>
+                <p>Creating FastFlag profiles can be done directly through the modloader menu. To do so open the menu and navigate to FastFlags > Configure FastFlag Profiles > Create New Profile. Enter the name you want to give to this profile and press ENTER.</p>
+            </div>
+            <div>
+                <b>Adding FastFlags</b>
+                <p>To add FastFlags to your profile, go to FastFlags > Configure FastFlag Profiles and select the profile that you want to add your fflags to. Now, choose 'Add FastFlags'. First you will be asked to enter the name of your fastflags, after that you can enter it's value.</p>
+            </div>
+            <div>
+                <b>Importing FastFlags</b>
+                <p>To import FastFlags, select your FastFlag profile and choose the option 'Import FastFlags'. You will now be prompted to open a .json file</p>
+            </div>
+            <div>
+                <b>Exporting FastFlags</b>
+                <p>To Export FastFlags, select your FastFlag profile and choose the option 'Export FastFlags'. Your FastFlags will be exported to a .json file</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="mods">
+        <div class="content">
+            <div>
+                <h3>Mods</h3>
+                <p>Mods are a way to personalize your Roblox experience. They are quite limited in what you can change, but — with the right set of mods — you can make Roblox look awesome. The most common mods that you will find are mods that affect UI elements and character sounds, as showcased below. </p>
+                <div class="desktop-hidden">
+                    <img src="images/mods/klikos-mod-1.png" alt="Mod preview">
+                    <img src="images/mods/discord-ui-1.png" alt="Mod preview">
+                </div>
+                <div class="mobile-hidden">
+                    <a class="mod-showcase" href="images/mods/klikos-mod-1.png" target="_blank">
+                        <img src="images/mods/klikos-mod-1.png" alt="mod showcase (Kliko's Mod)">
+                        <i class="image-description">Old escape menu without (left) and with (right) Kliko's mod</i>
+                    </a>
+                    <a class="mod-showcase" href="images/mods/discord-ui-1.png" target="_blank">
+                        <img src="images/mods/discord-ui-1.png" alt="mod showcase (Discord UI)">
+                        <i class="image-description">Old escape menu without (left) and with (right) Discord UI</i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <b>Downloading Mods</b>
+                <p>
+                    You can find Roblox mods on sites like <a href="https://gamebanana.com/games/2879/" target="_blank">GameBanana</a>, in our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">Discord server</a> or in servers for other programs that share the same functionality (example: <a href="https://github.com/pizzaboxer/bloxstrap/" target="_blank">Bloxstrap</a>). The mods you've downloaded should be in the form of a .zip file. Follow these steps to install them: 
+                    <ol>
+                        <li>
+                            Download and extract the .zip file
+                        </li>
+                        <li>
+                            Open File Explorer and go to "%localappdata\Kliko's modloader\Mods%" 
+                        </li>
+                        <li>
+                            Drag and drop the (extracted) .zip file into your mods folder 
+                        </li>
+                    </ol>
+                </p>
+            </div>
+            <div>
+                <b>Mod Formatting</b>
+                <p>
+                    Mods should be added to your mods folder with the right file structure.
+                    To verify that your downloaded mods will get applied correctly, please make sure that they follow the format shown below.
+                    <div>
+                        <ul class="file-structure">
+                            <li>
+                                <ul>
+                                    <li>
+                                        Mod
+                                        <ul>
+                                            <li>
+                                                content
+                                            </li>
+                                            <li>
+                                                ExtraContent
+                                            </li>
+                                            <li>
+                                                . . .
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        Mod
+                                    </li>
+                                    <li>
+                                        . . .
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <b>example:</b> You have a mod that changes the death sound. It should be formatted like this:<span class="mobile-hidden"> </span><br class="desktop-hidden">"mod_name\content\sounds\ouch.ogg" 
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="troubleshooting">
+        <div class="content">
+            <div style="margin-bottom: -32px;">
+                <h3>Common Errors</h3>
+            </div>
+            <div>
+                <b>Program crashes immediately (no error message)</b>
+                <p>
+                    Make sure that Python is (correctly) installed before trying to launch Kliko's modloader. If Python is already installed, and this issue still happens, please follow these steps:
+                    <ul>
+                        <li>
+                            Open file explorer and go to "%localappdata%\Kliko's modloader"
+                        </li>
+                        <li>
+                            Right click anywhere, select open in terminal and type the following command: python "Program Files\main.py"
+                        </li>
+                        <li>
+                            It will now show the error message without instantly closing the terminal.
+                        </li>
+                    </ul>
+                    <b>"Python was not found"</b><br>
+                    This means that windows does not recognize the python command. Please reinstall python and make sure to check the box that says 'Add python.exe to PATH', as shown in the image below.
+                    <img src="images/help/add-to-path.png" alt="Image">
+                </p>
+            </div>
+            <div>
+                <b>PlatformError</b>
+                <p>As of writing this, Kliko's modloader is only supported on Windows platforms, with no plans of adding support for other systems. Because of this, users attempting to launch this program on an unsupported OS will receive this error message.</p>
+            </div>
+            <div>
+                <b>ValidationError</b>
+                <p>This error occurs when (one of) the required files could not be found. Simply reinstalling Kliko's modloader should fix this issue.</p>
+            </div>
+            <div>
+                <b>NotImplementedError</b>
+                <p>You shouldn't encounter this error. If you do, please report this in our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">Discord server</a></p>
+            </div>
+            <div>
+                <b>Unexpected errors</b>
+                <p>Unexpected errors are any errors not listed above. To get more information on why you received this error message, please read the latest log file in "%localappdata%\Kliko's modloader\Logs". If you need any assistance, you are welcome to join our <a href="https://discord.gg/nEjUwdSP9P" target="_blank">support server</a> and let us know. </p>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div id="footer-branding">
+            <div>
+                <img src="images/logo/logo-white.png" alt="Logo">
+                <p>Kliko's modloader</p>
+            </div>
+            <a href="https://raw.githubusercontent.com/TheKliko/klikos-modloader/website/LICENSE">View License</a>
+        </div>
+
+        <div>
+            <div id="footer-action">
+                <div>
+                    <p>Other</p>
+                    <nav aria-label="secondary menu">
+                        <ul class="button-list">
+                            <li>
+                                <a class="navigation" href="https://discord.gg/nEjUwdSP9P">Join our Discord</a>
+                            </li>
+                            <li>
+                                <a class="navigation" href="https://github.com/TheKliko/klikos-modloader/">View on GitHub</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+    
+            <div id="footer-navigation">
+                <div>
+                    <p>Navigation</p>
+                    <nav aria-label="secondary menu">
+                        <ul class="button-list">
+                            <li>
+                                <a class="navigation" href="index.html">
+                                    Home
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navigation" href="" aria-current="page">
+                                    Documentation
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navigation" href="https://github.com/TheKliko/klikos-modloader/releases/" target="_blank">
+                                    Changelog
+                                </a>
+                            </li>
+                            <li>
+                                <a class="navigation" href="download.html">
+                                    Releases
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer-info">
+            <span>Website version: </span>
+            <span id="website-version"></span>
+        </div>
+    </footer>
+</body>
+</html>

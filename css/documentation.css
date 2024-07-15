@@ -1,0 +1,168 @@
+@font-face {
+    font-family: "Monsterrat";
+    src: url("../fonts/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Jura";
+    src: url("../fonts/Jura/Jura-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Code";
+    src: url("../fonts/Source_Code_Pro/SourceCodePro-VariableFont_wght.ttf");
+}
+
+:root {
+    --theme-color: #f20041;
+
+    --header-color: #fcfcfc;
+    --header-height: 32px;
+    --header-padding: 16px;
+
+
+    --footer-color: #25262b;
+    --footer-text: #fcb652;
+    --footer-url: #959595;
+    --footer-url-hover: #c9c9c9;
+    --footer-padding: 64px;
+
+
+    --section-padding-x: 88px;
+    --section-padding-y: 64px;
+    --section-color: #fcfcfc;
+
+
+
+    --text-color: #333;
+    --text-color-2: #ededed;
+    --text-secondary-color: #9c9b99;
+    --font: "Monsterrat";
+
+    --icon-shadow: rgba(98, 101, 105, 0.2) 0px 4px 4px;
+    --button-shadow: rgba(0, 0, 0, 0.35) 0px 4px 4px;
+    --card-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+
+.file-structure {
+    font-family: 'Code';
+    font-size: 0.90rem;
+}
+.file-structure, .file-structure li {
+    list-style-type: none;
+    padding: 0;
+}
+.file-structure > li::before {
+    content: "Mods Folder";
+    padding-right: 5px;
+}
+.file-structure li ul > li::before {
+    content: "├── ";
+    padding-right: 5px;
+}
+.file-structure li ul > li:last-child::before {
+    content: "└── ";
+}
+
+
+
+#documentation h2 {
+    font-size: 3rem;
+    text-align: center;
+}
+#documentation .card-list {
+    gap: 32px;
+}
+#documentation .card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    width: 350px;
+    height: 200px;
+    border: none;
+}
+#documentation .card img {
+    width: 88px;
+    height: 88px;
+}
+#documentation a.card {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1.85rem;
+}
+
+
+
+#menu .content, #mods .content, #troubleshooting .content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+#menu h3, #mods h3, #troubleshooting h3 {
+    margin: 0;
+}
+#menu p, #mods p, #troubleshooting p {
+    margin: 0;
+    margin-top: 4px;
+}
+#menu ul, #mods ul, #troubleshooting ul {
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+
+
+#mods img {
+    width: 100%;
+}
+#mods :nth-child(1) > div {
+    margin-top: 12px;
+}
+#mods img {
+    margin: 0;
+    box-shadow: var(--card-shadow);
+    border-radius: 8px;
+}
+#mods div:has(> .mod-showcase) {
+    display: flex;
+    gap: 16px;
+}
+#mods .mod-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    color: var(--text-color);
+    text-decoration: none;
+    transition: scale 200ms ease-in-out;
+}
+#mods .mod-showcase:hover {
+    scale: 1.01;
+}
+#mods div:has(> .file-structure) {
+    box-shadow: var(--card-shadow);
+    border-radius: 8px;
+    padding: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin: 0;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    background-color: rgba(230,230,230,0.1);
+    width: 350px;
+}
+.darkmode #mods div:has(> .file-structure) {
+    background-color: rgba(50,50,50,0.1);
+}
+
+
+
+#troubleshooting img {
+    display: block;
+    width: 50%;
+    margin-top: 8px;
+}
