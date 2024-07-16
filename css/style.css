@@ -294,11 +294,11 @@ section:nth-of-type(2n) {
     color: #00996f;
 }
 section:nth-of-type(2n) a {
-    color: var(--text-color-2);
+    color: var(--text-color-2) !important;
     filter: brightness(1.5);
 }
 section:nth-of-type(2n) a:visited {
-    filter: brightness(0.8);
+    filter: brightness(0.8) !important;
 }
 
 
