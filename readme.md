@@ -41,10 +41,10 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 Set up different mod profiles and seamlessly switch between them through the modloader menu, use mod priorities to make sure your mods are applied in the right order.
 
 <h3>Rich Presence</h3>
-Replace Roblox's default rich presence to show the game you are playing within Roblox, along with the time spent within that game.
+Replace Roblox's default rich presence to show more details. Including the game name and time spent within games.
 
 <h3>Studio Support</h3>
-Kliko's modloader is not only available for the Roblox Player client, it can also be used to add your favourite mods to Roblox Studio.
+Kliko's modloader is available for both the Roblox Player client and Roblox Studio.
 
 
 
@@ -60,7 +60,7 @@ Follow these instructions to install Kliko's modloader.
         Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod profiles.
     </li>
     <li>
-        Launch your modded copy of Roblox by running the 'Launcher' shortcut.
+        Run the 'Launcher' shortcut.
     </li>
 </ol>
 
@@ -92,22 +92,15 @@ Find more mods — or share your own — in our #mod-sharing channel.
 My goals for this project are:
 <ul>
     <li>
-        Getting more experienced with Python
+        Getting more experience in Python
     </li>
     <li>
         Introducing more people to Roblox mods
     </li>
     <li>
-        Making a website
-    </li>
-    <li>
-        Learning more about managing Discord servers
-    </li>
+        Making a website 😎
+    </li>
 </ul>
 
 <h3>Inspiration</h3>
-This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to Roblox modding, it's community has taught me a lot about creating my own mods.
-<br><br>
-Unfortunately, at the time this project was made, Bloxstrap's mod support was rather basic. Users were unable to switch between mod profiles, and would have to remove their currently applied mod if they wanted to use a different one.
-<br><br>
-This might not have been an issue for most people, but it can be annoying to work with when developing multiple mods at the same time. Rather than waiting for an update, I decided to challenge myself by making my own modloader from scratch, which is something that I've been wanting to do for a while now.
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
