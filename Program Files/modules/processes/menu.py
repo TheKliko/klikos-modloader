@@ -1,3 +1,5 @@
+# There's a lot of reused code in this one
+
 import logging
 import os
 import re
@@ -633,8 +635,18 @@ def configure_selected_mod_profile(profile: str) -> None:
                         
                         else:
                             mod_profiles[response] = mod_profiles.pop(profile)
-                            profile = response
                             json_manager.write(MOD_PROFILES_FILEPATH, mod_profiles)
+                            
+                            SETTINGS_FILEPATH: str = variables.get('settings_filepath')
+                            launch_configuration = variables.get('launch_configuration')
+                            launch_configuration['selected_mod_profile'] = response
+                            json_manager.update(SETTINGS_FILEPATH, 'launch_configuration', launch_configuration)
+
+                            old_selected_mod_profile: str = variables.get('old_selected_mod_profile')
+                            if profile == old_selected_mod_profile:
+                                variables.set('old_selected_mod_profile', response)
+                            
+                            profile = response
                             go_back = True
                         
                         if go_back:
@@ -1147,8 +1159,14 @@ def configure_selected_fastflag_profile(profile: str) -> None:
                         
                         else:
                             fastflag_profiles[response] = fastflag_profiles.pop(profile)
-                            profile = response
                             json_manager.write(FASTFLAG_PROFILES_FILEPATH, fastflag_profiles)
+                            
+                            SETTINGS_FILEPATH: str = variables.get('settings_filepath')
+                            launch_configuration = variables.get('launch_configuration')
+                            launch_configuration['selected_fastflag_profile'] = response
+                            json_manager.update(SETTINGS_FILEPATH, 'launch_configuration', launch_configuration)
+                            
+                            profile = response
                             go_back = True
                         
                         if go_back:
