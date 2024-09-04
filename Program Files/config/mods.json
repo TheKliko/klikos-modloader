@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Old death sound",
+        "enabled": false,
+        "priority": 0
+    },
+    {
+        "name": "Sack's 2015 UI",
+        "enabled": true,
+        "priority": 0
+    }
+]
