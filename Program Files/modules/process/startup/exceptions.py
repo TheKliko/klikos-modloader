@@ -1,0 +1,2 @@
+class CoreFileMissingError(Exception):
+    pass
