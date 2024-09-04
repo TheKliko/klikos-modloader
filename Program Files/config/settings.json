@@ -1,0 +1,57 @@
+{
+    "max_log_files": {
+        "name": "Log file limit",
+        "description": "The maximum number of log files stored in the logging directory",
+        "value": 10,
+        "default": 10,
+        "type": "int",
+        "range": {
+            "min": 3,
+            "max": null
+        }
+    },
+    "check_for_updates": {
+        "name": "Check for updates",
+        "description": "Check for updates when launching this program",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "show_license_details": {
+        "name": "Show license details",
+        "description": "Show the details for each license",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "auto_update_mods": {
+        "name": "Automatic mod updates",
+        "description": "Integrate Kliko's mod updater to automatically update compatible mods",
+        "value": true,
+        "default": false,
+        "type": "bool",
+        "dependants": [
+            "enable_marketplace"
+        ]
+    },
+    "enable_marketplace": {
+        "name": "Marketplace",
+        "description": "Adds the ability to remotely download mods from our marketplace",
+        "value": false,
+        "default": false,
+        "type": "bool",
+        "dependencies": [
+            {
+                "setting": "auto_update_mods",
+                "value": true
+            }
+        ]
+    },
+    "roblox_local_install": {
+        "name": "Use local installations",
+        "description": "When a Roblox update is available, this option can be enabled to check \"%localappdata%/Roblox/Versions\" to see if this version is already installed, and copies this version instead of downloading a new one.",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    }
+}
