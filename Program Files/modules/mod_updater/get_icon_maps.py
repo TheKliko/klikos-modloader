@@ -1,8 +1,10 @@
+import logging
 import os
 import re
 
 
 def get_icon_maps(directory, filepaths: list[dict[str, str]]) -> dict[str,dict[str,dict[str,str|int]]]:
+    logging.info('Getting icon maps . . .')
     data = {}
     for item in filepaths:
         version: str = item['version']

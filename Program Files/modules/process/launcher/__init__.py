@@ -6,7 +6,7 @@ from modules import interface
 from modules.other.launch_mode import ROBLOX_STUDIO
 from modules.roblox import channel, update, launcher
 from modules.utils import variables
-# from modules import activity_watcher
+from modules import activity_watcher
 
 from . import mods
 from . import fastflags
@@ -15,6 +15,7 @@ from . import fastflags
 def run(mode: list[str]) -> None:
     binary_type: str = 'WindowsStudio' if mode == ROBLOX_STUDIO else 'WindowsPlayer'
     logging.info(f'Sarting launcher in "{binary_type}" mode . . .')
+    variables.set('binary_type', binary_type)
 
 
     # Close existing Roblox instances
@@ -52,7 +53,7 @@ def run(mode: list[str]) -> None:
             outdated_mods: dict[str, list[str]] = mods.get_outdated_mods(version, active_mods)
             if outdated_mods != {}:
                 terminal.remove_last(1)
-                terminal.add_line('Updating mods . . .')
+                terminal.add_line('Updating mods . . . (This may take a few minutes)')
                 terminal.add_divider()
                 mods.update(outdated_mods, version)
                 terminal.remove_last(1)
@@ -100,4 +101,5 @@ def run(mode: list[str]) -> None:
     time.sleep(2)
     interface.hide()
 
-    # activity_watcher.start()  # TODO: Implement functionality
+    activity_watcher.start()
+    # TODO: Update rpc to also show updated status of Roblox Studio

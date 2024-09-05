@@ -21,9 +21,11 @@ def get_active() -> list[str]:
     for mod in data:
         if mod.get('enabled', False) == True:
             name: str = mod.get('name', None)
+            priority = mod.get('priority', 0)
             if name != None:
-                active_mods.append(name)
-    return active_mods
+                active_mods.append({'name': name, 'priority': priority})
+    active_mods.sort(key=lambda mod: mod['priority'])
+    return [mod['name'] for mod in active_mods]
 
 
 def get_outdated_mods(version: str, active_mods: list[str]) -> dict[str, list[str]]:
@@ -55,10 +57,23 @@ def get_outdated_mods(version: str, active_mods: list[str]) -> dict[str, list[st
     return outdated_mods
 
 
+def apply(mods: list[str], version: str) -> None:
+    logging.info('Applying mods . . .')
+    mods_directory: str = Directory.MODS
+    version_directory: str = os.path.join(Directory.VERSIONS, version)
+    filesystem.verify(version_directory)
+
+    for mod in mods:
+        mod_path: str = os.path.join(mods_directory, mod)
+        if not os.path.isdir(mod_path):
+            logging.info(f'Failed to apply mod "{mod}": path does not exist!')
+            continue
+
+        shutil.copytree(mod_path, version_directory, dirs_exist_ok=True)
+
+
 def update(mods: dict[str, list[str]], version: str) -> None:
     logging.info(f'Updating mods . . .')
-
-    mods_directory: str = Directory.MODS
 
     deploy_history = mod_updater.DeployHistory()
 
@@ -120,6 +135,7 @@ def update(mods: dict[str, list[str]], version: str) -> None:
             for file in deploy_history.ROBLOX_STUDIO:
                 if file['git_hash'] == mod_data['git_hash']:
                     version_mod_studio = file['version']
+                    git_hash_mod_studio = file['git_hash']
                     break
             if version_mod_studio is None:
                 logging.error('Mod update failed: version_mod_studio is None')
@@ -152,27 +168,9 @@ def update(mods: dict[str, list[str]], version: str) -> None:
 
             icon_maps: dict[str,dict[str,dict[str,str|int]]] = mod_updater.get_icon_maps(temp_directory, imagesetdata_filepaths)
 
+            mods_for_this_version: list[str] = mods[mod_data['version']]
+            modded_icons: dict[str,dict[str,list]] = mod_updater.get_modded_icons(mods_for_this_version, imageset_paths, icon_maps, version_mod_studio, temp_directory)
 
-            # for mod_data in mod_versions_to_update:
-                # for mod in mods[mod_data['version']]:
-                    # mod_updater.get_modded_icons(mod, version)
-                    # mod_updater.generate_imagesets(mod, version, modded_icons)
-                    # mod_updater.update_mod(mod, version)
+            mod_updater.generate_imagesets(modded_icons, imageset_paths, icon_maps, version_mod_studio, version_latest_studio, temp_directory)
 
-
-    raise NotImplementedError('[mods.update()] Function not implemented!')
-
-
-def apply(mods: list[str], version: str) -> None:
-    logging.info('Applying mods . . .')
-    mods_directory: str = Directory.MODS
-    version_directory: str = os.path.join(Directory.VERSIONS, version)
-    filesystem.verify(version_directory)
-
-    for mod in mods:
-        mod_path: str = os.path.join(mods_directory, mod)
-        if not os.path.isdir(mod_path):
-            logging.info(f'Failed to apply mod "{mod}": path does not exist!')
-            continue
-
-        shutil.copytree(mod_path, version_directory, dirs_exist_ok=True)
+            mod_updater.update_mods(mods_for_this_version, temp_directory, version)

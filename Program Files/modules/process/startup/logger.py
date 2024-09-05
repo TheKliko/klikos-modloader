@@ -23,3 +23,5 @@ def start() -> None:
         encoding='utf-8'
     )
     logging.info(f'Writing logs to: {log_filename}')
+
+    logging.getLogger('PIL').setLevel(logging.ERROR)

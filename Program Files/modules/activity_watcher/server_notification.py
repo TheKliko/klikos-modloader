@@ -1,3 +1,4 @@
+import logging
 import notifypy
 
 from modules.other.project import Project
@@ -13,6 +14,7 @@ class Notification:
         self.notification.icon = Project.ICON
 
     def send(self, title: str, message: str) -> None:
+        logging.info(f'Sending notification: {title}')
         self.notification.title = title
         self.notification.message = message
-        self.notification.send()
+        self.notification.send(block=False)
