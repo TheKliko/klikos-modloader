@@ -29,10 +29,7 @@
         "description": "Integrate Kliko's mod updater to automatically update compatible mods",
         "value": true,
         "default": true,
-        "type": "bool",
-        "dependants": [
-            "enable_marketplace"
-        ]
+        "type": "bool"
     },
     "roblox_local_install": {
         "name": "Use local installations",
