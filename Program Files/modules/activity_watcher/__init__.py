@@ -159,7 +159,6 @@ def start() -> None:
             }
 
             if current_data != old_data:
-                print('rpc update')
                 presence.update(
                     details=details,
                     state=state,
