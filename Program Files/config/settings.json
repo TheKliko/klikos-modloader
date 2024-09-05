@@ -28,23 +28,10 @@
         "name": "Automatic mod updates",
         "description": "Integrate Kliko's mod updater to automatically update compatible mods",
         "value": true,
-        "default": false,
+        "default": true,
         "type": "bool",
         "dependants": [
             "enable_marketplace"
-        ]
-    },
-    "enable_marketplace": {
-        "name": "Marketplace",
-        "description": "Adds the ability to remotely download mods from our marketplace",
-        "value": false,
-        "default": false,
-        "type": "bool",
-        "dependencies": [
-            {
-                "setting": "auto_update_mods",
-                "value": true
-            }
         ]
     },
     "roblox_local_install": {
