@@ -15,8 +15,8 @@ def set_registry_keys() -> None:
     roblox_player_registry_path: str = r'Software\Classes\roblox-player\shell\open\command'
     roblox_studio_registry_path: str = r'Software\Classes\roblox-studio\shell\open\command'
 
-    roblox_player_value: str = rf'"{path_to_executable}" -play %1'
-    roblox_studio_value: str = rf'"{path_to_executable}" -studio %1'
+    roblox_player_value: str = rf'"{path_to_executable}" -l %1'
+    roblox_studio_value: str = rf'"{path_to_executable}" -s %1'
 
     try:
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)

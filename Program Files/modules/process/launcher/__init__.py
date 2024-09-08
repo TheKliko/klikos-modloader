@@ -101,5 +101,4 @@ def run(mode: list[str]) -> None:
     time.sleep(2)
     interface.hide()
 
-    activity_watcher.start()
-    # TODO: Update rpc to also show updated status of Roblox Studio
+    activity_watcher.start(binary_type)

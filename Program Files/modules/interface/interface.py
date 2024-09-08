@@ -1,4 +1,5 @@
 import shutil
+import time
 from typing import Literal, Any
 
 from modules.other.project import Project
@@ -48,6 +49,9 @@ class Interface:
             ] = Alignment.LEFT,
             background_color: str = None
         ) -> None:
+
+        self.section = section
+        self.description = description
 
         background(background_color or self.BACKGROUND)
 
@@ -151,12 +155,12 @@ class Interface:
                 
                 if isinstance(text, list):
                     data = [
-                        f'{self.BORDER_COLOR}|{line.get('gap', ' ')}{color}{line.get('style', '')}{item:{line.get('alignment', Alignment.LEFT)}{self.width}}{self.BORDER_COLOR}{line.get('gap', ' ')}|{self.DEFAULT}'
+                        f'{self.BORDER_COLOR}|{line.get('gap', ' ')}{color}{line.get('style', '')}{item+self.DEFAULT:{line.get('alignment', Alignment.LEFT)}{self.width+len(self.DEFAULT)}}{self.DEFAULT}{self.BORDER_COLOR}{line.get('gap', ' ')}|{self.DEFAULT}'
                         for item in text
                     ]
 
                 else:
-                    data = f'{self.BORDER_COLOR}|{line.get('gap', ' ')}{color}{line.get('style', '')}{line['data']:{line.get('alignment', Alignment.LEFT)}{self.width}}{self.BORDER_COLOR}{line.get('gap', ' ')}|{self.DEFAULT}'
+                    data = f'{self.BORDER_COLOR}|{line.get('gap', ' ')}{color}{line.get('style', '')}{line['data']+self.DEFAULT:{line.get('alignment', Alignment.LEFT)}{self.width+len(self.DEFAULT)}}{self.DEFAULT}{self.BORDER_COLOR}{line.get('gap', ' ')}|{self.DEFAULT}'
             
             if isinstance(data, list):
                 for line in data:
@@ -286,3 +290,7 @@ class Interface:
         print(self.DEFAULT, end='')
         
         return response
+    
+    def reset(self) -> None:
+        var: int = 8 if self.description is None else 9
+        self.data = self.data[:var]

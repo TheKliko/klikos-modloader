@@ -21,13 +21,25 @@ class RichPresence:
             self.pypresence = Presence(self.CLIENT_ID)
         except Exception as e:
             self._on_error(e)
+    
+
+    def _init(self) -> None:
+        logging.info('Starting Discord RPC . . .')
+
+        try:
+            self.pypresence = Presence(self.CLIENT_ID)
+        except Exception as e:
+            self._on_error(e)
 
 
     def _on_error(self, exception) -> None:
         if type(exception) in [DiscordNotFound, PipeClosed]:
-            logging.warning(f'[{type(exception).__name__}] Retrying in 10 seconds . . .')
-            time.sleep(10)
-            self.__init__()
+            logging.warning(f'[{type(exception).__name__}] Retrying in 5 seconds . . .')
+
+            self._init()
+            time.sleep(5)
+            self.start()
+            variables.set('do_rpc_update', True)
 
         else:
             logging.error(f'[RichPresenceError] [{type(exception).__name__}] {str(exception)}')
