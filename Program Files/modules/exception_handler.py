@@ -26,4 +26,4 @@ def run(exception) -> None:
     interface.add_line(Hyperlink.WEBSITE, color=Color.URL, style=Style.UNDERLINE)
     interface.add_line('-', is_divider = True)
 
-    interface.get_input('Press ENTER to exit . . .', text_color=Color.BORDER, input_style=Style.HIDDEN)
+    interface.get_input('Press ENTER to exit . . .', input_style=Style.HIDDEN)

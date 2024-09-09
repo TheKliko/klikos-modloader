@@ -1,8 +1,11 @@
+import platform
+
 from . import logger
 from . import dependencies
 from . import settings
 from .check_required_files import check_required_files
 from .clear_old_logs import clear_old_logs
+from .exceptions import *
 
 from modules.interface import Print, Color
 from modules.other.paths import Directory, FilePath
@@ -15,6 +18,9 @@ def run() -> None:
 
     logger.start()
     check_required_files()
+
+    if platform.system() != 'Windows':
+        raise PlatformError(f'Unsupported OS "{platform.system()}" detected!')
 
     dependencies.check_dependencies()
 

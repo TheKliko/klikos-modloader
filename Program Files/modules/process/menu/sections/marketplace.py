@@ -3,7 +3,7 @@ from modules import interface
 
 def show(window) -> str:
     window.reset()
-    window.add_line('About', color=interface.Color.SECTION_TITLE)
+    window.add_line('Remote Mod Downloads', color=interface.Color.SECTION_TITLE)
     window.add_divider()
 
     raise NotImplementedError('Function not implemented!')

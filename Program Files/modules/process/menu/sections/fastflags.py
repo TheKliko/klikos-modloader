@@ -1,6 +1,14 @@
-def show(interface) -> str:
-    interface.reset()
-    interface.add_line('fastflags')
+from modules import interface
 
 
-    return 'home'
+def show(window) -> str:
+    window.reset()
+    window.add_line('FastFlags', color=interface.Color.SECTION_TITLE)
+    window.add_divider()
+
+    raise NotImplementedError('Function not implemented!')
+
+    next_section = window.get_input('Response: ')
+
+
+    return next_section
