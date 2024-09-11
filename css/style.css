@@ -42,11 +42,11 @@
 body.darkmode {
     --theme-color: #cc0037;
 
-    --header-color: #121212;
+    --header-color: #33000e;
     
     --footer-color: #181919;
     
-    --section-color: #121212;
+    --section-color: #1f2125;
     
     --text-color: #e3e1dd;
     --text-secondary-color: #9c9b99;
@@ -104,7 +104,7 @@ img, svg, br {
     box-shadow: var(--button-shadow);
     user-select: none;
 
-    transition: scale 100ms ease, background 100ms ease;
+    transition: scale 200ms ease, background 100ms ease;
 }
 .button * {
     margin: 0;
@@ -112,7 +112,7 @@ img, svg, br {
 }
 .button:hover {
     cursor: pointer;
-    scale: 1.02;
+    scale: 1.01;
 }
 
 .button.action {
@@ -138,7 +138,7 @@ header {
 
     display: grid;
     gap: 8px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: max-content 1fr 1fr;
     grid-template-areas: "branding navigation action";
     align-items: center;
 
@@ -162,7 +162,7 @@ header > * {
     height: var(--header-height);
     filter: url(#icon-shadow-filter);
 }
-#header-branding p {
+#header-branding span {
     font-family: 'Jura';
     font-size: 1.5rem;
     font-weight: 600;
@@ -180,6 +180,37 @@ header > * {
 #header-navigation .button:hover {
     background-color: rgba(125,125,125,0.05);
 }
+#header-navigation a {
+    position: relative;
+}
+#header-navigation a.active::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--theme-color);
+}
+#header-navigation a:hover:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--theme-color);
+}
+#header-navigation a {
+    display: flex;
+    gap: 8px;
+}
+#header-navigation svg {
+    width: 16px;
+}
+#header-navigation a:hover {
+    scale: 1;
+}
 
 #header-action {
     grid-area: action;
@@ -187,6 +218,25 @@ header > * {
 
     display: flex;
     align-items: center;
+}
+header a.hyperlink {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #1995d3;
+}
+header svg {
+    width: 20px;
+    fill: var(--text-color);
+}
+#header-action .button-list {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+header .button {
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 
@@ -385,14 +435,14 @@ section:nth-of-type(2n) .card {
 /* Lightmode icon */
 #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle) #moon {
     display: block;
-    fill: var(--header-color);
+    fill: var(--text-color);
 }
 #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle) #sun, #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle) #sun-hover, #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle) #moon-hover {
     display: none;
 }
 #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle):hover #moon-hover {
     display: block;
-    fill: var(--header-color);
+    fill: var(--text-color);
 }
 #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle):hover #sun, #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle):hover #sun-hover, #desktop-darkmode-toggle:not(.darkmode #desktop-darkmode-toggle):hover #moon {
     display: none;
@@ -401,14 +451,14 @@ section:nth-of-type(2n) .card {
 /* Darkmode icon */
 .darkmode #desktop-darkmode-toggle #sun {
     display: block;
-    fill: var(--header-color);
+    fill: var(--text-color);
 }
 .darkmode #desktop-darkmode-toggle #moon, .darkmode #desktop-darkmode-toggle #sun-hover, .darkmode #desktop-darkmode-toggle #moon-hover {
     display: none;
 }
 .darkmode #desktop-darkmode-toggle:hover #sun-hover {
     display: block;
-    fill: var(--header-color);
+    fill: var(--text-color);
 }
 .darkmode #desktop-darkmode-toggle:hover #sun, .darkmode #desktop-darkmode-toggle:hover #moon-hover, .darkmode #desktop-darkmode-toggle:hover #moon {
     display: none;

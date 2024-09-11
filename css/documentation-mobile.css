@@ -65,7 +65,17 @@
 }
 
 
-
+#documentation {
+    background: linear-gradient(15deg, #cbcbcb, var(--section-color)) no-repeat;
+}
+.darkmode #documentation {
+    background: linear-gradient(15deg, #050505, var(--section-color)) no-repeat;
+}
+#documentation .content {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
 #documentation h2 {
     text-align: center;
 }
@@ -92,6 +102,9 @@
     color: var(--text-color);
     font-weight: 600;
     font-size: 1.2rem;
+}
+.darkmode #documentation a.card {
+    border: solid 1px #252525;
 }
 
 

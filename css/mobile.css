@@ -45,11 +45,11 @@
 body.darkmode {
     --theme-color: #cc0037;
 
-    --header-color: #121212;
+    --header-color: #33000e;
     
     --footer-color: #181919;
     
-    --section-color: #121212;
+    --section-color: #1f2125;
     
     --text-color: #e3e1dd;
     --text-secondary-color: #9c9b99;
@@ -155,6 +155,23 @@ header {
     justify-self: end;
     margin-right: 4px;
 }
+header a.hyperlink {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #1995d3;
+}
+header svg {
+    width: 20px;
+}
+#header-action a.hyperlink {
+    fill: var(--text-color);
+}
+#header-action .button-list {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
 
 #header-branding img {
     width: var(--header-height);
@@ -179,6 +196,7 @@ header {
     opacity: 0;
 
     background: none;
+    background-color: var(--section-color) !important;
 
     transform: translateX(-100vw);
     transition: height 300ms ease, opacity 300ms, background 300ms;
@@ -210,6 +228,9 @@ header {
 }
 #header-navigation.active li:not(:last-child) {
     border-bottom: solid 1px var(--text-color);
+}
+.darkmode #header-navigation.active li:not(:last-child) {
+    border-bottom: solid 1px var(--footer-color);
 }
 #header-navigation a {
     padding-left: 8px;
