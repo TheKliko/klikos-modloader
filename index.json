@@ -1,0 +1,43 @@
+[
+    {
+        "name": "Kliko's mod",
+        "author": "TheKliko",
+        "description": "Gradient mod: #990000 -> #ff006e",
+        "id": "klikos-mod",
+        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-donwloads/thumbnails/klikos-mod.png"
+    },
+    {
+        "name": "Bloxstrap theme",
+        "author": "TheKliko",
+        "description": "Gradient mod: #a011fe -> #5460f9",
+        "id": "bloxstrap-theme",
+        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-donwloads/thumbnails/bloxstrap-theme.png"
+    },
+    {
+        "name": "Discord UI",
+        "author": "TheKliko",
+        "description": "Changes the icons to look like those found in Discord",
+        "id": "discord-ui",
+        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-donwloads/thumbnails/discord-ui.png"
+    },
+    {
+        "name": "Bloxstrap theme [Premium]",
+        "author": "TheKliko",
+        "description": "Gradient mod: #feaa17 -> #f95455",
+        "id": "bloxstrap-theme-premium",
+        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-donwloads/thumbnails/bloxstrap-theme-premium.png"
+    },
+    {
+        "name": "UBFF Theme",
+        "author": "TheKliko",
+        "description": "Gradient mod: #648bd9 -> #fa94d7",
+        "id": "ubff-theme",
+        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-donwloads/thumbnails/ubff-theme.png"
+    },
+    {
+        "name": "Old Death Sound",
+        "author": "TheKliko",
+        "description": "death sound: 'oof'",
+        "id": "old-death-sound"
+    }
+]
