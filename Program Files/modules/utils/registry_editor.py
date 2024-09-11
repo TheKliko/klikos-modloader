@@ -5,36 +5,32 @@ import winreg
 from modules.utils import variables
 
 
-def set_registry_key() -> None:
-    """Used to open Kliko's modloader when launching Roblox from the website"""
-    logging.info('Setting registry key for Kliko\'s modloader')
+def set_registry_keys() -> None:
+    logging.info('Setting registry keys . . .')
 
-    ROOT: str = variables.get('root')
-    REGISTRY_PATH: str = r'Software\Classes\roblox-player\shell\open\command'
-    STUDIO_REGISTRY_PATH: str = r'Software\Classes\roblox-studio\shell\open\command'
-    NEW_VALUE: str = f'"{ROOT}\Kliko\'s modloader.exe" -play %1'
-    STUDIO_NEW_VALUE: str = f'"{ROOT}\Kliko\'s modloader.exe" -studio %1'
+    root: str = variables.get('root')
+    path_to_executable: str = os.path.join(root, 'kliko\'s modloader.exe')
+
+    registry_path: str = r'Software\Classes\roblox\shell\open\command'
+    roblox_player_registry_path: str = r'Software\Classes\roblox-player\shell\open\command'
+    roblox_studio_registry_path: str = r'Software\Classes\roblox-studio\shell\open\command'
+
+    roblox_player_value: str = rf'"{path_to_executable}" -l %1'
+    roblox_studio_value: str = rf'"{path_to_executable}" -s %1'
 
     try:
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, REGISTRY_PATH, 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, '', 0, winreg.REG_SZ, NEW_VALUE)
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)
+        winreg.SetValueEx(key, '', 0, winreg.REG_SZ, roblox_player_value)
         winreg.CloseKey(key)
         
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, STUDIO_REGISTRY_PATH, 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, '', 0, winreg.REG_SZ, STUDIO_NEW_VALUE)
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, roblox_player_registry_path, 0, winreg.KEY_SET_VALUE)
+        winreg.SetValueEx(key, '', 0, winreg.REG_SZ, roblox_player_value)
+        winreg.CloseKey(key)
+        
+        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, roblox_studio_registry_path, 0, winreg.KEY_SET_VALUE)
+        winreg.SetValueEx(key, '', 0, winreg.REG_SZ, roblox_studio_value)
         winreg.CloseKey(key)
     
     except Exception as e:
-        logging.debug('Failed to set registry key!')
-        logging.error(f'An unexpected {type(e).__name__} occured: {str(e)}')
-
-
-def main() -> None:
-    print(f'filename: {os.path.basename(__file__)}')
-    print('description: module used in Kliko\'s modloader')
-    print()
-    input('Press ENTER to exit')
-
-
-if __name__ == '__main__':
-    main()
+        logging.error('Failed to set registry keys!')
+        logging.error(f'[{type(e).__name__}] {str(e)}')

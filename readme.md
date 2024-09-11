@@ -13,7 +13,7 @@
 <h3>Roblox mods made easy</h3>
 
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>. It serves as a wrapper around Roblox's default launcher, allowing users to safely launch a modded copy without any risk of getting their account suspended. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
 
 
 
@@ -37,14 +37,20 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 
 <h2 id="features">Features</h2>
 
-<h3>Mod Profiles</h3>
-Set up different mod profiles and seamlessly switch between them through the modloader menu, use mod priorities to make sure your mods are applied in the right order.
+<h3>Mods</h3>
+Each mod can be enabled or disabled, use mod priorities to make sure your mods are applied in the right order.
 
-<h3>Rich Presence</h3>
+<h3>Discord RPC</h3>
 Replace Roblox's default rich presence to show more details. Including the game name and time spent within games.
 
 <h3>Studio Support</h3>
 Kliko's modloader is available for both the Roblox Player client and Roblox Studio.
+
+<h3>Automatic mod updates</h3>
+Kliko's modloader will automatically update your compatible mods if needed.
+
+<h3>Remote mod downloads</h3>
+Users can easily download mods through the modloader menu.
 
 
 
@@ -57,10 +63,10 @@ Follow these instructions to install Kliko's modloader.
         Download and install the <a href="https://github.com/TheKliko/klikos-modloader/releases/latest">latest release</a>.
     </li>
     <li>
-        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mod profiles.
+        Run the 'Modloader Menu' shortcut to adjust your settings and configure your mods.
     </li>
     <li>
-        Run the 'Launcher' shortcut.
+        Run the 'Launcher' shortcut to launch modded Roblox.
     </li>
 </ol>
 
@@ -74,7 +80,7 @@ This is the official support server for Kliko's modloader, join our community to
 
 <h3>Support</h3>
 
-Are you having issues during setup? Have you encountered a bug? Do you need help with your mods? Or do you have another issue related to this program? We are happy to assist you, join our server and open a ticket or ask for help in on of the channels.
+Are you having issues during setup? Have you encountered a bug? Do you need help with your mods? Or do you have another issue related to this program? We are happy to assist you, <a href='https://discord.gg/nEjUwdSP9P'>join our server</a> and open a ticket or ask for help in one of the channels.
 
 <h3>Feedback</h3>
 
@@ -99,7 +105,8 @@ My goals for this project are:
     </li>
     <li>
         Making a website 😎
-    </li>
+    </li>
+
 </ul>
 
 <h3>Inspiration</h3>
