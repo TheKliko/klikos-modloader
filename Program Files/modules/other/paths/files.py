@@ -6,7 +6,6 @@ from .directories import Directory
 class FilePath:
     INTEGRATIONS: str = None
     SETTINGS: str = None
-    LAUNCH_CONFIGURATION: str = None
     MODS: str = None
     FASTFLAGS: str = None
 
@@ -19,7 +18,6 @@ class FilePath:
                 Directory.initialize()
             cls.INTEGRATIONS: str = os.path.join(Directory.PROGRAM_FILES, 'config', 'integrations.json')
             cls.SETTINGS: str = os.path.join(Directory.PROGRAM_FILES, 'config', 'settings.json')
-            cls.LAUNCH_CONFIGURATION: str = os.path.join(Directory.PROGRAM_FILES, 'config', 'launch_configuration.json')
             cls.MODS: str = os.path.join(Directory.PROGRAM_FILES, 'config', 'mods.json')
             cls.FASTFLAGS: str = os.path.join(Directory.PROGRAM_FILES, 'config', 'fastflags.json')
             cls._initialized = True
