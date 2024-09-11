@@ -1,0 +1,17 @@
+{
+    "normal": [
+        "certifi",
+        "charset_normalizer",
+        "colorama",
+        "idna",
+        "loguru",
+        "notifypy",
+        "pypresence",
+        "requests",
+        "urllib3",
+        "win32_setctime"
+    ],
+    "version_specific": [
+        "pillow"
+    ]
+}
