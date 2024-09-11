@@ -1,2 +1,0 @@
-class ManualQuitOut(Exception):
-    pass
