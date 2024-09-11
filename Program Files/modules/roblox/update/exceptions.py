@@ -1,0 +1,2 @@
+class RobloxUpdateError(Exception):
+    pass

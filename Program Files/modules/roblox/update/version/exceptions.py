@@ -1,0 +1,2 @@
+class LatestVersionNotFoundError(Exception):
+    pass
