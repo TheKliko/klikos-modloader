@@ -21,6 +21,13 @@
         "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/discord-ui.png"
     },
     {
+        "name": "Translucency",
+        "author": "dooM",
+        "description": "Make UI elements transparent.",
+        "id": "translucency",
+        "preview": "https://gamebanana.com/mods/542048"
+    },
+    {
         "name": "Bloxstrap theme [Premium]",
         "author": "TheKliko",
         "description": "Gradient mod: #feaa17 -> #f95455",
@@ -36,7 +43,7 @@
     },
     {
         "name": "Old Death Sound",
-        "author": "TheKliko",
+        "author": "???",
         "description": "death sound: 'oof'",
         "id": "old-death-sound"
     }
