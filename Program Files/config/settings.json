@@ -1,0 +1,34 @@
+{
+    "max_log_files": {
+        "name": "Log file limit",
+        "description": "The maximum number of log files stored in the logging directory.",
+        "value": 10,
+        "default": 10,
+        "type": "int",
+        "range": {
+            "min": 3,
+            "max": null
+        }
+    },
+    "check_for_updates": {
+        "name": "Check for updates",
+        "description": "Check for updates when launching this program.",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "auto_update_mods": {
+        "name": "Automatic mod updates",
+        "description": "Integrate Kliko's mod updater to automatically update compatible mods. Required for 'Community Mods' to work.",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "roblox_local_install": {
+        "name": "Use local installations",
+        "description": "When a Roblox update is available, this option can be enabled to check \"%localappdata%/Roblox/Versions\" to see if this version is already installed, and copies this version instead of downloading a new one.",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    }
+}
