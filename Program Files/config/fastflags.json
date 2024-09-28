@@ -27,7 +27,8 @@
             "FFlagEnableInGameMenuChrome": false,
             "FFlagEnableMenuControlsABTest": false,
             "FFlagEnableV3MenuABTest3": false,
-            "FFlagEnableInGameMenuChromeABTest3": false
+            "FFlagEnableInGameMenuChromeABTest3": false,
+            "FFlagFixReportButtonCutOff": false
         }
     },
     {
@@ -66,14 +67,6 @@
         "enabled": false,
         "data": {
             "FFlagDebugForceFutureIsBrightPhase3": true
-        }
-    },
-    {
-        "name": "Infinite zoom",
-        "description": null,
-        "enabled": true,
-        "data": {
-            "FIntCameraMaxZoomDistance": 99999
         }
     }
 ]
