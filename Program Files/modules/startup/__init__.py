@@ -1,2 +1,0 @@
-def run() -> None:
-    pass
