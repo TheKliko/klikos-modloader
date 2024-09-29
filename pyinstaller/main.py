@@ -31,9 +31,9 @@ def main():
 def python_not_found() -> None:
     system('cls' if name == 'nt' else 'clear')
     print(COLOR_ERROR+"ERROR: Python was not found!")
-    print(COLOR_WARNING+"Please (re)install Python, make sure to check the box that says: \"Add python.exe to PATH\"")
+    print(COLOR_WARNING+"Please reinstall Python, make sure to check the box that says: \"Add python.exe to PATH\"")
     print(COLOR_RESET)
-    print("Python can be installed from the Microsoft Store or "+COLOR_URL+"https://www.python.org/downloads/")
+    print("Python can be downloaded from the Microsoft Store or "+COLOR_URL+"https://www.python.org/downloads/")
     print(COLOR_RESET)
     input("Press ENTER to exit . . .")
 
