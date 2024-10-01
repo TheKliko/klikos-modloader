@@ -9,5 +9,6 @@
     "requests",
     "urllib3",
     "win32_setctime",
-    "PIL"
+    "PIL",
+	"customtkinter"
 ]
