@@ -1,14 +1,7 @@
 [
-    "certifi",
-    "charset_normalizer",
-    "colorama",
-    "idna",
-    "loguru",
-    "notifypy",
-    "pypresence",
     "requests",
-    "urllib3",
-    "win32_setctime",
+    "pypresence",
+    "notifypy",
     "PIL",
-	"customtkinter"
+    "customtkinter"
 ]
