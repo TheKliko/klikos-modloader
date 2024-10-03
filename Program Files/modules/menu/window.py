@@ -120,6 +120,7 @@ class MainWindow:
         from .sections import fastflags
         fastflags.show(
             root=self.root,
+            subsection_background=self.background_subsection,
             width=self.section_width,
             height=self.height,
             padx=self.section_padding,

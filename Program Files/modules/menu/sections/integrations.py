@@ -7,7 +7,6 @@ from typing import Any
 from modules.functions import integrations
 from resources.ctk_switch_color import CTkSwitchColor
 
-from ..load_image import load_image, load_image_from_url
 from ..fonts import *
 
 

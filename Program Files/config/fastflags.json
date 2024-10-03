@@ -1,7 +1,7 @@
 [
     {
         "name": "Texture quality override (3)",
-        "description": null,
+        "description": "Force textures to be rendered at the highest quality level",
         "enabled": true,
         "data": {
             "DFFlagTextureQualityOverrideEnabled": true,
@@ -10,7 +10,7 @@
     },
     {
         "name": "Hide fullscreen titlebar",
-        "description": null,
+        "description": "\"Hides\" the titlebar by adding a massive delay",
         "enabled": true,
         "data": {
             "FIntFullscreenTitleBarTriggerDelayMillis": 2147483647
@@ -71,7 +71,7 @@
     },
     {
         "name": "Infinite zoom",
-        "description": null,
+        "description": "Allows you to zoom out extremely far (only works on some games)",
         "enabled": true,
         "data": {
             "FIntCameraMaxZoomDistance": 99999

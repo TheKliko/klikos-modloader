@@ -189,9 +189,6 @@ def create_mod_frame(master, background: str|tuple[str,str], data: dict[str,str]
                 font=text_font,
                 fg_color="transparent"
             ).grid(column=1, row=0, rowspan=3, sticky="ns", padx=(0, 72))
-
-
-
         except:
             pass
     
@@ -208,7 +205,7 @@ def create_mod_frame(master, background: str|tuple[str,str], data: dict[str,str]
         hover_color=download_button_background_active,
         cursor="hand2",
         command=lambda: download_mod(mod_id=id, mod_name=name)
-    ).grid(column=2, row=0, rowspan=3, padx=(0,16))
+    ).grid(column=2, row=0, rowspan=3, padx=(0,32))
 
 
 def download_mod(mod_id: str, mod_name: str) -> None:
