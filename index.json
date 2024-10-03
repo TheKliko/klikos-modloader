@@ -14,7 +14,7 @@
         "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/bloxstrap-theme.png"
     },
     {
-        "name": "Discord UI",
+        "name": "Discord UI [WIP]",
         "author": "TheKliko",
         "description": "Changes the icons to look like those found in Discord",
         "id": "discord-ui",
