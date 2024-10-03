@@ -1,5 +1,7 @@
 from typing import Any
 import json
+import logging
+import copy
 
 from modules.filesystem import File
 
@@ -24,7 +26,16 @@ def set(key: str, value: Any) -> None:
     with open(File.settings(), "r") as file:
         data: dict = json.load(file)
 
+    old_data = copy.deepcopy(data)
     data[key]["value"] = value
 
-    with open(File.settings(), "w") as file:
-        json.dump(data, file, indent=4)
+    try:
+        with open(File.settings(), "w") as file:
+            json.dump(data, file, indent=4)
+
+    except Exception as e:
+        with open(File.settings(), "w") as file:
+            json.dump(old_data, file, indent=4)
+
+        logging.error(type(e).__name__+": "+str(e))
+        raise type(e)(str(e))
