@@ -9,6 +9,7 @@ from PIL import Image
 from modules import request
 
 
+cache: dict = {}
 loaded_images: list = []
 
 
@@ -38,12 +39,16 @@ def load_image_from_url(url: str, size: tuple[int,int] = (24,24)) -> CTkImage:
         response = request.get(url=url)
         pil_image: Image.Image = Image.open(BytesIO(response.content))
 
+        if url in cache:
+            return cache[url]
+        
         image = CTkImage(
             light_image=pil_image,
             dark_image=pil_image,
             size=size
         )
         loaded_images.append(image)
+        cache[url] = image
         return image
 
 
