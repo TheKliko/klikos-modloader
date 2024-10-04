@@ -38,4 +38,4 @@ def set(key: str, value: Any) -> None:
             json.dump(old_data, file, indent=4)
 
         logging.error(type(e).__name__+": "+str(e))
-        raise type(e)(str(e))
+        raise

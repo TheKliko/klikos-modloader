@@ -132,8 +132,10 @@ def load_mods(master, background: str|tuple[str,str]) -> None:
 
     for i, mod in enumerate(mods, 1):
         threading.Thread(
+            name="marketplace-thread-"+str(i),
             target=create_mod_frame,
-            args=(master,background,mod,i)
+            args=(master,background,mod,i),
+            daemon=True
         ).start()
 
 
