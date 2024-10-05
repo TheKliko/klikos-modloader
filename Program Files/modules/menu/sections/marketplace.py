@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess
 import threading
-
+import tkinter as tk
 import customtkinter as ctk
 
 from modules import request
@@ -117,13 +117,17 @@ def show_error(background: str|tuple[str,str], exception: Exception, width: int)
         font=text_font
     ).grid(column=0, row=0, sticky="ew", padx=(8,0))
 
-    ctk.CTkLabel(
+    textbox = ctk.CTkTextbox(
         frame,
-        text=str(type(exception).__name__)+": "+str(exception),
-        anchor="w",
-        justify="left",
-        font=text_font
-    ).grid(column=0, row=1, sticky="ew", padx=(8,0))
+        font=text_font,
+        fg_color=background,
+        width=width,
+        wrap="word"
+    )
+    textbox.delete(0.0, "end")
+    textbox.insert("end", (str(type(exception).__name__)+":\n"+str(exception)))
+    textbox.configure(state="disabled")
+    textbox.grid(column=0, row=1, sticky="ew")
 
 
 def load_mods(master, background: str|tuple[str,str]) -> None:
@@ -140,74 +144,78 @@ def load_mods(master, background: str|tuple[str,str]) -> None:
 
 
 def create_mod_frame(master, background: str|tuple[str,str], data: dict[str,str], index: int) -> None:
-    frame: ctk.CTkFrame = ctk.CTkFrame(
-        master,
-        fg_color=background
-    )
-    frame.grid(column=0, row=index, sticky="ew", pady=10, padx=(0,10))
-    frame.grid_columnconfigure(0, weight=3)
-    frame.grid_columnconfigure(1, weight=0)
-    frame.grid_columnconfigure(2, weight=0)
+    try:
+        frame: ctk.CTkFrame = ctk.CTkFrame(
+            master,
+            fg_color=background
+        )
+        frame.grid(column=0, row=index, sticky="ew", pady=10, padx=(0,10))
+        frame.grid_columnconfigure(0, weight=3)
+        frame.grid_columnconfigure(1, weight=0)
+        frame.grid_columnconfigure(2, weight=0)
 
-    id: str = data["id"]
-    name: str = data.get("name", id)
-    author: str|None = data.get("author", None)
-    description: str|None = data.get("description", None)
-    thumbnail_url: str|None = request.Api.mod_thumbnail(id) if data.get("has_thumbnail", True) == True else None
+        id: str = data["id"]
+        name: str = data.get("name", id)
+        author: str|None = data.get("author", None)
+        description: str|None = data.get("description", None)
+        thumbnail_url: str|None = request.Api.mod_thumbnail(id) if data.get("has_thumbnail", True) == True else None
 
-    ctk.CTkLabel(
-        frame,
-        text=str(name),
-        anchor="w",
-        justify="left",
-        font=subtitle_font
-    ).grid(column=0, row=0, sticky="ew", padx=(16,0), pady=(16,0))
-    
-    ctk.CTkLabel(
-        frame,
-        text=str(description),
-        anchor="w",
-        justify="left",
-        font=text_font
-    ).grid(column=0, row=1, sticky="ew", padx=(16,0))
-    
-    ctk.CTkLabel(
-        frame,
-        text="Made by: "+str(author or "AUTHOR_NOT_SPECIFIED"),
-        anchor="w",
-        justify="left",
-        font=text_font_small
-    ).grid(column=0, row=2, sticky="ew", padx=(16,0), pady=(0,16))
+        ctk.CTkLabel(
+            frame,
+            text=str(name),
+            anchor="w",
+            justify="left",
+            font=subtitle_font
+        ).grid(column=0, row=0, sticky="ew", padx=(16,0), pady=(16,0))
+        
+        ctk.CTkLabel(
+            frame,
+            text=str(description),
+            anchor="w",
+            justify="left",
+            font=text_font
+        ).grid(column=0, row=1, sticky="ew", padx=(16,0))
+        
+        ctk.CTkLabel(
+            frame,
+            text="Made by: "+str(author or "AUTHOR_NOT_SPECIFIED"),
+            anchor="w",
+            justify="left",
+            font=text_font_small
+        ).grid(column=0, row=2, sticky="ew", padx=(16,0), pady=(0,16))
 
-    if thumbnail_url is not None:
-        try:
-            image = load_image_from_url(url=thumbnail_url, size=(64,64))
-            ctk.CTkLabel(
-                frame,
-                text="",
-                image=image,
-                anchor="w",
-                justify="left",
-                font=text_font,
-                fg_color="transparent"
-            ).grid(column=1, row=0, rowspan=3, sticky="ns", padx=(0, 72))
-        except:
-            pass
-    
-    ctk.CTkButton(
-        frame,
-        text="",
-        image=load_image(
-            light=download_icon,
-            dark=download_icon
-        ),
-        width=48,
-        height=48,
-        fg_color=download_button_background,
-        hover_color=download_button_background_active,
-        cursor="hand2",
-        command=lambda: download_mod(mod_id=id, mod_name=name)
-    ).grid(column=2, row=0, rowspan=3, padx=(0,32))
+        if thumbnail_url is not None:
+            try:
+                image = load_image_from_url(url=thumbnail_url, size=(64,64))
+                ctk.CTkLabel(
+                    frame,
+                    text="",
+                    image=image,
+                    anchor="w",
+                    justify="left",
+                    font=text_font,
+                    fg_color="transparent"
+                ).grid(column=1, row=0, rowspan=3, sticky="ns", padx=(0, 72))
+            except:
+                pass
+        
+        ctk.CTkButton(
+            frame,
+            text="",
+            image=load_image(
+                light=download_icon,
+                dark=download_icon
+            ),
+            width=48,
+            height=48,
+            fg_color=download_button_background,
+            hover_color=download_button_background_active,
+            cursor="hand2",
+            command=lambda: download_mod(mod_id=id, mod_name=name)
+        ).grid(column=2, row=0, rowspan=3, padx=(0,32))
+
+    except tk.TclError:
+        pass
 
 
 def download_mod(mod_id: str, mod_name: str) -> None:

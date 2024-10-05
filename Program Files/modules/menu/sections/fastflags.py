@@ -330,23 +330,18 @@ def create_fastflags_frame(master, width: int, data: dict, full_data: dict, back
 
     save_icon: str = os.path.join(Directory.program_files(), "resources", "icons", "common", "save.png")
     icon_size: tuple[int,int] = (16,16)
-    button: dict = {
-        "text": "",
-        "image": save_icon,
-        "command": lambda: update_fastflags(data=full_data, textbox_frame=frame)
-    }
     image = load_image(
-        light=button["image"],
-        dark=button["image"],
+        light=save_icon,
+        dark=save_icon,
         size=icon_size
     )
     button_padding: int = 8
     ctk.CTkButton(
         parent,
-        text=str(button["text"] or ""),
+        text="Save",
         image=image,
-        command=button["command"],
-        width=32,
+        command=lambda: update_fastflags(data=full_data, textbox_frame=frame),
+        width=70,
         height=32,
         fg_color=CTkButtonColor.NORMAL,
         hover_color=CTkButtonColor.HOVER,
@@ -577,8 +572,8 @@ def import_fastflags(profile_data: dict, fastflag_frame):
             return
         with open(filepath, "r") as file:
             data = json.load(file)
-        
-        data_string = json.dumps(data, indent=4)
+        profile_data["data"].update(data)
+        data_string = json.dumps(profile_data["data"], indent=4)
         fastflag_frame.delete(0.0, "end")
         fastflag_frame.insert(0.0, data_string)
 

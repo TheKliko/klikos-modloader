@@ -2,17 +2,17 @@ import logging
 import os
 import tkinter as tk
 from io import BytesIO
+from functools import cache
 
 from customtkinter import CTkImage
 from PIL import Image
 
 from modules import request
 
-
-cache: dict = {}
-loaded_images: list = []
+# loaded_images: list = []
 
 
+@cache
 def load_image(light: str, dark: str, size: tuple[int,int] = (24,24)) -> CTkImage:
     if not os.path.isfile(light) or not light.endswith(".png") or not os.path.isfile(dark) or not dark.endswith(".png"):
         return
@@ -26,7 +26,7 @@ def load_image(light: str, dark: str, size: tuple[int,int] = (24,24)) -> CTkImag
             dark_image=dark_image,
             size=size
         )
-        loaded_images.append(image)
+        # loaded_images.append(image)
         return image
 
     except Exception as e:
@@ -34,11 +34,9 @@ def load_image(light: str, dark: str, size: tuple[int,int] = (24,24)) -> CTkImag
         logging.error(type(e).__name__+": "+str(e))
 
 
+@cache
 def load_image_from_url(url: str, size: tuple[int,int] = (24,24)) -> CTkImage:
     try:
-        if url in cache:
-            return cache[url]
-        
         response = request.get(url=url)
         pil_image: Image.Image = Image.open(BytesIO(response.content))
         
@@ -47,8 +45,7 @@ def load_image_from_url(url: str, size: tuple[int,int] = (24,24)) -> CTkImage:
             dark_image=pil_image,
             size=size
         )
-        loaded_images.append(image)
-        cache[url] = image
+        # loaded_images.append(image)
         return image
 
 

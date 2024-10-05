@@ -49,36 +49,8 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
     section.grid(column=1,row=0, sticky="nsew", padx=(padx,0), pady=pady)
     section.grid_columnconfigure(0, weight=1)
 
-    # load_header(master=section, width=width)
     load_info_frame(master=section, width=width, index=1)
     load_licenses(master=section, width=width, background=subsection_background, index=2)
-
-
-# def load_header(master, width: int) -> None:
-#     header: ctk.CTkFrame = ctk.CTkFrame(
-#         master,
-#         width=width,
-#         fg_color="transparent"
-#     )
-#     header.grid(column=0, row=0, sticky="nsew")
-
-#     title: ctk.CTkLabel = ctk.CTkLabel(
-#         header,
-#         text="About",
-#         anchor="w",
-#         justify="left",
-#         font=title_font
-#     )
-#     title.grid(column=0, row=0, sticky="nsew")
-
-#     description: ctk.CTkLabel = ctk.CTkLabel(
-#         header,
-#         text="Project Info",
-#         anchor="w",
-#         justify="left",
-#         font=text_font
-#     )
-#     description.grid(column=0, row=1, sticky="nsew")
 
 
 def load_info_frame(master, width: int, index: int) -> None:
@@ -255,7 +227,7 @@ def load_licenses(master, width: int, background: str|tuple[str,str], index: int
 
             ctk.CTkLabel(
                 license_box,
-                text=owner,
+                text="by "+owner,
                 anchor="w",
                 justify="left",
                 font=text_font_small
@@ -263,15 +235,15 @@ def load_licenses(master, width: int, background: str|tuple[str,str], index: int
 
             ctk.CTkLabel(
                 license_box,
-                text=license_type,
+                text="Type: "+license_type,
                 anchor="w",
                 justify="left",
-                font=text_font
-            ).grid(column=0, row=2, sticky="nsew", padx=box_padding, pady=box_padding)
+                font=text_font_small
+            ).grid(column=0, row=2, sticky="nsew", padx=box_padding, pady=(0, box_padding))
 
 
             if url:
-                license_box.bind("<Button-1>", lambda event: open_in_browser(url=url))
+                license_box.bind("<Button-1>", lambda event, url=url: open_in_browser(url=url))
 
         except Exception as e:
             print(type(e).__name__+": "+str(e))

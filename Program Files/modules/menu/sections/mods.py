@@ -5,6 +5,7 @@ from tkinter.filedialog import askopenfilenames
 import customtkinter as ctk
 
 from modules.interface import Response
+from modules import filesystem
 from modules.filesystem import Directory, extract
 from modules.functions import mods
 from modules.functions.menu import error
@@ -54,14 +55,22 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
 
     load_header(master=section, width=width)
 
-    icon: str = os.path.join(Directory.program_files(), "resources", "icons", "mods", "add.png")
-    ctk.CTkButton(
+    button_frame = ctk.CTkFrame(
         section,
+        width=width,
+        fg_color="transparent"
+    )
+    button_frame.grid(column=0, row=1, sticky="nsew")
+    button_frame.grid_columnconfigure(1, weight=1)
+
+    package_icon: str = os.path.join(Directory.program_files(), "resources", "icons", "mods", "package.png")
+    ctk.CTkButton(
+        button_frame,
         text="Add mods",
         width=108,
         image=load_image(
-            light=icon,
-            dark=icon
+            light=package_icon,
+            dark=package_icon
         ),
         fg_color=CTkButtonColor.NORMAL,
         hover_color=CTkButtonColor.HOVER,
@@ -76,9 +85,35 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
             padx=padx,
             pady=pady
         )
-    ).grid(column=0, row=1, sticky="nsw", pady=(16,24))
+    ).grid(column=0, row=0, sticky="nsw", pady=(16,16))
 
-    load_mods(master=section, width=width, index=2)
+    folder_icon: str = os.path.join(Directory.program_files(), "resources", "icons", "mods", "folder.png")
+    ctk.CTkButton(
+        button_frame,
+        text="Open mods folder",
+        width=108,
+        image=load_image(
+            light=folder_icon,
+            dark=folder_icon
+        ),
+        fg_color=CTkButtonColor.NORMAL,
+        hover_color=CTkButtonColor.HOVER,
+        cursor="hand2",
+        anchor="w",
+        compound=ctk.LEFT,
+        command=lambda: filesystem.open(Directory.mods())
+    ).grid(column=1, row=0, sticky="nsw", padx=8, pady=(16,16))
+
+    load_mods(
+        master=section,
+        width=width,
+        index=2,
+        background=subsection_background,
+        root=root,
+        height=height,
+        padx=padx,
+        pady=pady
+    )
 
 
 def load_header(master, width: int) -> None:
@@ -108,22 +143,152 @@ def load_header(master, width: int) -> None:
     description.grid(column=0, row=1, sticky="nsew")
 
 
-def load_mods(master, width: int, index: int) -> None:
-    pass
+def load_mods(master, width: int, index: int, root, background: str|tuple[str,str], height: int, padx: int, pady: int) -> None:
+    def create_mod_button(name: str, priority: int, enabled: bool, i: int) -> None:
+        frame: ctk.CTkFrame = ctk.CTkFrame(
+            master,
+            fg_color=background
+        )
+        frame.grid(column=0, row=i, sticky="ew", pady=10, padx=(0,10))
+        frame.grid_columnconfigure(1, weight=1)
+
+        delete_icon: str = os.path.join(Directory.program_files(), "resources", "icons", "common", "remove.png")
+        ctk.CTkButton(
+            frame,
+            text="",
+            image=load_image(
+                light=delete_icon,
+                dark=delete_icon
+            ),
+            width=44,
+            height=44,
+            fg_color=CTkButtonColor.NORMAL,
+            hover_color=CTkButtonColor.HOVER,
+            cursor="hand2",
+            command=lambda: delete_mod(
+                root=root,
+                subsection_background=background,
+                width=width,
+                height=height,
+                padx=padx,
+                pady=pady,
+                profile=name
+            )
+        ).grid(column=0, row=0, rowspan=2, padx=16)
+
+        load_order_icon: str = os.path.join(Directory.program_files(), "resources", "icons", "mods", "order.png")
+        ctk.CTkButton(
+            frame,
+            text="Change load order",
+            image=load_image(
+                light=load_order_icon,
+                dark=load_order_icon,
+                size=(32,32)
+            ),
+            width=152,
+            height=44,
+            fg_color=CTkButtonColor.NORMAL,
+            hover_color=CTkButtonColor.HOVER,
+            cursor="hand2",
+            command=lambda: change_priority(
+                profile=name,
+                root=root,
+                subsection_background=background,
+                width=width,
+                height=height,
+                padx=padx,
+                pady=pady
+            )
+        ).grid(column=2, row=0, rowspan=2, padx=16)
+
+        ctk.CTkLabel(
+            frame,
+            text=name,
+            anchor="w",
+            justify="left",
+            font=subtitle_font
+        ).grid(column=1, row=0, sticky="ew", pady=(16,0))
+
+        ctk.CTkLabel(
+            frame,
+            text="Load order: "+str(priority),
+            anchor="w",
+            justify="left",
+            font=text_font
+        ).grid(column=1, row=1, sticky="ew", pady=(0,16))
+
+        var = ctk.BooleanVar(value=enabled)
+        var.set(enabled)
+
+        ctk.CTkSwitch(
+            frame,
+            width=48,
+            height=24,
+            fg_color=CTkSwitchColor.OFF,
+            progress_color=CTkSwitchColor.ON,
+            text="",
+            cursor="hand2",
+            variable=var,
+            onvalue=True,
+            offvalue=False,
+            command=lambda: toggle_active_state(profile=name, status=var.get())
+        ).grid(column=3, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+
+    existing_mods: list[str] = [mod for mod in os.listdir(Directory.mods()) if os.path.isdir(os.path.join(Directory.mods(), mod))]
+    configured_mods: list[dict] = mods.get()
+    configured_mod_names: list[str] = [data["name"] for data in configured_mods]
+
+    for i, mod in enumerate(existing_mods, index):
+        is_configured: bool = mod in configured_mod_names
+
+        if is_configured:
+            mod_data: dict = mods.get(mod)
+            priority: int = mod_data["priority"]
+            enabled: bool = mod_data["enabled"]
+
+        else:
+            priority = 0
+            enabled = False
+        
+        create_mod_button(name=mod, priority=priority, enabled=enabled, i=i)
 
 
-def change_priority(profile: str, new: int) -> None:
-    if mods.get(profile) is not None:
+def change_priority(profile: str, root, subsection_background: str|tuple[str,str], width: int, height: int, padx: int, pady: int) -> None:
+    dialog: ctk.CTkInputDialog = ctk.CTkInputDialog(
+        text="Please enter a new value. Value must be an integer!",
+        title="Change Load Order",
+        fg_color=("#f8f8f8", "#1c1c1c"),
+        font=text_font,
+        button_fg_color=CTkButtonColor.NORMAL,
+        button_hover_color=CTkButtonColor.HOVER
+    )
+    response = str(dialog.get_input()).lower()
+
+    try:
+        new_priority: int = int(response)
+    except:
+        return
+
+    if mods.get(profile) is None:
         mods.create_profile({
             "name": profile,
             "enabled": False,
-            "priority": new
+            "priority": new_priority
         })
-    mods.set(name=profile, key="priority", value=new)
+    mods.set(name=profile, key="priority", value=new_priority)
+
+    show(
+        root=root,
+        subsection_background=subsection_background,
+        width=width,
+        height=height,
+        padx=padx,
+        pady=pady
+    )
 
 
 def toggle_active_state(profile: str, status: bool) -> None:
-    if mods.get(profile) is not None:
+    if mods.get(profile) is None:
         mods.create_profile({
             "name": profile,
             "enabled": status,
@@ -202,3 +367,32 @@ def install_mod(root, subsection_background: str|tuple[str,str], width: int, hei
 
     except Exception as e:
         error.show("Failed to install mod!", str(type(e).__name__)+": "+str(e))
+
+
+def delete_mod(root: ctk.CTk, subsection_background: str|tuple[str,str], width: int, height: int, padx: int, pady: int, profile: str) -> None:
+    dialog: ctk.CTkInputDialog = ctk.CTkInputDialog(
+        text="This action cannot be undone! To continue, type \"yes\"",
+        title="Delete Mod Profile",
+        fg_color=("#f8f8f8", "#1c1c1c"),
+        font=text_font,
+        button_fg_color=CTkButtonColor.NORMAL,
+        button_hover_color=CTkButtonColor.HOVER
+    )
+    response = str(dialog.get_input()).lower()
+
+    if response is None or response not in Response.ACCEPT:
+        return
+
+    mods.delete_profile(name=profile)
+    target: str = os.path.join(Directory.mods(), profile)
+    if os.path.isdir(target):
+        shutil.rmtree(target)
+
+    show(
+        root=root,
+        subsection_background=subsection_background,
+        width=width,
+        height=height,
+        padx=padx,
+        pady=pady
+    )
