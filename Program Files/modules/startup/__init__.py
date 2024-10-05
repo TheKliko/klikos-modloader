@@ -48,6 +48,8 @@ def run() -> None:
         logging.info("Clearing old logs . . .")
         print(Color.INITIALIZE+"Clearing old logs . . ."+Color.RESET)
         logger.clear_old_logs()
+        
+        print(Color.INITIALIZE+"Done!"+Color.RESET)
     
     except Exception as e:
         logging.error(type(e).__name__+": "+str(e))
