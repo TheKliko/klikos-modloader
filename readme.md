@@ -41,7 +41,7 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 Each mod can be toggled on or off, change the load order to make sure your mods are applied in the right order.
 
 <h3>Automatic mod updates</h3>
-<a href="https://github.com/TheKliko/klikos-modding-tool">Kliko's mod updater</a> will automatically update compatible mods.
+<a href="https://github.com/TheKliko/klikos-modding-tool">Kliko's modding tool</a> has been integrated to automatically update compatible mods.
 
 <h3>Community mods</h3>
 Download mods with the press of a button.
