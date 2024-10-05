@@ -41,10 +41,10 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 Each mod can be toggled on or off, change the load order to make sure your mods are applied in the right order.
 
 <h3>Automatic mod updates</h3>
-<a href="https://github.com/TheKliko/klikos-modding-tool">Kliko's modding tool</a> has been integrated to automatically update compatible mods.
+I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my modding tool</a> to automatically update compatible mods.
 
 <h3>Community mods</h3>
-Download mods with the press of a button.
+Download mods with the press of a button. Of course you can still add other mods manually.
 
 <h3>Discord RPC & BloxstrapSDK support</h3>
 Replace Roblox's default rich presence to show more details. The BloxstrapSDK allows games to set custom RPC data.
