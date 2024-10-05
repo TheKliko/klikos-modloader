@@ -25,6 +25,7 @@
         "author": "dooM",
         "description": "Make UI elements transparent.",
         "id": "translucency",
+        "has_thumbnail": false,
         "preview": "https://gamebanana.com/mods/542048"
     },
     {
@@ -45,6 +46,7 @@
         "name": "Old Death Sound",
         "author": "???",
         "description": "death sound: 'oof'",
-        "id": "old-death-sound"
+        "id": "old-death-sound",
+        "has_thumbnail": false
     }
 ]
