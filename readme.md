@@ -47,7 +47,7 @@ I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my m
 Download mods with the press of a button. Of course you can still add other mods manually.
 
 <h3>Discord RPC & BloxstrapSDK support</h3>
-Replace Roblox's default rich presence to show more details. The BloxstrapSDK allows games to set custom RPC data.
+Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapSDK</a> allows games to set custom RPC data.
 
 <h3>Studio Support</h3>
 Kliko's modloader is available for both the Roblox Player and Roblox Studio.
