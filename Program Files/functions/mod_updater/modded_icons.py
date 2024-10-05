@@ -1,5 +1,6 @@
 import copy
 import os
+import threading
 
 from PIL import Image
 
@@ -9,10 +10,18 @@ DEFAULT: dict[str,list] = {
     "2x": [],
     "3x": []
 }
+threads: list[threading.Thread] = []
 
 
 def get(mod_path, version_path, imageset_path: str, icon_map: dict[str,dict[str,dict[str,str|int]]]) -> dict[str,list[str]]:
     modded_icons: dict[str,list] = copy.deepcopy(DEFAULT)
+    def worker(name: str, size: str, unmodded_path: str, modded_path: str, x: int, y: int, w: int, h: int) -> None:
+        with Image.open(unmodded_path) as image1:
+            icon1 = image1.crop((x,y,x+w,y+h))
+        with Image.open(modded_path) as image2:
+            icon2 = image2.crop((x,y,x+w,y+h))
+        if is_modded_image(image1=icon1, image2=icon2):
+            modded_icons[size].append(name)
 
     for size, icons in icon_map.items():
         for name, data in icons.items():
@@ -29,19 +38,31 @@ def get(mod_path, version_path, imageset_path: str, icon_map: dict[str,dict[str,
             w: int = int(data["w"])
             h: int = int(data["h"])
 
-            with Image.open(unmodded_path) as image1:
-                icon1 = image1.crop((x,y,x+w,y+h))
-            with Image.open(modded_path) as image2:
-                icon2 = image2.crop((x,y,x+w,y+h))
+            # Multithreading reduced the time for detecting modded icons from 25s to 5s
+            # Only downside is if there is an error,
+            # every single thread will print the same message,
+            # which will be flooding the terminal
+            # Surely nothing will go wrong here :)
+            thread = threading.Thread(
+                name="icon-checker-thread",
+                target=worker,
+                kwargs={
+                    "name": name,
+                    "size": size,
+                    "unmodded_path": unmodded_path,
+                    "modded_path": modded_path,
+                    "x": x,
+                    "y": y,
+                    "w": w,
+                    "h": h
+                },
+                daemon=True
+            )
+            threads.append(thread)
+            thread.start()
 
-            if is_modded_image(image1=icon1, image2=icon2):
-                modded_icons[size].append(name)
-
-                # print("Modded icon detected: "+str(name))
-                # with Image.new("RGBA", (w*2, h)) as preview_image:
-                #     preview_image.paste(icon1,(0,0))
-                #     preview_image.paste(icon2, (w,0))
-                #     preview(preview_image)
+    for thread in threads:
+        thread.join()
 
     return modded_icons
 
