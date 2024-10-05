@@ -1,0 +1,7 @@
+[
+    "requests",
+    "pypresence",
+    "PIL",
+    "notifypy",
+    "customtkinter"
+]

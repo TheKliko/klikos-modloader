@@ -1,0 +1,37 @@
+{
+    "server_notifications": {
+        "name": "Server Notifications",
+        "description": "Receive a notification that shows your server location",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "discord_rpc": {
+        "name": "Discord RPC",
+        "description": "Replace Roblox' default RPC to show more details",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "bloxstrap_sdk": {
+        "name": "Bloxstrap SDK",
+        "description": "Allow games to change your Discord RPC status",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "activity_joining": {
+        "name": "Activity Joining",
+        "description": "Allow anyone to join your game through Discord",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "mod_updater": {
+        "name": "Automatic mod updates",
+        "description": "Integrate Kliko's mod updater to automatically update compatible mods when launching Roblox (always enabled when downloading mods through the 'Community Mods' tab)",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    }
+}
