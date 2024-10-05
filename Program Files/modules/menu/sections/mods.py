@@ -1,9 +1,12 @@
 import os
+import shutil
 import tkinter as tk
+from tkinter.filedialog import askopenfilenames
 import customtkinter as ctk
 
 from modules.interface import Response
-from modules.filesystem import Directory
+from modules.filesystem import Directory, extract
+from modules.functions import mods
 from modules.functions.menu import error
 from resources.ctk_switch_color import CTkSwitchColor
 from resources.ctk_button_color import CTkButtonColor
@@ -51,11 +54,11 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
 
     load_header(master=section, width=width)
 
-    icon: str = os.path.join(Directory.program_files(), "resources", "icons", "common", "create.png")
+    icon: str = os.path.join(Directory.program_files(), "resources", "icons", "mods", "add.png")
     ctk.CTkButton(
         section,
-        text="Create new profile",
-        width=156,
+        text="Add mods",
+        width=108,
         image=load_image(
             light=icon,
             dark=icon
@@ -63,7 +66,9 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
         fg_color=CTkButtonColor.NORMAL,
         hover_color=CTkButtonColor.HOVER,
         cursor="hand2",
-        command=lambda: create_new_profile(
+        anchor="w",
+        compound=ctk.LEFT,
+        command=lambda: install_mod(
             root=root,
             subsection_background=subsection_background,
             width=width,
@@ -72,6 +77,8 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subse
             pady=pady
         )
     ).grid(column=0, row=1, sticky="nsw", pady=(16,24))
+
+    load_mods(master=section, width=width, index=2)
 
 
 def load_header(master, width: int) -> None:
@@ -99,3 +106,99 @@ def load_header(master, width: int) -> None:
         font=text_font
     )
     description.grid(column=0, row=1, sticky="nsew")
+
+
+def load_mods(master, width: int, index: int) -> None:
+    pass
+
+
+def change_priority(profile: str, new: int) -> None:
+    if mods.get(profile) is not None:
+        mods.create_profile({
+            "name": profile,
+            "enabled": False,
+            "priority": new
+        })
+    mods.set(name=profile, key="priority", value=new)
+
+
+def toggle_active_state(profile: str, status: bool) -> None:
+    if mods.get(profile) is not None:
+        mods.create_profile({
+            "name": profile,
+            "enabled": status,
+            "priority": 0
+        })
+    mods.set(name=profile, key="enabled", value=status)
+
+
+def change_mod_name(old: str, new: str, root, subsection_background: str|tuple[str,str], width: int, height: int, padx: int, pady: int) -> None:
+    try:
+        rename_mod_folder(old=old, new=new)
+    except Exception as e:
+        error.show(name="Failed to rename mod!", text=type(e).__name__+": "+str(e))
+        return
+    
+    if mods.get(old) is not None:
+        mods.rename_profile(old=old, new=new)
+
+    show(
+        root=root,
+        subsection_background=subsection_background,
+        width=width,
+        height=height,
+        padx=padx,
+        pady=pady
+    )
+
+
+def rename_mod_folder(old: str, new: str) -> None:
+    old_path: str = os.path.join(Directory.mods(), old)
+    new_path: str = os.path.join(Directory.mods(), new)
+    os.rename(old_path, new_path)
+
+
+def install_mod(root, subsection_background: str|tuple[str,str], width: int, height: int, padx: int, pady: int) -> None:
+    try:
+        user_path: str = os.getenv("HOME") or os.getenv("USERPROFILE")
+        filepaths = askopenfilenames(
+            filetypes=[("ZIP archives", "*.zip")],
+            initialdir=os.path.join(user_path, "Downloads") if user_path is not None else os.path.abspath(os.sep),
+            title="Install mods"
+        )
+        if not filepaths:
+            return
+        
+        for file in filepaths:
+            mod_name: str = os.path.basename(file).removesuffix(".zip")
+            target: str = os.path.join(Directory.mods(), mod_name)
+            if os.path.isdir(target):
+                dialog: ctk.CTkInputDialog = ctk.CTkInputDialog(
+                    text="Mod \""+str(mod_name)+"\" already exists. To continue, type \"yes\"",
+                    title="Mod installer",
+                    fg_color=("#f8f8f8", "#1c1c1c"),
+                    font=text_font,
+                    button_fg_color=CTkButtonColor.NORMAL,
+                    button_hover_color=CTkButtonColor.HOVER
+                )
+                response = str(dialog.get_input()).lower()
+
+                if response is None or response not in Response.ACCEPT:
+                    continue
+                shutil.rmtree(target, ignore_errors=True)
+            extract(
+                source=file,
+                destination=target
+            )
+
+        show(
+            root=root,
+            subsection_background=subsection_background,
+            width=width,
+            height=height,
+            padx=padx,
+            pady=pady
+        )
+
+    except Exception as e:
+        error.show("Failed to install mod!", str(type(e).__name__)+": "+str(e))
