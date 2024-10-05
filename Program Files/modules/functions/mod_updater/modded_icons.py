@@ -72,7 +72,7 @@ def get(mod_path, version_path, imageset_path: str, icon_map: dict[str,dict[str,
 
 def is_modded_image(image1: Image.Image, image2: Image.Image) -> bool:
     if image1.size != image2.size or image1.format != image2.format:
-        return False
+        return True
     
     pixels1 = image1.load()
     pixels2 = image2.load()
