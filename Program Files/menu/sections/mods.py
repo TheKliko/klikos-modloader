@@ -1,5 +1,14 @@
+import os
 import tkinter as tk
 import customtkinter as ctk
+
+from modules.interface import Response
+from modules.filesystem import Directory
+from modules.functions.menu import error
+from resources.ctk_switch_color import CTkSwitchColor
+from resources.ctk_button_color import CTkButtonColor
+
+from ..load_image import load_image
 
 from ..fonts import *
 
@@ -7,14 +16,15 @@ from ..fonts import *
 section = None
 
 
-def show(root: ctk.CTk, width: int, height: int, padx: int, pady: int) -> None:
+def show(root: ctk.CTk, subsection_background: str|tuple[str,str], width: int, height: int, padx: int, pady: int) -> None:
     destroy()
     generate(
         root=root,
         width=width,
         height=height,
         padx=padx,
-        pady=pady
+        pady=pady,
+        subsection_background=subsection_background
     )
 
 
@@ -27,7 +37,7 @@ def destroy() -> None:
         widget.destroy()
 
 
-def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int) -> None:
+def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int, subsection_background: str|tuple[str,str]) -> None:
     global section
     section = ctk.CTkScrollableFrame(
         root,
@@ -40,6 +50,28 @@ def generate(root: ctk.CTk, width: int, height: int, padx: int, pady: int) -> No
     section.grid_columnconfigure(0, weight=1)
 
     load_header(master=section, width=width)
+
+    icon: str = os.path.join(Directory.program_files(), "resources", "icons", "common", "create.png")
+    ctk.CTkButton(
+        section,
+        text="Create new profile",
+        width=156,
+        image=load_image(
+            light=icon,
+            dark=icon
+        ),
+        fg_color=CTkButtonColor.NORMAL,
+        hover_color=CTkButtonColor.HOVER,
+        cursor="hand2",
+        command=lambda: create_new_profile(
+            root=root,
+            subsection_background=subsection_background,
+            width=width,
+            height=height,
+            padx=padx,
+            pady=pady
+        )
+    ).grid(column=0, row=1, sticky="nsw", pady=(16,24))
 
 
 def load_header(master, width: int) -> None:

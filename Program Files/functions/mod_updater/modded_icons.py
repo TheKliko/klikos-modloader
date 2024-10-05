@@ -14,7 +14,8 @@ threads: list[threading.Thread] = []
 
 
 def get(mod_path, version_path, imageset_path: str, icon_map: dict[str,dict[str,dict[str,str|int]]]) -> dict[str,list[str]]:
-    modded_icons: dict[str,list] = copy.deepcopy(DEFAULT)
+    global threads
+    
     def worker(name: str, size: str, unmodded_path: str, modded_path: str, x: int, y: int, w: int, h: int) -> None:
         with Image.open(unmodded_path) as image1:
             icon1 = image1.crop((x,y,x+w,y+h))
@@ -22,6 +23,8 @@ def get(mod_path, version_path, imageset_path: str, icon_map: dict[str,dict[str,
             icon2 = image2.crop((x,y,x+w,y+h))
         if is_modded_image(image1=icon1, image2=icon2):
             modded_icons[size].append(name)
+    
+    modded_icons: dict[str,list] = copy.deepcopy(DEFAULT)
 
     for size, icons in icon_map.items():
         for name, data in icons.items():
