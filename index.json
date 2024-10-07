@@ -48,5 +48,12 @@
         "description": "death sound: 'oof'",
         "id": "old-death-sound",
         "has_thumbnail": false
+    },
+    {
+        "name": "updater-test",
+        "author": "me",
+        "description": "don't download this lol",
+        "id": "updater-test",
+        "has_thumbnail": false
     }
 ]
