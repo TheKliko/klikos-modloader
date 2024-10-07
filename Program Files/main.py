@@ -40,9 +40,11 @@ def main() -> None:
             from modules import menu
             menu.MainWindow()
         elif mode == "launcher":
-            pass
+            from modules import launcher
+            launcher.MainWindow(mode="WindowsPlayer")
         elif mode == "studio":
-            pass
+            from modules import launcher
+            launcher.MainWindow(mode="WindowsStudio")
 
     except Exception as e:
         exception_handler.run(e)
