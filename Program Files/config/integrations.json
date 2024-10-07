@@ -1,11 +1,4 @@
 {
-    "server_notifications": {
-        "name": "Server Notifications",
-        "description": "Receive a notification that shows your server location",
-        "value": false,
-        "default": false,
-        "type": "bool"
-    },
     "discord_rpc": {
         "name": "Discord RPC",
         "description": "Replace Roblox' default RPC to show more details",

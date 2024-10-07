@@ -12,5 +12,19 @@
         "value": true,
         "default": true,
         "type": "bool"
+    },
+    "force_roblox_reinstallation": {
+        "name": "Force Roblox reinstallation",
+        "description": "Force Roblox to reinstall, useful after disabling a mod to make sure all modded files get restored.",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "always_update_roblox": {
+        "name": "Always reinstall Roblox",
+        "description": "The same as \"Force Roblox reinstallation\", but stays enabled.",
+        "value": false,
+        "default": false,
+        "type": "bool"
     }
 }
