@@ -6,9 +6,11 @@ import time
 from modules.filesystem.directories import Directory
 
 
-def start() -> None:
+def start(filename: str|None = None) -> None:
     logging_directory: str = Directory.logs()
     log_filename: str = "log_"+str(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()))+".log"
+    if filename:
+        log_filename = "log_"+str(time.strftime("%Y-%m-%d_%H-%M-%S", time.localtime()))+"_"+filename+".log"
     log_filepath: str = os.path.join(logging_directory, log_filename)
 
     os.makedirs(logging_directory, exist_ok=True)

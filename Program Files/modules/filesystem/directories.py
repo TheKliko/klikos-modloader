@@ -25,3 +25,7 @@ class Directory:
     @staticmethod
     def config() -> str:
         return os.path.join(Directory.program_files(), "config")
+
+    @staticmethod
+    def roblox_logs() -> str:
+        return os.path.join(os.getenv("LOCALAPPDATA"), "Roblox", "Logs")

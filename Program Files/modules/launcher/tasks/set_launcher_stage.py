@@ -1,5 +1,6 @@
 import os
 import customtkinter as ctk
+from typing import Literal
 
 from resources.fonts import *
 from modules.functions.ctk_functions.load_image import load_image
@@ -26,8 +27,14 @@ max_phase: int = 0
 
 
 
-def set_launcher_stage(set_phase_name: str|None = None, set_current_phase: int|None = None, set_max_phase: int|None = None, set_root: ctk.CTk|None = None) -> None:
+def set_launcher_stage(set_phase_name: str|None = None, set_current_phase: int|None = None, set_max_phase: int|None = None, set_root: ctk.CTk|None = None, destroy: None|Literal[True] = None) -> None:
     global phase_name, current_phase, max_phase, root, phase_label, description_label, image_label, image, frame
+
+    if destroy == True:
+        for widget in root.winfo_children():
+            widget.destroy()
+        root.destroy()
+        return
 
     if set_phase_name:
         phase_name = set_phase_name

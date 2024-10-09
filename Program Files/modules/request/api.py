@@ -15,6 +15,7 @@ class Api:
     def mod_download(id: str) -> str:
         return r"https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/mods/"+id+".zip"
 
+
 class RobloxApi:
     @staticmethod
     def user_channel(binary_type: str = "WindowsPlayer") -> str:
@@ -33,3 +34,8 @@ class RobloxApi:
     @staticmethod
     def download(version: str, file: str) -> str:
         return r"https://setup.rbxcdn.com/"+version+"-"+file
+    
+
+    @staticmethod
+    def fastflags() -> str:
+        return r"https://clientsettingscdn.roblox.com/v2/settings/application/PCDesktopClient"

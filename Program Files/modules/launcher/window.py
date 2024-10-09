@@ -1,4 +1,5 @@
 import os
+
 from tkinter import TclError
 import customtkinter as ctk
 import threading
@@ -58,7 +59,4 @@ class MainWindow:
         )
         thread.start()
 
-        try:
-            self.root.mainloop()
-        except TclError:
-            pass
+        self.root.mainloop()

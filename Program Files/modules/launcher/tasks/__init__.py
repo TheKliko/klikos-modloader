@@ -1,13 +1,13 @@
 import os
 import logging
-from tkinter import TclError
 import customtkinter as ctk
 from typing import Literal
 import time
+import subprocess
 
 from modules.filesystem import Directory
 from modules.functions import latest_roblox_version, user_channel, mods, integrations
-from modules.functions.menu import error
+from modules.functions.wait_until_roblox_is_launched import wait_until_roblox_is_launched
 
 from .set_launcher_stage import set_launcher_stage
 from . import updater
@@ -50,16 +50,19 @@ def run(root: ctk.CTk, mode: Literal["WindowsPlayer","WindowsStudio"]) -> None:
         
         
         if active_mods and do_mod_updates:
+            logging.info("Checking for mod updates . . .")
             set_launcher_stage(
                 set_current_phase=current_phase,
                 set_phase_name="Checking for mod updates . . ."
             )
-            mod_update_check = check_for_mod_updates(mods=active_mods, latest_version=version)
-            if mod_update_check != False:
+            mod_updater_check = check_for_mod_updates(mods=active_mods, latest_version=version)
+            if mod_updater_check != False:
+                logging.info("Updating mods . . .")
+                logging.debug("mod_updater_check = "+str(mod_updater_check))
                 set_launcher_stage(
                     set_phase_name="Updating mods . . ."
                 )
-                update_mods(data=mod_update_check, latest_version=version)
+                update_mods(data=mod_updater_check, latest_version=version)
             current_phase += 1
         time.sleep(1)
         
@@ -69,7 +72,9 @@ def run(root: ctk.CTk, mode: Literal["WindowsPlayer","WindowsStudio"]) -> None:
             set_current_phase=current_phase,
             set_phase_name="Applying modifications . . ."
         )
+        logging.info("Applying mods . . .")
         apply_mods(mods=active_mods, version=version)
+        logging.info("Applying FastFlags . . .")
         apply_fastflags(version=version)
         current_phase += 1
         time.sleep(1)
@@ -79,24 +84,29 @@ def run(root: ctk.CTk, mode: Literal["WindowsPlayer","WindowsStudio"]) -> None:
             set_phase_name="Launching Roblox "+str("Player" if "player" in mode.lower() else "Studio")+" . . ."
         )
         executable: str = "RobloxPlayerBeta.exe" if "player" in mode.lower() else "RobloxStudioBeta.exe"
+        logging.info("Launching Roblox . . .")
         launch_roblox(filepath=os.path.join(Directory.versions(), version, executable))
-        time.sleep(3)
+        
+        wait_until_roblox_is_launched(mode="player" if "player" in mode.lower() else "studio")
 
-        try:
-            root.destroy()
-        except:
-            pass
-    
-    except TclError:
-        pass
+        if integrations.value("discord_rpc", False) == True:
+            logging.info("Starting RPC . . .")
+            filepath: str = os.path.join(Directory.program_files(), "modules", "rpc", "main.py")
+            command: list = ["python", filepath]
+            try:
+                subprocess.Popen(command, creationflags=subprocess.CREATE_NO_WINDOW)
+            except Exception as e:
+                logging.warning("Failed to start RPC!")
+                logging.error(type(e).__name__+": "+str(e))
+
+        time.sleep(1)
+        set_launcher_stage(destroy=True)
     
     except Exception as e:
         logging.warning("Error while running the launcher!")
         logging.error(type(e).__name__+": "+str(e))
-        error.show(name=("Roblox"+str("Player" if "player" in mode.lower() else "Studio")+" failed to launch"), text=(type(e).__name__+": "+str(e)))
-        time.sleep(1)
-        try:
-            root.destroy()
-        except:
-            pass
+
+        for widget in root.winfo_children():
+            widget.destroy()
+        root.destroy()
         raise

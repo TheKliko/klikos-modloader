@@ -2,7 +2,8 @@ import os
 import platform
 import sys
 
-from modules.interface import Color
+from modules.interface import Color, title
+from modules.info import Project
 from modules.functions import registry_keys
 
 from . import logger
@@ -14,7 +15,7 @@ from . import dependencies
 def run() -> None:
     try:
         print(Color.INITIALIZE+"Starting logger . . .")
-        logger.start()
+        logger.start("MAIN")
 
         import logging
         logging.debug("Python version: "+str(sys.version_info.major)+"."+str(sys.version_info.minor)+"."+str(sys.version_info.micro)+"-"+str(sys.version_info.releaselevel))
@@ -50,6 +51,7 @@ def run() -> None:
         logger.clear_old_logs()
         
         print(Color.INITIALIZE+"Done!"+Color.RESET)
+        title(Project.NAME+" - v"+Project.VERSION)
     
     except Exception as e:
         logging.error(type(e).__name__+": "+str(e))

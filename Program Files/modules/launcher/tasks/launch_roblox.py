@@ -1,3 +1,4 @@
+import logging
 import subprocess
 import sys
 import time
@@ -5,6 +6,7 @@ import time
 
 def launch_roblox(filepath: str) -> None:
     command = get_launch_command(filepath=filepath)
+    logging.info("command: "+str(command))
     subprocess.Popen(command)
 
 
