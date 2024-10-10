@@ -2,7 +2,7 @@
     {
         "name": "Texture quality override (3)",
         "description": "Force textures to be rendered at the highest quality level",
-        "enabled": true,
+        "enabled": false,
         "data": {
             "DFFlagTextureQualityOverrideEnabled": true,
             "DFIntTextureQualityOverride": 3
@@ -11,15 +11,15 @@
     {
         "name": "Hide fullscreen titlebar",
         "description": "\"Hides\" the titlebar by adding a massive delay",
-        "enabled": true,
+        "enabled": false,
         "data": {
             "FIntFullscreenTitleBarTriggerDelayMillis": 2147483647
         }
     },
     {
         "name": "Old escape menu",
-        "description": null,
-        "enabled": true,
+        "description": "Old topbar and escape menu",
+        "enabled": false,
         "data": {
             "FFlagDisableNewIGMinDUA": true,
             "FFlagEnableInGameMenuControls": false,
@@ -33,7 +33,7 @@
     },
     {
         "name": "Chrome UI",
-        "description": null,
+        "description": "New topbar and escape menu",
         "enabled": false,
         "data": {
             "FFlagEnableInGameMenuChromeABTest3": false,
@@ -72,7 +72,7 @@
     {
         "name": "Infinite zoom",
         "description": "Allows you to zoom out extremely far (only works on some games)",
-        "enabled": true,
+        "enabled": false,
         "data": {
             "FIntCameraMaxZoomDistance": 99999
         }

@@ -1,14 +1,7 @@
 {
     "discord_rpc": {
         "name": "Discord RPC",
-        "description": "Replace Roblox' default RPC to show more details",
-        "value": true,
-        "default": true,
-        "type": "bool"
-    },
-    "bloxstrap_sdk": {
-        "name": "Bloxstrap SDK",
-        "description": "Allow games to change your Discord RPC status",
+        "description": "Replace the default Discord RPC to show more details",
         "value": true,
         "default": true,
         "type": "bool"
