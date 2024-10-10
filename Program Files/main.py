@@ -39,9 +39,11 @@ def main() -> None:
         if mode == "menu":
             from modules import menu
             menu.MainWindow()
+
         elif mode == "launcher":
             from modules import launcher
             launcher.MainWindow(mode="WindowsPlayer")
+
         elif mode == "studio":
             from modules import launcher
             launcher.MainWindow(mode="WindowsStudio")
