@@ -46,7 +46,7 @@ Each mod can be toggled on or off, change the load order to make sure your mods 
 I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my modding tool</a> to automatically update compatible mods.
 
 <h3>Community mods</h3>
-Download mods with the press of a button. Of course you can still add other mods manually.
+Download mods with the press of a button. Of course you can also add mods manually.
 
 <h3>Discord RPC & BloxstrapSDK support</h3>
 Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapSDK</a> allows games to set custom RPC data.
