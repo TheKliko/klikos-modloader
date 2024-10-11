@@ -1,28 +1,16 @@
 import os
 import sys
 
-python_version: str = f'{sys.version_info.major}.{sys.version_info.minor}'
-ROOT: str = os.path.dirname(os.path.dirname(__file__))
+python_version: str = str(sys.version_info.major)+"."+str(sys.version_info.minor)
+libraries: str = os.path.join(os.path.dirname(__file__), "libraries", python_version)
+os.makedirs(libraries, exist_ok=True)
+sys.path.append(libraries)
 
-path_to_libraries: str = os.path.join(os.path.dirname(__file__), 'libraries')
-path_version_specific_libraries: str = os.path.join(os.path.dirname(__file__), 'version_specific_libraries', f'python-{python_version}')
+from modules import exception_handler, launch_mode, startup, variables
+from modules.interface import Color
 
-try:
-    os.makedirs(path_to_libraries, exist_ok=True)
-    os.makedirs(path_version_specific_libraries)
-except:
-    pass
 
-sys.path.append(path_to_libraries)
-sys.path.append(path_version_specific_libraries)
-
-from modules import exception_handler
-from modules import interface
-from modules.process import startup
-from modules.process.get_launch_mode import get_launch_mode
-from modules.process import shutdown
-from modules.utils import variables
-from modules.other.launch_mode import MODLOADER_MENU
+root: str = os.path.dirname(os.path.dirname(__file__))
 
 
 WELCOME_MESSAGE: str = r"""
@@ -36,34 +24,32 @@ WELCOME_MESSAGE: str = r"""
 
 def main() -> None:
     try:
-        variables.set('root', ROOT)
-        variables.set('python_version', python_version)
+        print(Color.SPLASH+WELCOME_MESSAGE+Color.RESET)
 
-        interface.clear()
-        interface.Print(WELCOME_MESSAGE, color=interface.Color.SPLASH)
-        
+        mode: str = launch_mode.get()
+        if mode == "help":
+            launch_mode.help()
+
+        variables.set("python_version", python_version)
         startup.run()
+        
+        import logging
+        logging.debug("Launch mode: "+mode)
 
-        from modules.process import menu
-        from modules.process import launcher
+        if mode == "menu":
+            from modules import menu
+            menu.MainWindow()
 
-        mode: list[str] = get_launch_mode()
-        if mode == MODLOADER_MENU:
-            menu.run()
-        else:
-            launcher.run(mode)
+        elif mode == "launcher":
+            from modules import launcher
+            launcher.MainWindow(mode="WindowsPlayer")
 
-    
-    except shutdown.ManualQuitOut as e:
-        pass
-
+        elif mode == "studio":
+            from modules import launcher
+            launcher.MainWindow(mode="WindowsStudio")
 
     except Exception as e:
         exception_handler.run(e)
-
-
-    finally:
-        shutdown.run()
 
 
 if __name__ == '__main__':

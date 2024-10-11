@@ -1,0 +1,30 @@
+{
+    "check_for_updates": {
+        "name": "Check for updates",
+        "description": "Check for updates when launching this program.",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "use_local_installations": {
+        "name": "Use local installations",
+        "description": "When a Roblox update is available, this setting can be enabled to check \"%localappdata%/Roblox/Versions\" and copy updates from this directory if they have already been installed",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "force_roblox_reinstallation": {
+        "name": "Force Roblox reinstallation",
+        "description": "Force Roblox to reinstall, useful after disabling a mod to make sure all modded files get restored.",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "always_update_roblox": {
+        "name": "Always reinstall Roblox",
+        "description": "The same as \"Force Roblox reinstallation\", but stays enabled.",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    }
+}
