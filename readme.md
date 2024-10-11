@@ -15,6 +15,8 @@
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
 
+<img src="GitHub Files/Images/preview.gif" alt="preview"/>
+
 
 
 <h2>Quick Access</h2>
@@ -38,19 +40,19 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 <h2 id="features">Features</h2>
 
 <h3>Mods</h3>
-Each mod can be enabled or disabled, use mod priorities to make sure your mods are applied in the right order.
-
-<h3>Discord RPC</h3>
-Replace Roblox's default rich presence to show more details. Including the game name and time spent within games.
-
-<h3>Studio Support</h3>
-Kliko's modloader is available for both the Roblox Player client and Roblox Studio.
+Each mod can be toggled on or off, change the load order to make sure your mods are applied in the right order.
 
 <h3>Automatic mod updates</h3>
-Kliko's modloader will automatically update your compatible mods if needed.
+I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my modding tool</a> to automatically update compatible mods.
 
-<h3>Remote mod downloads</h3>
-Users can easily download mods through the modloader menu.
+<h3>Community mods</h3>
+Download mods with the press of a button. Of course you can also add mods manually.
+
+<h3>Discord RPC & BloxstrapSDK support</h3>
+Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapSDK</a> allows games to set custom RPC data.
+
+<h3>Studio Support</h3>
+Kliko's modloader is available for both the Roblox Player and Roblox Studio.
 
 
 
@@ -110,4 +112,4 @@ My goals for this project are:
 </ul>
 
 <h3>Inspiration</h3>
-This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox.
+This project was inspired by <a href='https://github.com/pizzaboxer/bloxstrap'>Bloxstrap</a>, an open-source, alternative bootstrapper for Roblox. Bloxstrap is what introduced me to the Roblox modding community. This project, my Roblox mods and my modding tool would not have existed without it.
