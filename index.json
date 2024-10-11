@@ -4,21 +4,18 @@
         "author": "TheKliko",
         "description": "Gradient mod: #990000 -> #ff006e",
         "id": "klikos-mod",
-        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/klikos-mod.png"
     },
     {
         "name": "Bloxstrap theme",
         "author": "TheKliko",
         "description": "Gradient mod: #a011fe -> #5460f9",
         "id": "bloxstrap-theme-2",
-        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/bloxstrap-theme.png"
     },
     {
         "name": "Discord UI [WIP]",
         "author": "TheKliko",
         "description": "Changes the icons to look like those found in Discord",
         "id": "discord-ui",
-        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/discord-ui.png"
     },
     {
         "name": "Translucency",
@@ -26,25 +23,21 @@
         "description": "Make UI elements transparent.",
         "id": "translucency",
         "has_thumbnail": false,
-        "preview": "https://gamebanana.com/mods/542048"
     },
     {
         "name": "Bloxstrap theme [Premium]",
         "author": "TheKliko",
         "description": "Gradient mod: #feaa17 -> #f95455",
         "id": "bloxstrap-theme-premium",
-        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/bloxstrap-theme-premium.png"
     },
     {
         "name": "UBFF Theme",
         "author": "TheKliko",
         "description": "Gradient mod: #648bd9 -> #fa94d7",
         "id": "ubff-theme",
-        "preview": "https://github.com/TheKliko/klikos-modloader/raw/remote-mod-downloads/thumbnails/ubff-theme.png"
     },
     {
         "name": "Old Death Sound",
-        "author": "???",
         "description": "death sound: 'oof'",
         "id": "old-death-sound",
         "has_thumbnail": false
