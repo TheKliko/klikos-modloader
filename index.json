@@ -3,38 +3,38 @@
         "name": "Kliko's mod",
         "author": "TheKliko",
         "description": "Gradient mod: #990000 -> #ff006e",
-        "id": "klikos-mod",
+        "id": "klikos-mod"
     },
     {
         "name": "Bloxstrap theme",
         "author": "TheKliko",
         "description": "Gradient mod: #a011fe -> #5460f9",
-        "id": "bloxstrap-theme-2",
+        "id": "bloxstrap-theme-2"
     },
     {
         "name": "Discord UI [WIP]",
         "author": "TheKliko",
         "description": "Changes the icons to look like those found in Discord",
-        "id": "discord-ui",
+        "id": "discord-ui"
     },
     {
         "name": "Translucency",
         "author": "dooM",
         "description": "Make UI elements transparent.",
         "id": "translucency",
-        "has_thumbnail": false,
+        "has_thumbnail": false
     },
     {
         "name": "Bloxstrap theme [Premium]",
         "author": "TheKliko",
         "description": "Gradient mod: #feaa17 -> #f95455",
-        "id": "bloxstrap-theme-premium",
+        "id": "bloxstrap-theme-premium"
     },
     {
         "name": "UBFF Theme",
         "author": "TheKliko",
         "description": "Gradient mod: #648bd9 -> #fa94d7",
-        "id": "ubff-theme",
+        "id": "ubff-theme"
     },
     {
         "name": "Old Death Sound",
