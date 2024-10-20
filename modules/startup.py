@@ -7,6 +7,7 @@ import shutil
 
 from modules.logger import logger
 from modules.filesystem import Directory, FilePath, logged_path
+from modules.functions.set_registry_keys import set_registry_keys
 
 IS_FROZEN = getattr(sys, "frozen", False)
 if IS_FROZEN:
@@ -48,13 +49,13 @@ def run() -> None:
     
     if IS_FROZEN:
         pyi_splash.update_text("Setting registry keys...")
-    thread = threading.Thread(
-        name="startup.set_registry_keys()_thread",
-        target=set_registry_keys,
-        daemon=True
-    )
-    threads.append(thread)
-    thread.start()
+        thread = threading.Thread(
+            name="startup.set_registry_keys()_thread",
+            target=set_registry_keys,
+            daemon=True
+        )
+        threads.append(thread)
+        thread.start()
 
     for thread in threads:
         thread.join()
@@ -77,6 +78,9 @@ def check_core_files() -> None:
         
         else:
             raise FileNotFoundError(os.path.join(os.path.basename(os.path.dirname(file)), os.path.basename(file)))
+    
+    os.makedirs(Directory.mods(), exist_ok=True)
+    os.makedirs(Directory.versions(), exist_ok=True)
 
 
 def restore_core_file(file: str) -> None:
@@ -115,9 +119,4 @@ def check_file_content(file: str) -> None:
 
 def check_for_updates() -> None:
     logger.info("Checking for updates...")
-    pass
-
-
-def set_registry_keys() -> None:
-    logger.info("Setting registry keys...")
-    pass
+    logger.critical("NotImplementedError: startup.check_for_updates()")
