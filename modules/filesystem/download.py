@@ -10,8 +10,8 @@ COOLDOWN: int = 2
 
 
 def download(url: str, destination: str, attempts: int = 3) -> None:
-    logger.info(f"Attempting file download: {url}")
     try:
+        logger.info(f"Attempting file download: {url}")
         os.makedirs(destination, exist_ok=True)
         urllib.request.urlretrieve(url, destination)
         logger.info(f"File downloaded successfully: {url}")
@@ -20,10 +20,11 @@ def download(url: str, destination: str, attempts: int = 3) -> None:
         logger.warning(f"File download failed: {url}, reason: {type(e).__name__}! {e}")
 
         if attempts <= 0:
-            logger.error(f"File download failed: {url}, reason: Too many attemps!")
+            logger.error(f"File download failed: {url}, reason: Too many attempts!")
             raise
 
+        logger.warning(f"Remaining attempts: {attempts}")
+        logger.info(f"Retrying in {COOLDOWN} seconds...")
         time.sleep(COOLDOWN)
-        logger.info("Retrying . . .")
         return download(url=url, destination=destination, attempts=attempts-1)
         

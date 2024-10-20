@@ -7,6 +7,7 @@ from typing import Callable, Literal
 from modules.logger import logger
 from modules.info import ProjectData
 from modules.filesystem import Directory, logged_path
+from modules import filesystem
 from modules.interface.images import load_image
 
 import customtkinter as ctk
@@ -63,6 +64,7 @@ class MainWindow:
     font_small_bold: ctk.CTkFont
     font_navigation: ctk.CTkFont
     font_medium_bold: ctk.CTkFont
+    font_large: ctk.CTkFont
 
 
 
@@ -83,7 +85,7 @@ class MainWindow:
         if os.path.isfile(theme_path):
             try:
                 with open(self.theme, "r") as file:
-                    data: dict[dict] = json.load(file)
+                    data: dict[str, dict] = json.load(file)
                 self.root_background = data.get("CTk", {}).get("fg_color", "transparent")
             except Exception:
                 self.root_background = "transparent"
@@ -109,6 +111,7 @@ class MainWindow:
         
         self.font_bold = ctk.CTkFont(weight="bold")
         self.font_title = ctk.CTkFont(size=20, weight="bold")
+        self.font_large = ctk.CTkFont(size=16)
         self.font_subtitle = ctk.CTkFont(size=16, weight="bold")
         self.font_small = ctk.CTkFont(size=12)
         self.font_small_bold = ctk.CTkFont(size=12, weight="bold")
@@ -156,10 +159,11 @@ class MainWindow:
             fg_color=self.root_background
         )
         self.content.grid_columnconfigure(0, weight=1)
-        self.content.grid(column=1, row=0, sticky="nsew")
+        self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
     
 
     def show(self) -> None:
+        self._show_mods()
         self.root.mainloop()
     
 
@@ -208,7 +212,7 @@ class MainWindow:
                 anchor="center",
                 justify="center",
                 font=self.font_medium_bold
-            ).grid(column=0, row=1, sticky="nsew", pady=(16,0))
+            ).grid(column=0, row=1, sticky="nsew")
 
             ctk.CTkLabel(
                 header,
@@ -305,15 +309,61 @@ class MainWindow:
 
             ctk.CTkLabel(
                 frame,
-                text="Section",
-                font=self.font_title
+                text="Mods",
+                font=self.font_title,
+                anchor="w"
             ).grid(column=0, row=0, sticky="nsew")
 
             ctk.CTkLabel(
                 frame,
-                text="Description",
-                font=self.font_title
-            ).grid(column=0, row=0, sticky="nsew")
+                text="Manage your mods",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
+
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
+            button_frame.grid_columnconfigure(1, weight=1)
+
+            package_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "package.png")
+            if not os.path.isfile(package_icon) and IS_FROZEN:
+                os.makedirs(os.path.dirname(package_icon), exist_ok=True)
+                shutil.copy(os.path.join(Directory._MEI(), os.path.relpath(package_icon, Directory.root())), os.path.dirname(package_icon))
+                logger.warning(f"File restored from _MEI: {logged_path.get(package_icon)}")
+            ctk.CTkButton(
+                button_frame,
+                text="Add mods",
+                width=108,
+                image=load_image(
+                    light=package_icon,
+                    dark=package_icon,
+                    size=(24,24)
+                ),
+                anchor="w",
+                compound=ctk.LEFT
+            ).grid(column=0, row=0, sticky="nsw")
+
+            folder_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "folder.png")
+            if not os.path.isfile(folder_icon) and IS_FROZEN:
+                os.makedirs(os.path.dirname(folder_icon), exist_ok=True)
+                shutil.copy(os.path.join(Directory._MEI(), os.path.relpath(folder_icon, Directory.root())), os.path.dirname(folder_icon))
+                logger.warning(f"File restored from _MEI: {logged_path.get(folder_icon)}")
+            ctk.CTkButton(
+                button_frame,
+                text="Open mods folder",
+                width=108,
+                image=load_image(
+                    light=folder_icon,
+                    dark=folder_icon,
+                    size=(24,24)
+                ),
+                anchor="w",
+                compound=ctk.LEFT,
+                command=lambda: filesystem.open(Directory.mods())
+            ).grid(column=1, row=0, sticky="nsw", padx=8)
 
         def load_content() -> None:
             pass
@@ -330,12 +380,31 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
-        def generate() -> None:
-            pass
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="FastFlags",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Manage your FastFlags",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
 
         self.active_section = "fastflags"
         destroy()
-        generate()
+        load_header()
     
 
 
@@ -344,12 +413,31 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
-        def generate() -> None:
-            pass
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Community mods",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Download mods with the press of a button",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
 
         self.active_section = "marketplace"
         destroy()
-        generate()
+        load_header()
     
 
 
@@ -358,12 +446,31 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
-        def generate() -> None:
-            pass
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Integrations",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Manage integrations",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
 
         self.active_section = "integrations"
         destroy()
-        generate()
+        load_header()
     
 
 
@@ -372,12 +479,31 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
-        def generate() -> None:
-            pass
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Settings",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Configure settings",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
 
         self.active_section = "settings"
         destroy()
-        generate()
+        load_header()
     
 
 
@@ -386,9 +512,28 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
-        def generate() -> None:
-            pass
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="About",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text=ProjectData.DESCRIPTION,
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
 
         self.active_section = "about"
         destroy()
-        generate()
+        load_header()

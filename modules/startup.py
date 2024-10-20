@@ -4,10 +4,15 @@ import sys
 import threading
 import json
 import shutil
+import webbrowser
 
 from modules.logger import logger
 from modules.filesystem import Directory, FilePath, logged_path
 from modules.functions.set_registry_keys import set_registry_keys
+from modules.info import ProjectData, Hyperlink
+from modules import request
+
+from tkinter import messagebox
 
 IS_FROZEN = getattr(sys, "frozen", False)
 if IS_FROZEN:
@@ -119,4 +124,14 @@ def check_file_content(file: str) -> None:
 
 def check_for_updates() -> None:
     logger.info("Checking for updates...")
-    logger.critical("NotImplementedError: startup.check_for_updates()")
+    
+    response: request.Response = request.get(request.GitHubApi.latest_version())
+    data: dict = response.json()
+    latest_version: str = data.get("latest")
+    if not latest_version:
+        return
+    
+    if latest_version > ProjectData.VERSION:
+        logger.debug(f"A newer version is available: {latest_version}")
+        if messagebox.askyesno(ProjectData.NAME, f"A newer version is available! Do you wish to update?"):
+            webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)

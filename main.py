@@ -3,7 +3,7 @@ import sys
 
 from modules.logger import logger
 from modules.filesystem import Directory
-from modules import error_handler, startup, launch_mode
+from modules import error_handler, launch_mode
 
 IS_FROZEN = getattr(sys, "frozen", False)
 if IS_FROZEN:
@@ -11,7 +11,7 @@ if IS_FROZEN:
 else:
     sys.path.insert(0, os.path.join(Directory.root(), "libraries"))
 
-from modules import menu, launcher
+from modules import startup, menu, launcher
 
 
 def main():

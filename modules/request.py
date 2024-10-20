@@ -1,10 +1,13 @@
+import time
 from typing import Literal, Optional
 
 from modules.logger import logger
 
 import requests
+from requests import Response
 
 
+COOLDOWN: int = 2
 _cache: dict = {}
 
 
@@ -84,23 +87,28 @@ class RobloxActivityApi:
 
 
 # region get()
-def get(url, attempts: int = 3, cache: bool = False) -> requests.Response:
+def get(url, attempts: int = 3, cache: bool = False) -> Response:
     if cache:
         if url in _cache:
             return _cache[url]
 
-    if attempts <= 0:
-        logger.error(f"GET request failed: {url}")
-        raise RequestError("Out of attempts")
     attempts -= 1
 
     try:
-        response: requests.Response = requests.get(url, timeout=(5,15))
+        logger.info(f"Attempting GET request: {url}")
+        response: Response = requests.get(url, timeout=(5,15))
         response.raise_for_status()
         _cache[url] = response
-        return response.json()
+        return response
 
     except Exception as e:
-        logger.error(f"Error during GET request! {type(e).__name__}: {e}")
+        logger.error(f"GET request failed: {url}, reason: {type(e).__name__}: {e}")
+
+        if attempts <= 0:
+            logger.error(f"GET request failed: {url}, reason: Too many attempts!")
+            raise
+        
         logger.warning(f"Remaining attempts: {attempts}")
+        logger.info(f"Retrying in {COOLDOWN} seconds...")
+        time.sleep(COOLDOWN)
         return get(url=url, attempts=attempts, cache=cache)
