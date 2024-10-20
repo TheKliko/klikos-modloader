@@ -7,7 +7,7 @@ set "work_path=%parent%\temp"
 set "dist_path=%parent%\bin"
 
 set "root_path=%parent%.."
-set "program_files_path=%root_path%\Program Files"
+set "libraries_path=%root_path%\libraries"
 set "modules_path=%program_files_path%\modules"
 set "config_path=%root_path%\config"
 set "resources_path=%root_path%\resources"
@@ -21,6 +21,12 @@ if exist "%dist_path%" (
 )
 
 
+if not exist "%libraries_path%" (
+    mkdir "%libraries_path%"
+)
+pip install --upgrade --target="%libraries_path%" pillow requests customtkinter pypresence
+
+
 pyinstaller ..\main.py ^
 --distpath="%dist_path%" ^
 --workpath="%work_path%" ^
@@ -30,7 +36,9 @@ pyinstaller ..\main.py ^
 --splash="%splash_path%" ^
 --clean --onefile --noconsole ^
 --paths="%root_path%" ^
+--paths="%libraries_path%" ^
 --add-data="%resources_path%;resources" ^
+--add-data="%resources_path%\theme.json;resources" ^
 --add-data="%config_path%/settings.json;config" ^
 --add-data="%config_path%/integrations.json;config" ^
 --add-data="%config_path%/mods.json;config" ^
@@ -43,6 +51,5 @@ if exist "%dist_path%\modloader.exe" (
 if exist "%work_path%" (
     rmdir /s /q "%work_path%"
 )
-
 
 pause
