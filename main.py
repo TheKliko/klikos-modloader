@@ -14,9 +14,6 @@ else:
 from modules import menu, launcher
 
 
-logger.debug(f"Path: {sys.path}")
-
-
 def main():
     try:
         startup.run()
