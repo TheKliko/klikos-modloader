@@ -89,17 +89,9 @@ def restore_core_file(file: str) -> None:
     try:
         os.makedirs(os.path.dirname(file), exist_ok=True)
         shutil.copy(os.path.join(MEIPASS, path_extension), os.path.join(root, path_extension))
+        logger.warning(f"File restored from _MEI: {logged_path.get(file)}")
     except Exception as e:
         logger.error(f"Failed to restore file: {logged_path.get(file)}, reason: {type(e).__name__}: {e}")
-    
-    # with open(os.path.join(MEIPASS, path_extension), "r") as file1:
-    #     data = json.load(file1)
-
-    # os.makedirs(os.path.dirname(file), exist_ok=True)
-    # with open(file, "w") as file2:
-    #     json.dump(data, file2, indent=4)
-    
-    logger.warning(f"File restored from _MEI: {logged_path.get(file)}")
 
 
 def check_file_content(file: str) -> None:

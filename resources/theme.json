@@ -3,7 +3,7 @@
       "fg_color": ["#f8f8f8", "#1c1c1c"]
     },
     "CTkToplevel": {
-      "fg_color": ["#f8f8f8", "#191919"]
+      "fg_color": ["#f8f8f8", "#1c1c1c"]
     },
     "CTkFrame": {
       "corner_radius": 6,
@@ -128,7 +128,7 @@
       "scrollbar_button_hover_color": ["gray40", "gray53"]
     },
     "CTkScrollableFrame": {
-      "label_fg_color": ["gray80", "gray21"]
+      "label_fg_color": ["transparent", "transparent"]
     },
     "DropdownMenu": {
       "fg_color": ["gray90", "gray20"],

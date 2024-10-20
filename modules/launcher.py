@@ -5,30 +5,26 @@ from typing import Literal
 from modules.info import ProjectData
 from modules.filesystem import Directory
 
-IS_FROZEN = getattr(sys, "frozen", False)
-if IS_FROZEN:
-    import customtkinter as ctk
-else:
-    try:
-        import customtkinter as ctk
-    except ImportError:
-        sys.path.insert(0, os.path.join(Directory.root(), "libraries"))
-        import customtkinter as ctk
+import customtkinter as ctk
 
+
+IS_FROZEN = getattr(sys, "frozen", False)
 
 icon_path_extention: str = os.path.join("resources", "favicon.ico")
 icon_path: str | None = os.path.join(Directory.root(), icon_path_extention)
-if not os.path.isfile(icon_path) and IS_FROZEN:
-    icon_path = os.path.join(Directory._MEI(), icon_path_extention)
-else:
-    icon_path = None
+if not os.path.isfile(icon_path):
+    if IS_FROZEN:
+        icon_path = os.path.join(Directory._MEI(), icon_path_extention)
+    else:
+        icon_path = None
 
 theme_path_extention: str = os.path.join("resources", "theme.json")
 theme_path: str = os.path.join(Directory.root(), theme_path_extention)
-if not os.path.isfile(theme_path) and IS_FROZEN:
-    theme_path = os.path.join(Directory._MEI(), theme_path_extention)
-else:
-    theme_path = "blue"
+if not os.path.isfile(theme_path):
+    if IS_FROZEN:
+        theme_path = os.path.join(Directory._MEI(), theme_path_extention)
+    else:
+        theme_path = "blue"
 
 
 class MainWindow:

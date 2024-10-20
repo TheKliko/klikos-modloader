@@ -3,7 +3,7 @@ from typing import Literal
 from io import BytesIO
 
 from modules.logger import logger
-from modules import request
+# from modules import request
 
 from customtkinter import CTkImage
 from PIL import Image
@@ -22,7 +22,7 @@ def load_image(light: str, dark: str, size: tuple[int, int]) -> CTkImage | Liter
         light_image = Image.open(light)
         dark_image = Image.open(dark)
     except Exception as e:
-        logger.warning(f"Failed to load images: {os.path.basename(light)} & {os.path.basename(dark)}, reason: {type(e).__name__}! {str(e)}")
+        logger.error(f"Failed to load images: {os.path.basename(light)} & {os.path.basename(dark)}, reason: {type(e).__name__}! {str(e)}")
         return ""
 
     image: CTkImage = CTkImage(
@@ -34,24 +34,24 @@ def load_image(light: str, dark: str, size: tuple[int, int]) -> CTkImage | Liter
     return image
 
 
-def load_image_from_url(url: str, size: tuple[int, int]) -> CTkImage | Literal[""]:
-    key: str = f"{url}-{size}"
-    cached_image = _image_cache.get(key)
-    if cached_image is not None:
-        return cached_image
+# def load_image_from_url(url: str, size: tuple[int, int]) -> CTkImage | Literal[""]:
+#     key: str = f"{url}-{size}"
+#     cached_image = _image_cache.get(key)
+#     if cached_image is not None:
+#         return cached_image
     
-    try:
-        response = request.get(url)
-        pil_image = Image.open(BytesIO(response.content))
-    except Exception as e:
-        logger.warning(f"Failed to load image from URL: \"{url}\", reason: {type(e).__name__}! {str(e)}")
-        return ""
+#     try:
+#         response = request.get(url)
+#         pil_image = Image.open(BytesIO(response.content))
+#     except Exception as e:
+#         logger.error(f"Failed to load image from URL: \"{url}\", reason: {type(e).__name__}! {str(e)}")
+#         return ""
     
 
-    image: CTkImage = CTkImage(
-        light_image=pil_image,
-        dark_image=pil_image,
-        size=size
-    )
-    _image_cache[key] = image
-    return image
+#     image: CTkImage = CTkImage(
+#         light_image=pil_image,
+#         dark_image=pil_image,
+#         size=size
+#     )
+#     _image_cache[key] = image
+#     return image
