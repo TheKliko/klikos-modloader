@@ -76,7 +76,7 @@ class Logger:
             return
 
         old_log_count: int = log_count - self.MAX_LOG_COUNT
-        self.info(f"Removing {old_log_count} old logs...")
+        self.info(f"Removing {old_log_count} log file{'s' if old_log_count > 1 else ''}...")
 
         for log in sorted(logs, key=os.path.getctime)[:old_log_count]:
             try:

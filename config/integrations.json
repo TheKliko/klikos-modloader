@@ -1,0 +1,9 @@
+{
+    "mod_updates": {
+        "name": "Kliko's mod updater",
+        "description": "Enables automatic mod updates",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    }
+}

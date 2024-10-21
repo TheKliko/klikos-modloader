@@ -6,10 +6,13 @@ from typing import Callable, Literal
 
 from modules.logger import logger
 from modules.info import ProjectData
-from modules.filesystem import Directory, logged_path
+from modules.filesystem import Directory
 from modules import filesystem
 from modules.interface.images import load_image
+from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
+from modules.functions.config import mods
 
+from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 
@@ -17,21 +20,19 @@ IS_FROZEN = getattr(sys, "frozen", False)
 
 icon_path_extension: str = os.path.join("resources", "favicon.ico")
 icon_path: str | None = os.path.join(Directory.root(), icon_path_extension)
-if not os.path.isfile(icon_path):
-    if IS_FROZEN:
-        icon_path = os.path.join(Directory._MEI(), icon_path_extension)
-    else:
-        icon_path = None
+if isinstance(icon_path, str):
+    if not os.path.isfile(icon_path):
+        if IS_FROZEN:
+            restore_from_mei(icon_path)
+        else:
+            icon_path = None
 
 theme_path_extension: str = os.path.join("resources", "theme.json")
 theme_path: str = os.path.join(Directory.root(), theme_path_extension)
 if not os.path.isfile(theme_path):
-    if IS_FROZEN:
-        os.makedirs(os.path.dirname(theme_path), exist_ok=True)
-        shutil.copy(os.path.join(Directory._MEI(), "resources", "theme.json"), theme_path)
-        logger.warning(f"File restored from _MEI: {logged_path.get(theme_path)}")
-        theme_path = os.path.join(Directory._MEI(), theme_path_extension)
-    else:
+    try:
+        restore_from_mei(theme_path)
+    except Exception as e:
         theme_path = "blue"
 
 
@@ -44,7 +45,7 @@ class MainWindow:
     size: str = f"{width}x{height}"
 
     title: str = "Modloader Menu"
-    icon: str = icon_path
+    icon: str | None = icon_path
     theme: str = theme_path
     appearance: str = "System"
 
@@ -185,14 +186,16 @@ class MainWindow:
             logo_base_path: str = os.path.join(Directory.root(), "resources", "menu", "logo")
             light_icon_path: str = os.path.join(logo_base_path, "light.png")
             dark_icon_path: str = os.path.join(logo_base_path, "dark.png")
-            if not os.path.isfile(light_icon_path) and IS_FROZEN:
-                os.makedirs(logo_base_path, exist_ok=True)
-                shutil.copy(os.path.join(Directory._MEI(), "resources", "menu", "logo", "light.png"), logo_base_path)
-                logger.warning(f"File restored from _MEI: {logged_path.get(light_icon_path)}")
-            if not os.path.isfile(dark_icon_path) and IS_FROZEN:
-                os.makedirs(logo_base_path, exist_ok=True)
-                shutil.copy(os.path.join(Directory._MEI(), "resources", "menu", "logo", "dark.png"), logo_base_path)
-                logger.warning(f"File restored from _MEI: {logged_path.get(dark_icon_path)}")
+            if not os.path.isfile(light_icon_path):
+                try:
+                    restore_from_mei(light_icon_path)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            if not os.path.isfile(dark_icon_path):
+                try:
+                    restore_from_mei(dark_icon_path)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
                 
             ctk.CTkLabel(
                 header,
@@ -204,22 +207,21 @@ class MainWindow:
                 ),
                 anchor="center",
                 justify="center"
-            ).grid(column=0, row=0, sticky="nsew")
+            ).grid(column=0, row=0, sticky="nsew", pady=(0,16))
     
             ctk.CTkLabel(
                 header,
                 text=ProjectData.NAME,
                 anchor="center",
                 justify="center",
-                font=self.font_medium_bold
+                font=self.font_large
             ).grid(column=0, row=1, sticky="nsew")
 
             ctk.CTkLabel(
                 header,
                 text="Version "+ProjectData.VERSION,
                 anchor="center",
-                justify="center",
-                font=self.font_small_bold
+                justify="center"
             ).grid(column=0, row=2, sticky="nsew")
 
 
@@ -239,14 +241,16 @@ class MainWindow:
                     directory_path_dark: str = os.path.join(Directory.root(), "resources", "menu", "navigation", "dark")
                     icon_path_light: str = os.path.join(directory_path_light, icon)
                     icon_path_dark: str = os.path.join(directory_path_dark, icon)
-                    if not os.path.isfile(icon_path_light) and IS_FROZEN:
-                        os.makedirs(directory_path_light, exist_ok=True)
-                        shutil.copy(os.path.join(Directory._MEI(), "resources", "menu", "navigation", "light", icon), directory_path_light)
-                        logger.warning(f"File restored from _MEI: {logged_path.get(icon_path_light)}")
-                    if not os.path.isfile(icon_path_dark) and IS_FROZEN:
-                        os.makedirs(directory_path_dark, exist_ok=True)
-                        shutil.copy(os.path.join(Directory._MEI(), "resources", "menu", "navigation", "dark", icon), directory_path_dark)
-                        logger.warning(f"File restored from _MEI: {logged_path.get(icon_path_dark)}")
+                    if not os.path.isfile(icon_path_light):
+                        try:
+                            restore_from_mei(icon_path_light)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+                    if not os.path.isfile(icon_path_dark):
+                        try:
+                            restore_from_mei(icon_path_dark)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
                     image = load_image(
                         light=icon_path_light,
                         dark=icon_path_dark,
@@ -299,6 +303,7 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -326,52 +331,256 @@ class MainWindow:
                 fg_color="transparent"
             )
             button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
-            button_frame.grid_columnconfigure(1, weight=1)
+            # button_frame.grid_columnconfigure(2, weight=1)
 
             package_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "package.png")
-            if not os.path.isfile(package_icon) and IS_FROZEN:
-                os.makedirs(os.path.dirname(package_icon), exist_ok=True)
-                shutil.copy(os.path.join(Directory._MEI(), os.path.relpath(package_icon, Directory.root())), os.path.dirname(package_icon))
-                logger.warning(f"File restored from _MEI: {logged_path.get(package_icon)}")
+            if not os.path.isfile(package_icon):
+                try:
+                    restore_from_mei(package_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
             ctk.CTkButton(
                 button_frame,
                 text="Add mods",
-                width=108,
                 image=load_image(
                     light=package_icon,
                     dark=package_icon,
                     size=(24,24)
                 ),
+                width=1,
                 anchor="w",
-                compound=ctk.LEFT
+                compound=ctk.LEFT,
+                command=self._import_mod
             ).grid(column=0, row=0, sticky="nsw")
 
             folder_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "folder.png")
-            if not os.path.isfile(folder_icon) and IS_FROZEN:
-                os.makedirs(os.path.dirname(folder_icon), exist_ok=True)
-                shutil.copy(os.path.join(Directory._MEI(), os.path.relpath(folder_icon, Directory.root())), os.path.dirname(folder_icon))
-                logger.warning(f"File restored from _MEI: {logged_path.get(folder_icon)}")
+            if not os.path.isfile(folder_icon):
+                try:
+                    restore_from_mei(folder_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
             ctk.CTkButton(
                 button_frame,
                 text="Open mods folder",
-                width=108,
                 image=load_image(
                     light=folder_icon,
                     dark=folder_icon,
                     size=(24,24)
                 ),
+                width=1,
                 anchor="w",
                 compound=ctk.LEFT,
                 command=lambda: filesystem.open(Directory.mods())
-            ).grid(column=1, row=0, sticky="nsw", padx=8)
+            ).grid(column=1, row=0, sticky="nsw", padx=(8,0))
+
+            font_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "font.png")
+            if not os.path.isfile(font_icon):
+                try:
+                    restore_from_mei(font_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Add font",
+                image=load_image(
+                    light=font_icon,
+                    dark=font_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._create_font_mod
+            ).grid(column=2, row=0, sticky="nsw", padx=(8,0))
 
         def load_content() -> None:
-            pass
+            mods_directory: str = Directory.mods()
+            installed_mods: list = [mod for mod in os.listdir(mods_directory) if os.path.isdir(os.path.join(mods_directory, mod))]
+            mod_data: dict = mods.get_all()
+            configured_mods: list[str] = [mod["name"] for mod in mod_data]
+
+            if installed_mods:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid(column=0, row=1, sticky="nsew")
+                for i, mod in enumerate(installed_mods):
+                    is_configured: bool = mod in configured_mods
+                    if is_configured:
+                        data: dict = mods.get(mod)
+                        priority: int = data["priority"]
+                        enabled: bool = data["enabled"]
+                    else:
+                        priority = 0
+                        enabled = False
+
+                    mod_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    mod_frame.grid(column=0, row=i, sticky="ew", pady=10)
+
+                    # Delete button
+                    delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
+                    if not os.path.isfile(delete_icon):
+                        try:
+                            restore_from_mei(delete_icon)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+                    ctk.CTkButton(
+                        mod_frame,
+                        text="",
+                        image=load_image(
+                            light=delete_icon,
+                            dark=delete_icon,
+                            size=(24,24)
+                        ),
+                        width=44,
+                        height=44,
+                        command=lambda: self._delete_mod(
+                            name=mod
+                        )
+                    ).grid(column=0, row=0, rowspan=2, padx=16, pady=16)
+
+                    # Load order frame
+                    load_order_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        mod_frame,
+                        fg_color="transparent"
+                    )
+                    load_order_frame.grid(column=2, row=0, rowspan=2, padx=(16,32), pady=16)
+
+                    ctk.CTkLabel(
+                        load_order_frame,
+                        text="Load order:",
+                        anchor="w",
+                        justify="left"
+                    ).grid(column=0, row=0, sticky="nsew")
+
+                    entry = ctk.CTkEntry(
+                        load_order_frame,
+                        width=40,
+                        height=40,
+                        validate="key",
+                        validatecommand=(self.root.register(lambda value: value.isdigit() or value == ""), '%P')
+                    )
+                    entry.insert("end", str(priority))
+                    entry.bind("<Return>", lambda _: self.root.focus())
+                    entry.bind("<FocusOut>", lambda event: self._set_mod_priority(event, mod))
+                    entry.grid(column=1, row=0, sticky="nsew", padx=8)
+
+                    switch: ctk.CTkSwitch = ctk.CTkSwitch(
+                        frame,
+                        width=48,
+                        height=24,
+                        text="",
+                        onvalue=True,
+                        offvalue=False,
+                        command=lambda: self._set_mod_status(mod, switch.get())
+                    )
+                    switch.grid(column=3, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+
 
         self.active_section = "mods"
         destroy()
         load_header()
         load_content()
+    
+
+
+    # region Configure mods
+    def _import_mod(self) -> None:
+        user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
+        initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+        files_to_import = filedialog.askopenfilenames(
+            filetypes=[
+                ("Archive files", "*.zip;*.7z"),
+                ("ZIP archives", "*.zip"),
+                ("7z archives", "*.7z")
+            ],
+            initialdir=initial_dir,
+            title="Import mods"
+        )
+
+        if not files_to_import:
+            return
+        
+        for file in files_to_import:
+            mod_name: str = os.path.basename(file).removesuffix(".zip").removesuffix(".7z")
+            target: str = os.path.join(Directory.mods(), mod_name)
+            
+            if os.path.isdir(target):
+                if not messagebox.askokcancel(ProjectData.NAME, f"A mod named \"{mod_name}\" already exists!\nDo you still wish to import it?"):
+                    continue
+                shutil.rmtree(target, ignore_errors=True)
+            
+            try:
+                filesystem.extract(file, target)
+            except Exception as e:
+                logger.error(f"Failed to import mod: {mod_name}\n{type(e).__name__}: {e}")
+                messagebox.showerror(ProjectData.NAME, f"Failed to import mod: {mod_name}\n{type(e).__name__}: {e}")
+
+        self._show_mods()
+    
+    def _create_font_mod(self) -> None:
+        # region TODO: font mods
+        # ctk top level
+        # either from file or gogole fonts url
+        pass
+        self._show_mods()
+    
+    def _set_mod_status(self, name: str, status: bool) -> None:
+        try:
+            mods.set_status(name, status)
+        except Exception as e:
+            logger.error(f"Failed to update mod status\n{type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update mod status\n{type(e).__name__}: {e}")
+    
+    def _set_mod_priority(self, event, name: str) -> None:
+        try:
+            priority: int = int(event.widget.get())
+        except Exception as e:
+            logger.error(f"Failed to update mod priority\n{type(e).__name__}: {e}")
+            event.widget.delete(0, "end")
+            event.widget.insert(0, str(mods.get(name).get("priority", mods.FORMAT["priority"])))
+            return
+
+        try:
+            mods.set_priority(name, priority)
+        except Exception as e:
+            logger.error(f"Failed to update mod priority\n{type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update mod priority\n{type(e).__name__}: {e}")
+    
+    def _rename_mod(self, name: str, new_name: str) -> None:
+        if name == new_name:
+            return
+
+        mods_directory: str = Directory.mods()
+        try:
+            os.rename(os.path.join(mods_directory, name), os.path.join(mods_directory, new_name))
+        except Exception as e:
+            logger.error(f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
+            return
+
+        mods.set_name(name, new_name)
+        self._show_mods()
+    
+    def _delete_mod(self, name: str) -> None:
+        if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this mod: \"{name}\"\nThis action cannot be undone!"):
+            return
+
+        try:
+            filesystem.remove(os.path.join(Directory.mods(), name))
+        except Exception as e:
+            logger.error(f"Failed to delete mod \"{name}\"\n{type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to delete mod \"{name}\"\n{type(e).__name__}: {e}")
+            return
+        
+        try:
+            mods.remove(name)
+        except Exception:
+            pass
+        self._show_mods()
     
 
 

@@ -39,9 +39,7 @@ pyinstaller ..\main.py ^
 --paths="%libraries_path%" ^
 --add-data="%resources_path%;resources" ^
 --add-data="%config_path%/settings.json;config" ^
---add-data="%config_path%/integrations.json;config" ^
---add-data="%config_path%/mods.json;config" ^
---add-data="%config_path%/fastflags.json;config"
+--add-data="%config_path%/integrations.json;config"
 
 
 if exist "%dist_path%\modloader.exe" (

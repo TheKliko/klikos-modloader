@@ -2,15 +2,15 @@ import os
 import sys
 
 from modules.logger import logger
-from modules.filesystem import Directory
 from modules import error_handler, launch_mode
 
 IS_FROZEN = getattr(sys, "frozen", False)
 if IS_FROZEN:
     import pyi_splash
 else:
-    sys.path.insert(0, os.path.join(Directory.root(), "libraries"))
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "libraries"))
 
+from modules.filesystem import Directory
 from modules import startup, menu, launcher
 
 

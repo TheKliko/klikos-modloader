@@ -3,16 +3,18 @@ import os
 import sys
 import threading
 import json
-import shutil
 import webbrowser
 
 from modules.logger import logger
 from modules.filesystem import Directory, FilePath, logged_path
 from modules.functions.set_registry_keys import set_registry_keys
+from modules.functions.restore_from_mei import restore_from_mei
 from modules.info import ProjectData, Hyperlink
 from modules import request
+from modules.functions.config import settings
 
 from tkinter import messagebox
+
 
 IS_FROZEN = getattr(sys, "frozen", False)
 if IS_FROZEN:
@@ -20,7 +22,6 @@ if IS_FROZEN:
 
 
 PLATFORM: str = platform.system()
-threads: list[threading.Thread] = []
 
 
 class PlatformError(Exception):
@@ -31,39 +32,33 @@ def run() -> None:
     if IS_FROZEN:
         pyi_splash.update_text("Checking platform...")
     if PLATFORM != "Windows":
-        raise PlatformError(f"Unsupported OS \"{PLATFORM}\" detected!")
+        error_text: str = f"Unsupported OS \"{PLATFORM}\""
+        if IS_FROZEN:
+            if pyi_splash.is_alive():
+                pyi_splash.close()
+        logger.error(error_text)
+        raise PlatformError(error_text)
     
     if IS_FROZEN:
         pyi_splash.update_text("Checking core files...")
-    thread = threading.Thread(
-        name="startup.check_core_files()_thread",
-        target=check_core_files,
-        daemon=True
-    )
-    threads.append(thread)
-    thread.start()
+    check_core_files()
     
-    if IS_FROZEN:
-        pyi_splash.update_text("Checking for updates...")
-    update_checker_thread = threading.Thread(
-        name="startup.check_for_updates()_thread",
-        target=check_for_updates,
-        daemon=True
-    )
-    update_checker_thread.start()
-    
+    if settings.value("check_for_updates") == True:
+        if IS_FROZEN:
+            pyi_splash.update_text("Checking for updates...")
+        threading.Thread(
+            name="startup.check_for_updates()_thread",
+            target=check_for_updates,
+            daemon=True
+        ).start()
+
     if IS_FROZEN:
         pyi_splash.update_text("Setting registry keys...")
-        thread = threading.Thread(
-            name="startup.set_registry_keys()_thread",
-            target=set_registry_keys,
-            daemon=True
-        )
-        threads.append(thread)
-        thread.start()
-
-    for thread in threads:
-        thread.join()
+    threading.Thread(
+        name="startup.set_registry_keys()_thread",
+        target=set_registry_keys,
+        daemon=True
+    ).start()
 
     if IS_FROZEN:
         pyi_splash.update_text("Done!")
@@ -73,53 +68,54 @@ def check_core_files() -> None:
     logger.info("Checking core files...")
     core_files: list[str] = FilePath.core_files()
     for file in core_files:
-        if os.path.isfile(file):
-            if IS_FROZEN:
-                check_file_content(file)
-            continue
+        file_exists: bool = os.path.isfile(file)
 
-        elif IS_FROZEN:
-            restore_core_file(file)
-        
-        else:
-            raise FileNotFoundError(os.path.join(os.path.basename(os.path.dirname(file)), os.path.basename(file)))
+        if not IS_FROZEN and not file_exists:
+            raise FileNotFoundError(logged_path.get(file))
+
+        if IS_FROZEN:
+            if file_exists:
+                check_file_content(file)
+            else:
+                restore_from_mei(file)
     
     os.makedirs(Directory.mods(), exist_ok=True)
     os.makedirs(Directory.versions(), exist_ok=True)
 
 
-def restore_core_file(file: str) -> None:
-    if not IS_FROZEN:
-        return
-    root: str = Directory.root()
-    MEIPASS: str = Directory._MEI()
-    path_extension: str = os.path.relpath(file, root)
-
-    try:
-        os.makedirs(os.path.dirname(file), exist_ok=True)
-        shutil.copy(os.path.join(MEIPASS, path_extension), os.path.join(root, path_extension))
-        logger.warning(f"File restored from _MEI: {logged_path.get(file)}")
-    except Exception as e:
-        logger.error(f"Failed to restore file: {logged_path.get(file)}, reason: {type(e).__name__}: {e}")
-
-
 def check_file_content(file: str) -> None:
     if not IS_FROZEN:
         return
+
     root: str = Directory.root()
     MEIPASS: str = Directory._MEI()
     path_extension: str = os.path.relpath(file, root)
 
-    with open(file, "r") as file1:
-        current_data: dict = json.load(file1)
-    
-    test: str = os.path.join(MEIPASS, path_extension)
-    with open(test, "r") as file2:
-        new_data: dict = json.load(file2)
-    
-    for key in new_data:
-        if key not in current_data:
-            restore_core_file(file)
+    if not os.path.isfile(file):
+        restore_from_mei(file)
+
+    try:
+        with open(file, "r") as current_file:
+            current_data: dict = json.load(current_file)
+        
+        original_filepath: str = os.path.join(MEIPASS, path_extension)
+        with open(original_filepath, "r") as original_file:
+            original_data: dict = json.load(original_file)
+        
+        if current_data.keys() == original_data.keys():
+            return
+        
+        filtered_data: dict = original_data.copy()
+        for key in filtered_data:
+            if key in current_data:
+                filtered_data[key] = current_data[key]
+
+        if filtered_data != current_data:
+            with open(file, "w") as current_file:
+                json.dump(filtered_data, current_file, indent=4)
+
+    except Exception as e:
+        logger.warning(f"Failed to verify content of {logged_path.get(file)}, reason: {type(e).__name__}: {e}")
 
 
 def check_for_updates() -> None:
@@ -127,11 +123,13 @@ def check_for_updates() -> None:
     
     response: request.Response = request.get(request.GitHubApi.latest_version())
     data: dict = response.json()
-    latest_version: str = data.get("latest")
-    if not latest_version:
+    latest_version: str | None = data.get("latest")
+    if latest_version is None:
         return
     
     if latest_version > ProjectData.VERSION:
         logger.debug(f"A newer version is available: {latest_version}")
         if messagebox.askyesno(ProjectData.NAME, f"A newer version is available! Do you wish to update?"):
             webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)
+            logger.info("User chose to update! Shutting down...")
+            os._exit(0)

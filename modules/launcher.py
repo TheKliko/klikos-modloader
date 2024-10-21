@@ -4,26 +4,28 @@ from typing import Literal
 
 from modules.info import ProjectData
 from modules.filesystem import Directory
+from modules.functions.restore_from_mei import restore_from_mei
 
 import customtkinter as ctk
 
 
 IS_FROZEN = getattr(sys, "frozen", False)
 
-icon_path_extention: str = os.path.join("resources", "favicon.ico")
-icon_path: str | None = os.path.join(Directory.root(), icon_path_extention)
-if not os.path.isfile(icon_path):
-    if IS_FROZEN:
-        icon_path = os.path.join(Directory._MEI(), icon_path_extention)
-    else:
-        icon_path = None
+icon_path_extension: str = os.path.join("resources", "favicon.ico")
+icon_path: str | None = os.path.join(Directory.root(), icon_path_extension)
+if isinstance(icon_path, str):
+    if not os.path.isfile(icon_path):
+        if IS_FROZEN:
+            restore_from_mei(icon_path)
+        else:
+            icon_path = None
 
-theme_path_extention: str = os.path.join("resources", "theme.json")
-theme_path: str = os.path.join(Directory.root(), theme_path_extention)
+theme_path_extension: str = os.path.join("resources", "theme.json")
+theme_path: str = os.path.join(Directory.root(), theme_path_extension)
 if not os.path.isfile(theme_path):
-    if IS_FROZEN:
-        theme_path = os.path.join(Directory._MEI(), theme_path_extention)
-    else:
+    try:
+        restore_from_mei(theme_path)
+    except Exception as e:
         theme_path = "blue"
 
 
