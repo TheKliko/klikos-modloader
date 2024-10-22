@@ -3,6 +3,7 @@ import sys
 import shutil
 import json
 from typing import Callable, Literal
+from tempfile import TemporaryDirectory
 
 from modules.logger import logger
 from modules.info import ProjectData
@@ -11,9 +12,12 @@ from modules import filesystem
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.config import mods
+from modules.functions.get_latest_version import get_latest_version
+from modules.request import RobloxApi
 
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
+from fontTools.ttLib import TTFont
 
 
 IS_FROZEN = getattr(sys, "frozen", False)
@@ -331,7 +335,6 @@ class MainWindow:
                 fg_color="transparent"
             )
             button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
-            # button_frame.grid_columnconfigure(2, weight=1)
 
             package_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "package.png")
             if not os.path.isfile(package_icon):
@@ -399,7 +402,14 @@ class MainWindow:
             mod_data: dict = mods.get_all()
             configured_mods: list[str] = [mod["name"] for mod in mod_data]
 
-            if installed_mods:
+            if not installed_mods:
+                ctk.CTkLabel(
+                    self.content,
+                    text="No mods found!",
+                    font=self.font_title
+                ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+            else:
                 frame: ctk.CTkFrame = ctk.CTkFrame(
                     self.content,
                     fg_color="transparent"
@@ -487,7 +497,7 @@ class MainWindow:
     
 
 
-    # region Configure mods
+    # region Importing mods
     def _import_mod(self) -> None:
         user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
         initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
@@ -543,7 +553,7 @@ class MainWindow:
                 self.title("Font selector")
 
                 self.protocol("WM_DELETE_WINDOW", self._on_close)
-                self.bind("<Escape>", self._on_close)
+                self.bind("<Escape>", lambda _: self._on_close())
 
                 file_select_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "file_select.png")
                 run_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "run.png")
@@ -564,24 +574,24 @@ class MainWindow:
                     self,
                     fg_color="transparent"
                 )
-                self.file_frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,8))
+                self.file_frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,32))
                 self.file_frame.grid_columnconfigure(0, weight=1)
                 self.filepath = ctk.StringVar(value="")
 
-                ctk.CTkLabel(
-                    self.file_frame,
-                    text="Load from file:",
-                    font=self.root.font_bold
-                ).grid(column=0, row=0, sticky="ns", padx=(0,8))
+                # ctk.CTkLabel(
+                #     self.file_frame,
+                #     text="Load from file:",
+                #     font=self.root.font_bold
+                # ).grid(column=0, row=0, sticky="ns", padx=(0,8))
 
-                file_entry: ctk.CTkEntry = ctk.CTkEntry(
+                self.file_entry: ctk.CTkEntry = ctk.CTkEntry(
                     self.file_frame,
                     width=self.entry_width-self.button_size[0]-8,
                     height=self.button_size[1],
                     placeholder_text="Choose a file"
                 )
-                file_entry.configure(state="disabled")
-                file_entry.grid(column=1, row=0, sticky="ns")
+                self.file_entry.configure(state="disabled")
+                self.file_entry.grid(column=1, row=0, sticky="ns")
 
                 ctk.CTkButton(
                     self.file_frame,
@@ -592,7 +602,8 @@ class MainWindow:
                         light=file_select_icon,
                         dark=file_select_icon,
                         size=self.icon_size
-                    )
+                    ),
+                    command=self._choose_file
                 ).grid(column=2, row=0, sticky="ns", padx=(8,0))
 
                 ctk.CTkButton(
@@ -604,43 +615,45 @@ class MainWindow:
                         light=run_icon,
                         dark=run_icon,
                         size=self.icon_size
-                    )
+                    ),
+                    command=lambda: self._on_run(mode=self.FILE_MODE, data=self.filepath)
                 ).grid(column=3, row=0, sticky="ns", padx=(16,0))
 
                 # Font from URL
-                self.url_frame = ctk.CTkFrame(
-                    self,
-                    fg_color="transparent"
-                )
-                self.url_frame.grid(column=0, row=1, sticky="nsew", padx=32, pady=(8,32))
-                self.url_frame.grid_columnconfigure(0, weight=1)
-                self.url = ctk.StringVar(value="")
+                # self.url_frame = ctk.CTkFrame(
+                #     self,
+                #     fg_color="transparent"
+                # )
+                # self.url_frame.grid(column=0, row=1, sticky="nsew", padx=32, pady=(16,32))
+                # self.url_frame.grid_columnconfigure(0, weight=1)
+                # self.url = ctk.StringVar(value="")
 
-                ctk.CTkLabel(
-                    self.url_frame,
-                    text="Load from URL:",
-                    font=self.root.font_bold
-                ).grid(column=0, row=0, sticky="ns", padx=(0,8))
+                # ctk.CTkLabel(
+                #     self.url_frame,
+                #     text="Load from URL:",
+                #     font=self.root.font_bold
+                # ).grid(column=0, row=0, sticky="ns", padx=(0,8))
 
-                ctk.CTkEntry(
-                    self.url_frame,
-                    width=self.entry_width,
-                    height=self.button_size[1],
-                    placeholder_text="https://fonts.google.com/noto/specimen/Noto+Sans+JP",
-                    textvariable=self.url
-                ).grid(column=1, row=0, sticky="ns")
+                # ctk.CTkEntry(
+                #     self.url_frame,
+                #     width=self.entry_width,
+                #     height=self.button_size[1],
+                #     placeholder_text="URL",
+                #     textvariable=self.url
+                # ).grid(column=1, row=0, sticky="ns")
 
-                ctk.CTkButton(
-                    self.url_frame,
-                    text="",
-                    width=self.button_size[0],
-                    height=self.button_size[1],
-                    image=load_image(
-                        light=run_icon,
-                        dark=run_icon,
-                        size=self.icon_size
-                    )
-                ).grid(column=2, row=0, sticky="ns", padx=(16,0))
+                # ctk.CTkButton(
+                #     self.url_frame,
+                #     text="",
+                #     width=self.button_size[0],
+                #     height=self.button_size[1],
+                #     image=load_image(
+                #         light=run_icon,
+                #         dark=run_icon,
+                #         size=self.icon_size
+                #     ),
+                #     command=lambda: self._on_run(mode=self.URL_MODE, data=self.url)
+                # ).grid(column=2, row=0, sticky="ns", padx=(16,0))
 
                 self.update_idletasks()
                 width = self.winfo_reqwidth()
@@ -659,41 +672,104 @@ class MainWindow:
                 self.wait_window()
                 return self.result
             
+            def _choose_file(self) -> None:
+                user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
+                initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                font_file = filedialog.askopenfilename(
+                    filetypes=[
+                        ("Font files", "*.ttf;*.otf"),
+                        ("TrueType Fonts", "*.ttf"),
+                        ("OpenType Fonts", "*.otf")
+                    ],
+                    initialdir=initial_dir,
+                    title="Choose a font"
+                )
+                if not font_file:
+                    return
+                self.filepath = font_file
+                self.file_entry.configure(state="normal")
+                self.file_entry.delete(0, "end")
+                self.file_entry.insert(0, os.path.basename(self.filepath))
+                self.file_entry.configure(state="disabled")
+
+            
             def _on_close(self) -> None:
                 self.grab_release()
                 self.destroy()
             
             def _on_run(self, mode: str, data: str) -> None:
-                try:
-                    if mode == self.FILE_MODE:
-                        raise NotImplementedError("Function not implemented!")
-                    elif mode == self.URL_MODE:
-                        raise NotImplementedError("Function not implemented!")
-                except Exception as e:
-                    messagebox.showerror(f"Failed to create mod!\n{type(e).__name__}: {e}")
-                    return
+                self.result = (mode, data)
                 self._on_close()
 
         window = Window(self)
-        response = window.show()
-        
-        messagebox.showinfo("test", str(response))
-        if not response:
+        result = window.show()
+        if not result:
             return
-        mode: str = response[0]
-        data: str = response[1]
+        
+        mode: str = result[0]
 
         if mode == window.FILE_MODE:
-            messagebox.showinfo("test", "FILEMODE")
+            filepath: str = result[1]
 
-        elif mode == window.URL_MODE:
-            messagebox.showinfo("test", "URLMODE")
-        # region TODO: font mods
-        # ctk top level
-        # either from file or gogole fonts url
-        pass
+            if not os.path.isfile(filepath):
+                messagebox.showerror(ProjectData.NAME, "Failed to create font mod!\nFile does not exist.")
+                return
+
+            mod_name: str = f"Font ({os.path.basename(filepath).split('.')[0]})"
+            target: str = os.path.join(Directory.mods(), mod_name)
+
+            rbxasset_new: str = "rbxasset://fonts/CustomFont.ttf"
+            try:
+                with TemporaryDirectory() as temp_directory:
+                    source: str = os.path.join(temp_directory, mod_name)
+                    font_basepath: str = os.path.join(source, "content", "fonts")
+                    font_path: str = os.path.join(font_basepath, "CustomFont.ttf")
+                    font_families_path: str = os.path.join(font_basepath, "families")
+                    os.makedirs(font_families_path)
+
+                    if filepath.endswith(".ttf"):
+                        shutil.copyfile(filepath, font_path)
+                    else:
+                        TTFont(filepath).save(font_path)
+                    
+                    filesystem.open(temp_directory)
+                    messagebox.showinfo("test", "test")
+                    
+                    latest_version: str = get_latest_version(binary_type="WindowsPlayer")
+                    filesystem.download(RobloxApi.download(latest_version, "content-fonts.zip"), os.path.join(temp_directory, "roblox_fonts.zip"))
+                    filesystem.extract(os.path.join(temp_directory, "roblox_fonts.zip"), os.path.join(temp_directory, "roblox_fonts"))
+
+                    roblox_font_families_path: str = os.path.join(temp_directory, "roblox_fonts", "families")
+                    shutil.copytree(roblox_font_families_path, font_families_path, dirs_exist_ok=True)
+                    
+                    for json_file in [os.path.join(font_families_path, item) for item in os.listdir(font_families_path) if os.path.join(font_families_path, item) and item.endswith(".json")]:
+                        with open(json_file, "r") as read_file:
+                            data: dict = json.load(read_file)
+                        font_faces: list = data.get("faces", [])
+                        if not font_faces:
+                            continue
+                        for i in range(len(font_faces)):
+                            font_faces[i]["assetId"] = rbxasset_new
+                        data["faces"] = font_faces
+                        with open(json_file, "w") as write_file:
+                            json.dump(data, write_file, indent=4)
+
+                    if os.path.isdir(target):
+                        shutil.rmtree(target, ignore_errors=True)
+                    shutil.copytree(source, target, dirs_exist_ok=True)
+
+            except Exception as e:
+                messagebox.showerror(ProjectData.NAME, f"Failed to create font mod!\n{type(e).__name__}: {e}")
+
+        else:
+            raise NotImplementedError(f"Failed to generate font mod! mode: {mode}")
+        # elif mode == window.URL_MODE:
+        #     url: str = result[1]
+        #     messagebox.showinfo("test", "URLMODE")
+
         self._show_mods()
     
+    # region Configure mod
     def _set_mod_status(self, name: str, status: bool) -> None:
         try:
             mods.set_status(name, status)

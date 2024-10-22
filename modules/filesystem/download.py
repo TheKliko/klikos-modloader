@@ -12,7 +12,7 @@ COOLDOWN: int = 2
 def download(url: str, destination: str, attempts: int = 3) -> None:
     try:
         logger.info(f"Attempting file download: {url}")
-        os.makedirs(destination, exist_ok=True)
+        os.makedirs(os.path.dirname(destination), exist_ok=True)
         urllib.request.urlretrieve(url, destination)
         logger.info(f"File downloaded successfully: {url}")
     
