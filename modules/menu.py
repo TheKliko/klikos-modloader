@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import json
+import re
 from typing import Callable, Literal
 from tempfile import TemporaryDirectory
 
@@ -165,6 +166,8 @@ class MainWindow:
         )
         self.content.grid_columnconfigure(0, weight=1)
         self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
+
+        self.root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
     
 
     def show(self) -> None:
@@ -414,7 +417,8 @@ class MainWindow:
                     self.content,
                     fg_color="transparent"
                 )
-                frame.grid(column=0, row=1, sticky="nsew")
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
                 for i, mod in enumerate(installed_mods):
                     is_configured: bool = mod in configured_mods
                     if is_configured:
@@ -424,10 +428,12 @@ class MainWindow:
                     else:
                         priority = 0
                         enabled = False
+                    mod_info = {"name": mod}
 
                     mod_frame: ctk.CTkFrame = ctk.CTkFrame(
                         frame
                     )
+                    mod_frame.grid_columnconfigure(1, weight=1)
                     mod_frame.grid(column=0, row=i, sticky="ew", pady=10)
 
                     # Delete button
@@ -447,17 +453,41 @@ class MainWindow:
                         ),
                         width=44,
                         height=44,
-                        command=lambda: self._delete_mod(
-                            name=mod
+                        command=lambda mod_info=mod_info: self._delete_mod(
+                            name=mod_info["name"]
                         )
                     ).grid(column=0, row=0, rowspan=2, padx=16, pady=16)
+
+                    # Name label
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        mod_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid(column=1, row=0, sticky="nsew")
+                    name_entry = ctk.CTkEntry(
+                        name_frame,
+                        width=250,
+                        height=40,
+                        validate="key",
+                        validatecommand=(self.root.register(lambda value: not re.search(r'[\\/:*?"<>|]', value)), '%P')
+                    )
+                    name_entry.insert("end", str(mod))
+                    name_entry.bind("<Return>", lambda _: self.root.focus())
+                    name_entry.bind("<FocusOut>", lambda event, mod_info=mod_info: self._rename_mod(event, mod_info))
+                    name_entry.grid(column=0, row=0, sticky="nsew", pady=24)
 
                     # Load order frame
                     load_order_frame: ctk.CTkFrame = ctk.CTkFrame(
                         mod_frame,
                         fg_color="transparent"
                     )
-                    load_order_frame.grid(column=2, row=0, rowspan=2, padx=(16,32), pady=16)
+                    load_order_frame.grid(column=2, row=0, rowspan=2, padx=16, pady=16)
+
+
+                    # stop ctrl+z-ing
+                    # stop ctrl+z-ing
+                    # stop ctrl+z-ing
+
 
                     ctk.CTkLabel(
                         load_order_frame,
@@ -475,17 +505,20 @@ class MainWindow:
                     )
                     entry.insert("end", str(priority))
                     entry.bind("<Return>", lambda _: self.root.focus())
-                    entry.bind("<FocusOut>", lambda event: self._set_mod_priority(event, mod))
-                    entry.grid(column=1, row=0, sticky="nsew", padx=8)
+                    entry.bind("<FocusOut>", lambda event, mod_info=mod_info: self._set_mod_priority(event, mod_info["name"]))
+                    entry.grid(column=1, row=0, sticky="nsew", padx=16)
 
+                    # Toggle active state
+                    var = ctk.BooleanVar(value=enabled)
                     switch: ctk.CTkSwitch = ctk.CTkSwitch(
-                        frame,
+                        mod_frame,
                         width=48,
                         height=24,
                         text="",
+                        variable=var,
                         onvalue=True,
                         offvalue=False,
-                        command=lambda: self._set_mod_status(mod, switch.get())
+                        command=lambda mod_info=mod_info, status_var=var: self._set_mod_status(mod_info["name"], status_var.get())
                     )
                     switch.grid(column=3, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
 
@@ -532,6 +565,7 @@ class MainWindow:
         self._show_mods()
     
     # region Font mods
+    # TODO: Load fonts from URL
     def _create_font_mod(self) -> None:
         class Window(ctk.CTkToplevel):
 
@@ -732,9 +766,6 @@ class MainWindow:
                     else:
                         TTFont(filepath).save(font_path)
                     
-                    filesystem.open(temp_directory)
-                    messagebox.showinfo("test", "test")
-                    
                     latest_version: str = get_latest_version(binary_type="WindowsPlayer")
                     filesystem.download(RobloxApi.download(latest_version, "content-fonts.zip"), os.path.join(temp_directory, "roblox_fonts.zip"))
                     filesystem.extract(os.path.join(temp_directory, "roblox_fonts.zip"), os.path.join(temp_directory, "roblox_fonts"))
@@ -792,20 +823,31 @@ class MainWindow:
             logger.error(f"Failed to update mod priority\n{type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to update mod priority\n{type(e).__name__}: {e}")
     
-    def _rename_mod(self, name: str, new_name: str) -> None:
+    def _rename_mod(self, event, mod_info) -> None:
+        name: str = mod_info["name"]
+        new_name: str = str(event.widget.get())
         if name == new_name:
+            return
+        
+        if not new_name:
+            event.widget.delete(0, "end")
+            event.widget.insert(0, name)
             return
 
         mods_directory: str = Directory.mods()
         try:
             os.rename(os.path.join(mods_directory, name), os.path.join(mods_directory, new_name))
+        except FileExistsError:
+            messagebox.showerror(ProjectData.NAME, "Failed to rename mod!\nAnother mod with the same name already exists!")
+            return
         except Exception as e:
             logger.error(f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
-            messagebox.showerror(ProjectData.NAME, f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
+            messagebox.showwarning(ProjectData.NAME, f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
             return
 
         mods.set_name(name, new_name)
-        self._show_mods()
+        mod_info["name"] = new_name
+        # self._show_mods()
     
     def _delete_mod(self, name: str) -> None:
         if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this mod: \"{name}\"\nThis action cannot be undone!"):

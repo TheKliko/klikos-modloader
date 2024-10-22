@@ -26,7 +26,8 @@ if not exist "%libraries_path%" (
 )
 pip install --upgrade --target="%libraries_path%" pillow requests customtkinter pypresence py7zr fonttools
 
-echo "run pyinstaller"
+echo
+echo run pyinstaller
 pyinstaller ..\main.py ^
 --distpath="%dist_path%" ^
 --workpath="%work_path%" ^
