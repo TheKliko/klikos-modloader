@@ -43,14 +43,15 @@ def run() -> None:
         pyi_splash.update_text("Checking core files...")
     check_core_files()
     
-    if settings.value("check_for_updates") == True:
-        if IS_FROZEN:
-            pyi_splash.update_text("Checking for updates...")
-        threading.Thread(
-            name="startup.check_for_updates()_thread",
-            target=check_for_updates,
-            daemon=True
-        ).start()
+    if not os.path.exists(FilePath.skip_update_check()):
+        if settings.value("check_for_updates") == True:
+            if IS_FROZEN:
+                pyi_splash.update_text("Checking for updates...")
+            threading.Thread(
+                name="startup.check_for_updates()_thread",
+                target=check_for_updates,
+                daemon=True
+            ).start()
 
     if IS_FROZEN:
         pyi_splash.update_text("Setting registry keys...")

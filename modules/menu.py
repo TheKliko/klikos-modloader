@@ -521,7 +521,173 @@ class MainWindow:
 
         self._show_mods()
     
+    # region Font mods
     def _create_font_mod(self) -> None:
+        class Window(ctk.CTkToplevel):
+
+            result: tuple[str, str] | None = None
+            URL_MODE: str = "url"
+            FILE_MODE: str = "file"
+
+            entry_width: int = 360
+            button_size: tuple[int, int] = (44, 44)
+            icon_size: tuple[int, int] = (24, 24)
+
+            def __init__(self, root, *args, **kwargs) -> None:
+                super().__init__(*args, **kwargs)
+                self.root = root
+
+                if self.root.icon is not None:
+                    self.iconbitmap(self.root.icon)
+                    self.after(200, lambda: self.iconbitmap(self.root.icon))
+                self.title("Font selector")
+
+                self.protocol("WM_DELETE_WINDOW", self._on_close)
+                self.bind("<Escape>", self._on_close)
+
+                file_select_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "file_select.png")
+                run_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "run.png")
+                
+                if not os.path.isfile(file_select_icon):
+                    try:
+                        restore_from_mei(file_select_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+                if not os.path.isfile(run_icon):
+                    try:
+                        restore_from_mei(run_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+
+                # Font from file
+                self.file_frame = ctk.CTkFrame(
+                    self,
+                    fg_color="transparent"
+                )
+                self.file_frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,8))
+                self.file_frame.grid_columnconfigure(0, weight=1)
+                self.filepath = ctk.StringVar(value="")
+
+                ctk.CTkLabel(
+                    self.file_frame,
+                    text="Load from file:",
+                    font=self.root.font_bold
+                ).grid(column=0, row=0, sticky="ns", padx=(0,8))
+
+                file_entry: ctk.CTkEntry = ctk.CTkEntry(
+                    self.file_frame,
+                    width=self.entry_width-self.button_size[0]-8,
+                    height=self.button_size[1],
+                    placeholder_text="Choose a file"
+                )
+                file_entry.configure(state="disabled")
+                file_entry.grid(column=1, row=0, sticky="ns")
+
+                ctk.CTkButton(
+                    self.file_frame,
+                    text="",
+                    width=self.button_size[0],
+                    height=self.button_size[1],
+                    image=load_image(
+                        light=file_select_icon,
+                        dark=file_select_icon,
+                        size=self.icon_size
+                    )
+                ).grid(column=2, row=0, sticky="ns", padx=(8,0))
+
+                ctk.CTkButton(
+                    self.file_frame,
+                    text="",
+                    width=self.button_size[0],
+                    height=self.button_size[1],
+                    image=load_image(
+                        light=run_icon,
+                        dark=run_icon,
+                        size=self.icon_size
+                    )
+                ).grid(column=3, row=0, sticky="ns", padx=(16,0))
+
+                # Font from URL
+                self.url_frame = ctk.CTkFrame(
+                    self,
+                    fg_color="transparent"
+                )
+                self.url_frame.grid(column=0, row=1, sticky="nsew", padx=32, pady=(8,32))
+                self.url_frame.grid_columnconfigure(0, weight=1)
+                self.url = ctk.StringVar(value="")
+
+                ctk.CTkLabel(
+                    self.url_frame,
+                    text="Load from URL:",
+                    font=self.root.font_bold
+                ).grid(column=0, row=0, sticky="ns", padx=(0,8))
+
+                ctk.CTkEntry(
+                    self.url_frame,
+                    width=self.entry_width,
+                    height=self.button_size[1],
+                    placeholder_text="https://fonts.google.com/noto/specimen/Noto+Sans+JP",
+                    textvariable=self.url
+                ).grid(column=1, row=0, sticky="ns")
+
+                ctk.CTkButton(
+                    self.url_frame,
+                    text="",
+                    width=self.button_size[0],
+                    height=self.button_size[1],
+                    image=load_image(
+                        light=run_icon,
+                        dark=run_icon,
+                        size=self.icon_size
+                    )
+                ).grid(column=2, row=0, sticky="ns", padx=(16,0))
+
+                self.update_idletasks()
+                width = self.winfo_reqwidth()
+                height = self.winfo_reqheight()
+                screen_width = self.winfo_screenwidth()
+                screen_height = self.winfo_screenheight()
+                x = (screen_width // 2) - (width // 2)
+                y = (screen_height // 2) - (height // 2)
+                self.geometry(f"{width}x{height}+{x}+{y}")
+                self.resizable(False, False)
+
+                
+            def show(self) -> tuple[str, str] | None:
+                self.focus()
+                self.grab_set()
+                self.wait_window()
+                return self.result
+            
+            def _on_close(self) -> None:
+                self.grab_release()
+                self.destroy()
+            
+            def _on_run(self, mode: str, data: str) -> None:
+                try:
+                    if mode == self.FILE_MODE:
+                        raise NotImplementedError("Function not implemented!")
+                    elif mode == self.URL_MODE:
+                        raise NotImplementedError("Function not implemented!")
+                except Exception as e:
+                    messagebox.showerror(f"Failed to create mod!\n{type(e).__name__}: {e}")
+                    return
+                self._on_close()
+
+        window = Window(self)
+        response = window.show()
+        
+        messagebox.showinfo("test", str(response))
+        if not response:
+            return
+        mode: str = response[0]
+        data: str = response[1]
+
+        if mode == window.FILE_MODE:
+            messagebox.showinfo("test", "FILEMODE")
+
+        elif mode == window.URL_MODE:
+            messagebox.showinfo("test", "URLMODE")
         # region TODO: font mods
         # ctk top level
         # either from file or gogole fonts url

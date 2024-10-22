@@ -25,6 +25,10 @@ class FilePath:
         return os.path.join(Directory.config(), "launch_integrations.json")
     
     @staticmethod
+    def skip_update_check() -> str:
+        return os.path.join(Directory.config(), "SKIP_UPDATE_CHECK")
+    
+    @staticmethod
     def core_files() -> list[str]:
         return [
             FilePath.settings(),
