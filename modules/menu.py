@@ -483,12 +483,6 @@ class MainWindow:
                     )
                     load_order_frame.grid(column=2, row=0, rowspan=2, padx=16, pady=16)
 
-
-                    # stop ctrl+z-ing
-                    # stop ctrl+z-ing
-                    # stop ctrl+z-ing
-
-
                     ctk.CTkLabel(
                         load_order_frame,
                         text="Load order:",
@@ -559,8 +553,8 @@ class MainWindow:
             try:
                 filesystem.extract(file, target)
             except Exception as e:
-                logger.error(f"Failed to import mod: {mod_name}\n{type(e).__name__}: {e}")
-                messagebox.showerror(ProjectData.NAME, f"Failed to import mod: {mod_name}\n{type(e).__name__}: {e}")
+                logger.error(f"Failed to import mod: {mod_name}, {type(e).__name__}: {e}")
+                messagebox.showerror(ProjectData.NAME, f"Failed to import mod:\n\"{mod_name}\"\n\n{type(e).__name__}: {e}")
 
         self._show_mods()
     
@@ -746,7 +740,7 @@ class MainWindow:
             filepath: str = result[1]
 
             if not os.path.isfile(filepath):
-                messagebox.showerror(ProjectData.NAME, "Failed to create font mod!\nFile does not exist.")
+                messagebox.showerror(ProjectData.NAME, "Failed to create font mod!\n\nFile does not exist.")
                 return
 
             mod_name: str = f"Font ({os.path.basename(filepath).split('.')[0]})"
@@ -790,10 +784,11 @@ class MainWindow:
                     shutil.copytree(source, target, dirs_exist_ok=True)
 
             except Exception as e:
-                messagebox.showerror(ProjectData.NAME, f"Failed to create font mod!\n{type(e).__name__}: {e}")
+                logger.error(f"Failed to create font mod, {type(e).__name__}: {e}")
+                messagebox.showerror(ProjectData.NAME, f"Failed to create font mod!\n\n{type(e).__name__}: {e}")
 
         else:
-            raise NotImplementedError(f"Failed to generate font mod! mode: {mode}")
+            raise NotImplementedError(f"Failed to generate font mod!\n Unknown mode: {mode}")
         # elif mode == window.URL_MODE:
         #     url: str = result[1]
         #     messagebox.showinfo("test", "URLMODE")
@@ -805,14 +800,14 @@ class MainWindow:
         try:
             mods.set_status(name, status)
         except Exception as e:
-            logger.error(f"Failed to update mod status\n{type(e).__name__}: {e}")
-            messagebox.showerror(ProjectData.NAME, f"Failed to update mod status\n{type(e).__name__}: {e}")
+            logger.error(f"Failed to update mod status, {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update mod status!\n\n{type(e).__name__}: {e}")
     
     def _set_mod_priority(self, event, name: str) -> None:
         try:
             priority: int = int(event.widget.get())
         except Exception as e:
-            logger.error(f"Failed to update mod priority\n{type(e).__name__}: {e}")
+            logger.error(f"Failed to update mod priority!\n\n{type(e).__name__}: {e}")
             event.widget.delete(0, "end")
             event.widget.insert(0, str(mods.get(name).get("priority", mods.FORMAT["priority"])))
             return
@@ -820,8 +815,8 @@ class MainWindow:
         try:
             mods.set_priority(name, priority)
         except Exception as e:
-            logger.error(f"Failed to update mod priority\n{type(e).__name__}: {e}")
-            messagebox.showerror(ProjectData.NAME, f"Failed to update mod priority\n{type(e).__name__}: {e}")
+            logger.error(f"Failed to update mod priority! {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update mod priority!\n\n{type(e).__name__}: {e}")
     
     def _rename_mod(self, event, mod_info) -> None:
         name: str = mod_info["name"]
@@ -841,8 +836,8 @@ class MainWindow:
             messagebox.showerror(ProjectData.NAME, "Failed to rename mod!\nAnother mod with the same name already exists!")
             return
         except Exception as e:
-            logger.error(f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
-            messagebox.showwarning(ProjectData.NAME, f"Failed to rename mod \"{name}\"\n{type(e).__name__}: {e}")
+            logger.error(f"Failed to rename mod: \"{name}\", {type(e).__name__}: {e}")
+            messagebox.showwarning(ProjectData.NAME, f"Failed to rename mod:\n\"{name}\"\n\n{type(e).__name__}: {e}")
             return
 
         mods.set_name(name, new_name)
@@ -850,14 +845,14 @@ class MainWindow:
         # self._show_mods()
     
     def _delete_mod(self, name: str) -> None:
-        if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this mod: \"{name}\"\nThis action cannot be undone!"):
+        if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this mod:\n\"{name}\"\n\nThis action cannot be undone!"):
             return
 
         try:
             filesystem.remove(os.path.join(Directory.mods(), name))
         except Exception as e:
             logger.error(f"Failed to delete mod \"{name}\"\n{type(e).__name__}: {e}")
-            messagebox.showerror(ProjectData.NAME, f"Failed to delete mod \"{name}\"\n{type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to delete mod:\n\"{name}\"\n\n{type(e).__name__}: {e}")
             return
         
         try:
