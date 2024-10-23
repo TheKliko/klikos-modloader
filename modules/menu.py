@@ -12,7 +12,7 @@ from modules.filesystem import Directory
 from modules import filesystem
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
-from modules.functions.config import mods
+from modules.functions.config import mods, fastflags
 from modules.functions.get_latest_version import get_latest_version
 from modules.request import RobloxApi
 
@@ -71,8 +71,6 @@ class MainWindow:
     font_navigation: ctk.CTkFont
     font_medium_bold: ctk.CTkFont
     font_large: ctk.CTkFont
-
-
 
 
     #region __init__()
@@ -168,14 +166,10 @@ class MainWindow:
         self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
 
         self.root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
-    
 
     def show(self) -> None:
         self._show_mods()
         self.root.mainloop()
-    
-
-
 
     # region Navigation
     def _create_navigation(self) -> None:
@@ -302,8 +296,6 @@ class MainWindow:
 
         create_header()
         create_buttons()
-    
-
 
     # region Mods
     def _show_mods(self) -> None:
@@ -339,7 +331,7 @@ class MainWindow:
             )
             button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
 
-            package_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "package.png")
+            package_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "package.png")
             if not os.path.isfile(package_icon):
                 try:
                     restore_from_mei(package_icon)
@@ -359,7 +351,7 @@ class MainWindow:
                 command=self._import_mod
             ).grid(column=0, row=0, sticky="nsw")
 
-            folder_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "folder.png")
+            folder_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "folder.png")
             if not os.path.isfile(folder_icon):
                 try:
                     restore_from_mei(folder_icon)
@@ -379,7 +371,7 @@ class MainWindow:
                 command=lambda: filesystem.open(Directory.mods())
             ).grid(column=1, row=0, sticky="nsw", padx=(8,0))
 
-            font_icon: str = os.path.join(Directory.root(), "resources", "menu", "mods", "font.png")
+            font_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "font.png")
             if not os.path.isfile(font_icon):
                 try:
                     restore_from_mei(font_icon)
@@ -521,8 +513,6 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
-    
-
 
     # region Importing mods
     def _import_mod(self) -> None:
@@ -557,7 +547,7 @@ class MainWindow:
                 messagebox.showerror(ProjectData.NAME, f"Failed to import mod:\n\"{mod_name}\"\n\n{type(e).__name__}: {e}")
 
         self._show_mods()
-    
+
     # region Font mods
     # TODO: Load fonts from URL
     def _create_font_mod(self) -> None:
@@ -794,7 +784,7 @@ class MainWindow:
         #     messagebox.showinfo("test", "URLMODE")
 
         self._show_mods()
-    
+
     # region Configure mod
     def _set_mod_status(self, name: str, status: bool) -> None:
         try:
@@ -802,7 +792,7 @@ class MainWindow:
         except Exception as e:
             logger.error(f"Failed to update mod status, {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to update mod status!\n\n{type(e).__name__}: {e}")
-    
+
     def _set_mod_priority(self, event, name: str) -> None:
         try:
             priority: int = int(event.widget.get())
@@ -860,14 +850,13 @@ class MainWindow:
         except Exception:
             pass
         self._show_mods()
-    
-
 
     # region FastFlags
     def _show_fastflags(self) -> None:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+    
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -890,9 +879,323 @@ class MainWindow:
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
 
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
+
+            plus_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "create.png")
+            if not os.path.isfile(plus_icon):
+                try:
+                    restore_from_mei(plus_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="New profile",
+                image=load_image(
+                    light=plus_icon,
+                    dark=plus_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._create_fastflag_profile
+            ).grid(column=0, row=0, sticky="nsw")
+
+            download_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "cloud-download.png")
+            if not os.path.isfile(download_icon):
+                try:
+                    restore_from_mei(download_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="FastFlag presets",
+                image=load_image(
+                    light=download_icon,
+                    dark=download_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._import_fastflag_preset
+            ).grid(column=1, row=0, sticky="nsw", padx=(8,0))
+        
+        def load_content() -> None:
+            profiles: list[dict] = fastflags.get_all()
+
+            if not profiles:
+                ctk.CTkLabel(
+                    self.content,
+                    text="No profiles found!",
+                    font=self.font_title
+                ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+            else:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
+
+                for i, profile in enumerate(profiles):
+                    name: str | None = profile.get("name")
+                    description: str | None = profile.get("description")
+                    enabled: bool = profile.get("enabled", False)
+                    profile_info = {"name": name}
+
+                    if not name:
+                        continue
+
+                    profile_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    profile_frame.grid_columnconfigure(1, weight=1)
+                    profile_frame.grid(column=0, row=i, sticky="ew", pady=10)
+
+                    # Delete button
+                    delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
+                    if not os.path.isfile(delete_icon):
+                        try:
+                            restore_from_mei(delete_icon)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+                    ctk.CTkButton(
+                        profile_frame,
+                        text="",
+                        image=load_image(
+                            light=delete_icon,
+                            dark=delete_icon,
+                            size=(24,24)
+                        ),
+                        width=44,
+                        height=44,
+                        command=lambda profile_info=profile_info: self._delete_mod(
+                            name=profile_info["name"]
+                        )
+                    ).grid(column=0, row=0, rowspan=2, padx=16, pady=16)
+
+                    # Name label
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        profile_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid(column=1, row=0, sticky="nsew")
+                    name_entry = ctk.CTkEntry(
+                        name_frame,
+                        width=250,
+                        height=40
+                    )
+                    name_entry.insert("end", name)
+                    name_entry.bind("<Return>", lambda _: self.root.focus())
+                    name_entry.bind("<FocusOut>", lambda event, profile_info=profile_info: self._rename_fastflag_profile(event, profile_info))
+                    name_entry.grid(column=0, row=0, sticky="nsew", pady=24)
+
+                    # Toggle active state
+                    var = ctk.BooleanVar(value=enabled)
+                    switch: ctk.CTkSwitch = ctk.CTkSwitch(
+                        profile_frame,
+                        width=48,
+                        height=24,
+                        text="",
+                        variable=var,
+                        onvalue=True,
+                        offvalue=False,
+                        command=lambda profile_info=profile_info, status_var=var: self._set_fastflag_profile_status(profile_info["name"], status_var.get())
+                    )
+                    switch.grid(column=3, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+
         self.active_section = "fastflags"
         destroy()
         load_header()
+        load_content()
+    
+    #region Configure FastFlag
+    def _create_fastflag_profile(self) -> None:
+        pass
+
+    def _rename_fastflag_profile(self, event, profile_info) -> None:
+        name: str = profile_info["name"]
+        new_name: str = str(event.widget.get())
+        if name == new_name:
+            return
+        
+        if not new_name:
+            event.widget.delete(0, "end")
+            event.widget.insert(0, name)
+            return
+
+        fastflags.set_name(name, new_name)
+        profile_info["name"] = new_name
+        # self._show_fastflags()
+
+    def _set_fastflag_profile_status(self, name: str, status: bool) -> None:
+        try:
+            fastflags.set_status(name, status)
+        except Exception as e:
+            logger.error(f"Failed to update profile status, {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update profile status!\n\n{type(e).__name__}: {e}")
+    
+
+
+    # region FastFlag presets
+    def _import_fastflag_preset(self) -> None:
+        class Window(ctk.CTkToplevel):
+            DROPDOWN_PLACEHOLDER: str = "Select an option"
+
+            result: str | None = None
+
+            entry_width: int = 360
+            button_size: tuple[int, int] = (44, 44)
+            icon_size: tuple[int, int] = (24, 24)
+
+            def __init__(self, root, *args, **kwargs) -> None:
+                super().__init__(*args, **kwargs)
+                self.root = root
+
+                if self.root.icon is not None:
+                    self.iconbitmap(self.root.icon)
+                    self.after(200, lambda: self.iconbitmap(self.root.icon))
+                self.title("FastFlag presets")
+
+                self.protocol("WM_DELETE_WINDOW", self._on_close)
+                self.bind("<Escape>", lambda _: self._on_close())
+
+                run_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "run.png")
+                if not os.path.isfile(run_icon):
+                    try:
+                        restore_from_mei(run_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+
+                # Selector frame
+                self.selector_frame = ctk.CTkFrame(
+                    self,
+                    fg_color="transparent"
+                )
+                self.selector_frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,8))
+                self.selector_frame.grid_columnconfigure(0, weight=1)
+
+                # ctk.CTkLabel(
+                #     self.selector_frame,
+                #     text="Choose a preset:",
+                #     font=self.root.font_bold
+                # ).grid(column=0, row=0, sticky="ns", padx=(0,8))
+
+                var = ctk.StringVar(value=self.DROPDOWN_PLACEHOLDER)
+                self.dropdown: ctk.CTkComboBox = ctk.CTkComboBox(
+                    self.selector_frame,
+                    width=self.entry_width,
+                    height=self.button_size[1],
+                    variable=var,
+                    values=["1", "2", "3"]
+                )
+                self.dropdown.grid(column=0, row=0, sticky="ns")
+
+                ctk.CTkButton(
+                    self.selector_frame,
+                    text="",
+                    width=self.button_size[0],
+                    height=self.button_size[1],
+                    image=load_image(
+                        light=run_icon,
+                        dark=run_icon,
+                        size=self.icon_size
+                    )
+                ).grid(column=1, row=0, sticky="ns", padx=(16,0))
+
+                # Preset info
+                info_frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self,
+                    fg_color="transparent"
+                )
+                info_frame.grid(column=0, row=1, sticky="nsew", padx=32, pady=(8,32))
+                info_frame.grid_columnconfigure(0, weight=1)
+                
+                # Name
+                name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                    info_frame,
+                    fg_color="transparent"
+                )
+                name_frame.grid(column=0, row=0, sticky="nsew")
+                name_frame.grid_columnconfigure(1, weight=1)
+
+                ctk.CTkLabel(
+                    name_frame,
+                    text="Name: ",
+                    anchor="w",
+                    justify="left"
+                ).grid(column=0, row=0, sticky="nsew")
+                ctk.CTkLabel(
+                    name_frame,
+                    text="",
+                    anchor="w",
+                    justify="left"
+                ).grid(column=1, row=0, sticky="nsew")
+
+                # Description
+                description_frame: ctk.CTkFrame = ctk.CTkFrame(
+                    info_frame,
+                    fg_color="transparent"
+                )
+                description_frame.grid(column=0, row=1, sticky="nsew")
+                description_frame.grid_columnconfigure(1, weight=1)
+
+                ctk.CTkLabel(
+                    description_frame,
+                    text="Description: ",
+                    anchor="w",
+                    justify="left"
+                ).grid(column=0, row=1, sticky="nsew")
+                ctk.CTkLabel(
+                    description_frame,
+                    text="",
+                    anchor="w",
+                    justify="left"
+                ).grid(column=1, row=1, sticky="nsew")
+
+
+                self.update_idletasks()
+                width = self.winfo_reqwidth()
+                height = self.winfo_reqheight()
+                screen_width = self.winfo_screenwidth()
+                screen_height = self.winfo_screenheight()
+                x = (screen_width // 2) - (width // 2)
+                y = (screen_height // 2) - (height // 2)
+                self.geometry(f"{width}x{height}+{x}+{y}")
+                self.resizable(False, False)
+
+                
+            def show(self) -> str | None:
+                self.focus()
+                self.grab_set()
+                self.wait_window()
+                return self.result
+
+            
+            def _on_close(self) -> None:
+                self.grab_release()
+                self.destroy()
+            
+            def _on_run(self, mode: str, data: str) -> None:
+                self._on_close()
+
+        window = Window(self)
+        result: str | None = window.show()
+        if not result:
+            return
+
+        # if profile.exists():
+        #    ask_permission() to overwrite_profile()
+        #    else return
+        # overwrite_profile()
+        
+        self._show_fastflags()
     
 
 
@@ -901,6 +1204,7 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -922,10 +1226,14 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+        
+        def load_content() -> None:
+            pass
 
         self.active_section = "marketplace"
         destroy()
         load_header()
+        load_content()
     
 
 
@@ -934,6 +1242,7 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -955,10 +1264,14 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+        
+        def load_content() -> None:
+            pass
 
         self.active_section = "integrations"
         destroy()
         load_header()
+        load_content()
     
 
 
@@ -967,6 +1280,7 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -988,10 +1302,14 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+        
+        def load_content() -> None:
+            pass
 
         self.active_section = "settings"
         destroy()
         load_header()
+        load_content()
     
 
 
@@ -1000,6 +1318,7 @@ class MainWindow:
         def destroy() -> None:
             for widget in self.content.winfo_children():
                 widget.destroy()
+
         def load_header() -> None:
             frame: ctk.CTkFrame = ctk.CTkFrame(
                 self.content,
@@ -1021,7 +1340,11 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+        
+        def load_content() -> None:
+            pass
 
         self.active_section = "about"
         destroy()
         load_header()
+        load_content()

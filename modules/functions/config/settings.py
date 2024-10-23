@@ -106,8 +106,4 @@ def get_all() -> dict:
         logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
         raise
 
-    if key not in data:
-        logger.error(f"Could not find \"{key}\" in {os.path.basename(filepath)}")
-        raise KeyError(f"Failed to find \"{key}\" in {os.path.basename(filepath)}")
-
-    return data[key]
+    return data

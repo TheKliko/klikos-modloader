@@ -23,7 +23,7 @@ def set_name(key: str, value: str) -> None:
 
     try:
         with open(filepath, "r") as file:
-            data: list = json.load(file)
+            data: list[dict] = json.load(file)
     except json.JSONDecodeError as e:
         logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
         raise
@@ -59,7 +59,7 @@ def set_priority(key: str, value: int) -> None:
     else:
         try:
             with open(filepath, "r") as file:
-                data = json.load(file)
+                data: list[dict] = json.load(file)
         except json.JSONDecodeError as e:
             logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
             raise
@@ -103,7 +103,7 @@ def set_status(key: str, value: bool) -> None:
     else:
         try:
             with open(filepath, "r") as file:
-                data = json.load(file)
+                data: list[dict] = json.load(file)
         except json.JSONDecodeError as e:
             logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
             raise
@@ -144,7 +144,7 @@ def remove(key: str) -> None:
     
     try:
         with open(filepath, "r") as file:
-            data = json.load(file)
+            data: list[dict] = json.load(file)
     except json.JSONDecodeError as e:
         logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
         raise
@@ -179,7 +179,7 @@ def get(key: str) -> dict:
     else:
         try:
             with open(filepath, "r") as file:
-                data = json.load(file)
+                data: list[dict] = json.load(file)
         except json.JSONDecodeError as e:
             logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
             raise
@@ -191,14 +191,14 @@ def get(key: str) -> dict:
         return {}
 
 
-def get_all() -> dict:
+def get_all() -> list[dict]:
     filepath = FilePath.mods()
     if not os.path.isfile(filepath):
-        return {}
+        return []
     
     try:
         with open(filepath, "r") as file:
-            data: dict = json.load(file)
+            data: list[dict] = json.load(file)
     except json.JSONDecodeError as e:
         logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
         raise
