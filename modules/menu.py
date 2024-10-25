@@ -14,7 +14,8 @@ from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.config import mods, fastflags
 from modules.functions.get_latest_version import get_latest_version
-from modules.request import RobloxApi
+from modules import request
+from modules.request import RobloxApi, GitHubApi, RequestError, Response
 
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
@@ -68,6 +69,8 @@ class MainWindow:
     font_subtitle: ctk.CTkFont
     font_small: ctk.CTkFont
     font_small_bold: ctk.CTkFont
+    font_13: ctk.CTkFont
+    font_13_bold: ctk.CTkFont
     font_navigation: ctk.CTkFont
     font_medium_bold: ctk.CTkFont
     font_large: ctk.CTkFont
@@ -119,6 +122,8 @@ class MainWindow:
         self.font_subtitle = ctk.CTkFont(size=16, weight="bold")
         self.font_small = ctk.CTkFont(size=12)
         self.font_small_bold = ctk.CTkFont(size=12, weight="bold")
+        self.font_13 = ctk.CTkFont(size=13)
+        self.font_13_bold = ctk.CTkFont(size=13, weight="bold")
         self.font_medium_bold = ctk.CTkFont(size=14, weight="bold")
         self.font_navigation = ctk.CTkFont()
 
@@ -975,7 +980,7 @@ class MainWindow:
                         ),
                         width=44,
                         height=44,
-                        command=lambda profile_info=profile_info: self._delete_mod(
+                        command=lambda profile_info=profile_info: self._delete_fastflag_profile(
                             name=profile_info["name"]
                         )
                     ).grid(column=0, row=0, rowspan=2, padx=16, pady=16)
@@ -1018,6 +1023,7 @@ class MainWindow:
     #region Configure FastFlag
     def _create_fastflag_profile(self) -> None:
         pass
+        self._show_fastflags()
 
     def _rename_fastflag_profile(self, event, profile_info) -> None:
         name: str = profile_info["name"]
@@ -1042,21 +1048,37 @@ class MainWindow:
             messagebox.showerror(ProjectData.NAME, f"Failed to update profile status!\n\n{type(e).__name__}: {e}")
     
 
+    def _delete_fastflag_profile(self, name: str) -> None:
+        try:
+            fastflags.remove(name)
+            self._show_fastflags()
+        except Exception as e:
+            logger.error(f"Failed to remove FastFlag profile, {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to remove FastFlag profile!\n\n{type(e).__name__}: {e}")
+    
+
 
     # region FastFlag presets
     def _import_fastflag_preset(self) -> None:
         class Window(ctk.CTkToplevel):
             DROPDOWN_PLACEHOLDER: str = "Select an option"
 
-            result: str | None = None
-
             entry_width: int = 360
             button_size: tuple[int, int] = (44, 44)
             icon_size: tuple[int, int] = (24, 24)
+            
+            dropdown_name_var = ctk.StringVar(value=DROPDOWN_PLACEHOLDER)
+            selected_name_var = ctk.StringVar(value="")
+            description_var = ctk.StringVar(value="")
 
-            def __init__(self, root, *args, **kwargs) -> None:
+            preset_name: str = ""
+            preset_description: str | None = None
+            preset_data: dict = {}
+
+            def __init__(self, root, presets: list[dict], *args, **kwargs) -> None:
                 super().__init__(*args, **kwargs)
                 self.root = root
+                self.presets = presets
 
                 if self.root.icon is not None:
                     self.iconbitmap(self.root.icon)
@@ -1079,7 +1101,7 @@ class MainWindow:
                     fg_color="transparent"
                 )
                 self.selector_frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,8))
-                self.selector_frame.grid_columnconfigure(0, weight=1)
+                # self.selector_frame.grid_columnconfigure(0, weight=1)
 
                 # ctk.CTkLabel(
                 #     self.selector_frame,
@@ -1087,15 +1109,15 @@ class MainWindow:
                 #     font=self.root.font_bold
                 # ).grid(column=0, row=0, sticky="ns", padx=(0,8))
 
-                var = ctk.StringVar(value=self.DROPDOWN_PLACEHOLDER)
                 self.dropdown: ctk.CTkComboBox = ctk.CTkComboBox(
                     self.selector_frame,
                     width=self.entry_width,
                     height=self.button_size[1],
-                    variable=var,
-                    values=["1", "2", "3"]
+                    variable=self.dropdown_name_var,
+                    values=[preset["name"] for preset in self.presets],
+                    command=lambda event: self._select_profile()
                 )
-                self.dropdown.grid(column=0, row=0, sticky="ns")
+                self.dropdown.grid(column=0, row=0, sticky="nsw")
 
                 ctk.CTkButton(
                     self.selector_frame,
@@ -1106,8 +1128,9 @@ class MainWindow:
                         light=run_icon,
                         dark=run_icon,
                         size=self.icon_size
-                    )
-                ).grid(column=1, row=0, sticky="ns", padx=(16,0))
+                    ),
+                    command=self._on_run
+                ).grid(column=1, row=0, sticky="nsw", padx=(16,0))
 
                 # Preset info
                 info_frame: ctk.CTkFrame = ctk.CTkFrame(
@@ -1118,45 +1141,47 @@ class MainWindow:
                 info_frame.grid_columnconfigure(0, weight=1)
                 
                 # Name
-                name_frame: ctk.CTkFrame = ctk.CTkFrame(
-                    info_frame,
-                    fg_color="transparent"
-                )
-                name_frame.grid(column=0, row=0, sticky="nsew")
-                name_frame.grid_columnconfigure(1, weight=1)
+                # name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                #     info_frame,
+                #     fg_color="transparent"
+                # )
+                # name_frame.grid(column=0, row=0, sticky="nsew")
+                # name_frame.grid_columnconfigure(1, weight=1)
 
-                ctk.CTkLabel(
-                    name_frame,
-                    text="Name: ",
-                    anchor="w",
-                    justify="left"
-                ).grid(column=0, row=0, sticky="nsew")
-                ctk.CTkLabel(
-                    name_frame,
-                    text="",
-                    anchor="w",
-                    justify="left"
-                ).grid(column=1, row=0, sticky="nsew")
+                # ctk.CTkLabel(
+                #     name_frame,
+                #     text="Name: ",
+                #     anchor="w",
+                #     justify="left"
+                # ).grid(column=0, row=0, sticky="nsew")
+                # ctk.CTkLabel(
+                #     name_frame,
+                #     textvariable=self.selected_name_var,
+                #     anchor="w",
+                #     justify="left"
+                # ).grid(column=1, row=0, sticky="nsew")
 
                 # Description
                 description_frame: ctk.CTkFrame = ctk.CTkFrame(
                     info_frame,
                     fg_color="transparent"
                 )
-                description_frame.grid(column=0, row=1, sticky="nsew")
+                description_frame.grid(column=0, row=0, sticky="nsew")
                 description_frame.grid_columnconfigure(1, weight=1)
 
                 ctk.CTkLabel(
                     description_frame,
                     text="Description: ",
                     anchor="w",
-                    justify="left"
+                    justify="left",
+                    font=self.root.font_13_bold
                 ).grid(column=0, row=1, sticky="nsew")
                 ctk.CTkLabel(
                     description_frame,
-                    text="",
+                    textvariable=self.description_var,
                     anchor="w",
-                    justify="left"
+                    justify="left",
+                    font=self.root.font_13
                 ).grid(column=1, row=1, sticky="nsew")
 
 
@@ -1169,26 +1194,76 @@ class MainWindow:
                 y = (screen_height // 2) - (height // 2)
                 self.geometry(f"{width}x{height}+{x}+{y}")
                 self.resizable(False, False)
+            
+
+            def _select_profile(self) -> None:
+                profile_name: str = self.dropdown_name_var.get()
+                for preset in self.presets:
+                    if preset["name"] == profile_name:
+                        description: str | None = preset.get("description")
+                        
+                        self.selected_name_var.set(profile_name)
+                        if description is not None:
+                            self.description_var.set(description)
+                        else:
+                            self.description_var.set("")
+                        self.preset_name = profile_name
+                        self.preset_description = description
+                        self.preset_data = preset["data"]
+                
+                self.update_idletasks()
+                width = self.winfo_reqwidth()
+                height = self.winfo_reqheight()
+                self.geometry(f"{width}x{height}")
 
                 
-            def show(self) -> str | None:
+            def show(self) -> None:
                 self.focus()
                 self.grab_set()
                 self.wait_window()
-                return self.result
 
             
             def _on_close(self) -> None:
                 self.grab_release()
                 self.destroy()
             
-            def _on_run(self, mode: str, data: str) -> None:
+
+            def _on_run(self) -> None:
+                if not self.selected_name_var:
+                    return
+
+                if fastflags.get(self.preset_name) != {}:
+                    if messagebox.askokcancel(ProjectData.NAME, "Another profile with the same name already exists!\nDo you wish to overwrite it?"):
+                        fastflags.remove(self.preset_name)
+                    else:
+                        return
+
+                try:
+                    fastflags.create(
+                        self.preset_name,
+                        self.preset_description,
+                        self.preset_data
+                    )
+                except Exception as e:
+                    messagebox.showerror(f"Failed to create profile!\n\n{type(e).__name__}: {e}")
+                    return
+                
                 self._on_close()
 
-        window = Window(self)
-        result: str | None = window.show()
-        if not result:
+        try:
+            respose: Response = request.get(GitHubApi.fastflag_presets(), cache=True)
+            data: list[dict] = respose.json()
+        except (RequestError, KeyError) as e:
+            logger.error(f"Failed to load FastFlag presets, {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to load FastFlag presets!\n\n{type(e).__name__}: {e}")
             return
+        
+        if not data:
+            messagebox.showwarning("Failed to load FastFlag presets!\nNo presets found!")
+            return
+
+        window = Window(self, data)
+        window.show()
 
         # if profile.exists():
         #    ask_permission() to overwrite_profile()

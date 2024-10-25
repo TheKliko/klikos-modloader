@@ -140,9 +140,12 @@ def set_data(key: str, value: dict) -> None:
         raise
 
 
-def create(key: str) -> None:
+def create(key: str, description: str | None, fastflags: dict | None) -> None:
     profile: dict = deepcopy(FORMAT)
     profile["name"] = key
+    profile["description"] = description
+    if fastflags:
+        profile["data"] = fastflags
 
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
