@@ -1,45 +1,65 @@
 [
     {
-        "name": "Kliko's mod",
-        "author": "TheKliko",
-        "description": "Gradient mod: #990000 -> #ff006e",
-        "id": "klikos-mod"
+        "name": "Texture quality override (3)",
+        "description": "Force textures to be rendered at the highest quality level",
+        "data": {
+            "DFFlagTextureQualityOverrideEnabled": true,
+            "DFIntTextureQualityOverride": 3
+        }
     },
     {
-        "name": "Bloxstrap theme",
-        "author": "TheKliko",
-        "description": "Gradient mod: #a011fe -> #5460f9",
-        "id": "bloxstrap-theme-2"
+        "name": "Hide fullscreen titlebar",
+        "description": "\"Hides\" the titlebar by adding a massive delay",
+        "data": {
+            "FIntFullscreenTitleBarTriggerDelayMillis": 2147483647
+        }
     },
     {
-        "name": "Discord UI [WIP]",
-        "author": "TheKliko",
-        "description": "Changes the icons to look like those found in Discord",
-        "id": "discord-ui"
+        "name": "Old escape menu",
+        "description": "Old topbar and escape menu",
+        "data": {
+            "FFlagDisableNewIGMinDUA": true,
+            "FFlagEnableInGameMenuControls": false,
+            "FFlagEnableInGameMenuModernization": false,
+            "FFlagEnableInGameMenuChrome": false,
+            "FFlagEnableMenuControlsABTest": false,
+            "FFlagEnableV3MenuABTest3": false,
+            "FFlagEnableInGameMenuChromeABTest3": false,
+            "FFlagFixReportButtonCutOff": false
+        }
     },
     {
-        "name": "Translucency",
-        "author": "dooM",
-        "description": "Make UI elements transparent.",
-        "id": "translucency",
-        "has_thumbnail": false
+        "name": "Chrome UI",
+        "description": "New topbar and escape menu",
+        "data": {
+            "FFlagEnableInGameMenuChromeABTest3": false,
+            "FFlagEnableV3MenuABTest3": false,
+            "FFlagEnableMenuControlsABTest": false,
+            "FFlagEnableInGameMenuChrome": true,
+            "FFlagEnableInGameMenuModernization": true,
+            "FFlagEnableInGameMenuControls": true,
+            "FFlagDisableNewIGMinDUA": true
+        }
     },
     {
-        "name": "Bloxstrap theme [Premium]",
-        "author": "TheKliko",
-        "description": "Gradient mod: #feaa17 -> #f95455",
-        "id": "bloxstrap-theme-premium"
+        "name": "Lighting technology (Voxel)",
+        "description": null,
+        "data": {
+            "DFFlagDebugRenderForceTechnologyVoxel": true
+        }
     },
     {
-        "name": "UBFF Theme",
-        "author": "TheKliko",
-        "description": "Gradient mod: #648bd9 -> #fa94d7",
-        "id": "ubff-theme"
+        "name": "Lighting technology (ShadowMap)",
+        "description": null,
+        "data": {
+            "FFlagDebugForceFutureIsBrightPhase2": true
+        }
     },
     {
-        "name": "Old Death Sound",
-        "description": "death sound: 'oof'",
-        "id": "old-death-sound",
-        "has_thumbnail": false
+        "name": "Lighting technology (Future)",
+        "description": null,
+        "data": {
+            "FFlagDebugForceFutureIsBrightPhase3": true
+        }
     }
 ]
