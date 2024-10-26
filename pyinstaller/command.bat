@@ -24,7 +24,7 @@ if exist "%dist_path%" (
 if not exist "%libraries_path%" (
     mkdir "%libraries_path%"
 )
-pip install --upgrade --target="%libraries_path%" pillow requests customtkinter pypresence py7zr fonttools
+pip install --upgrade --target="%libraries_path%" pillow requests customtkinter pypresence py7zr fonttools pyperclip
 
 echo
 echo run pyinstaller

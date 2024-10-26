@@ -24,6 +24,7 @@ def set_name(key: str, value: str) -> None:
 
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
 
     try:
@@ -34,10 +35,16 @@ def set_name(key: str, value: str) -> None:
         raise
 
     for i, profile in enumerate(data):
+        if profile.get("name") == value:
+            logger.error(f"KeyExistsError: Another profile with the same name already exists")
+            raise KeyExistsError("Another profile with the same name already exists")
+
+    for i, profile in enumerate(data):
         if profile.get("name") == key:
             data[i]["name"] = value
             break
     else:
+        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
         raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
 
     try:
@@ -57,6 +64,7 @@ def set_name(key: str, value: str) -> None:
 def set_status(key: str, value: bool) -> None:
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
+        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
 
     try:
@@ -73,6 +81,7 @@ def set_status(key: str, value: bool) -> None:
             data[i]["enabled"] = value
             break
     else:
+        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
         raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
 
     try:
@@ -86,6 +95,7 @@ def set_status(key: str, value: bool) -> None:
 def set_description(key: str, value: str | None) -> None:
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
+        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
     
     if not value:
@@ -103,6 +113,7 @@ def set_description(key: str, value: str | None) -> None:
             data[i]["description"] = value
             break
     else:
+        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
         raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
 
     try:
@@ -116,6 +127,7 @@ def set_description(key: str, value: str | None) -> None:
 def set_data(key: str, value: dict) -> None:
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
+        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
 
     try:
@@ -130,6 +142,7 @@ def set_data(key: str, value: dict) -> None:
             data[i]["data"] = value
             break
     else:
+        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
         raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
 
     try:
@@ -159,8 +172,9 @@ def create(key: str, description: str | None, fastflags: dict | None) -> None:
             logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
             raise
 
-        for i, profile in enumerate(data):
-            if profile.get("name") == key:
+        for i, existing_profile in enumerate(data):
+            if existing_profile.get("name") == key:
+                logger.error(f"KeyExistsError: Another profile with the same name already exists")
                 raise KeyExistsError("Another profile with the same name already exists")
         else:
             data.insert(0, profile)
@@ -176,6 +190,7 @@ def create(key: str, description: str | None, fastflags: dict | None) -> None:
 def remove(key: str) -> None:
     filepath = FilePath.fastflags()
     if not os.path.isfile(filepath):
+        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
 
     try:

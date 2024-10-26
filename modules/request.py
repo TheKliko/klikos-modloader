@@ -94,6 +94,7 @@ class RobloxActivityApi:
 def get(url, attempts: int = 3, cache: bool = False) -> Response:
     if cache:
         if url in _cache:
+            logger.debug(f"Cached GET request: {url}")
             return _cache[url]
 
     attempts -= 1

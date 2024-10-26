@@ -3,6 +3,7 @@ import sys
 import shutil
 import json
 import re
+from datetime import datetime
 from typing import Callable, Literal
 from tempfile import TemporaryDirectory
 
@@ -20,6 +21,7 @@ from modules.request import RobloxApi, GitHubApi, RequestError, Response
 from tkinter import filedialog, messagebox
 import customtkinter as ctk
 from fontTools.ttLib import TTFont
+import pyperclip
 
 
 IS_FROZEN = getattr(sys, "frozen", False)
@@ -470,6 +472,7 @@ class MainWindow:
                     )
                     name_entry.insert("end", str(mod))
                     name_entry.bind("<Return>", lambda _: self.root.focus())
+                    name_entry.bind("<Control-s>", lambda _: self.root.focus())
                     name_entry.bind("<FocusOut>", lambda event, mod_info=mod_info: self._rename_mod(event, mod_info))
                     name_entry.grid(column=0, row=0, sticky="nsew", pady=24)
 
@@ -496,6 +499,7 @@ class MainWindow:
                     )
                     entry.insert("end", str(priority))
                     entry.bind("<Return>", lambda _: self.root.focus())
+                    entry.bind("<Control-s>", lambda _: self.root.focus())
                     entry.bind("<FocusOut>", lambda event, mod_info=mod_info: self._set_mod_priority(event, mod_info["name"]))
                     entry.grid(column=1, row=0, sticky="nsew", padx=16)
 
@@ -952,7 +956,14 @@ class MainWindow:
                     name: str | None = profile.get("name")
                     description: str | None = profile.get("description")
                     enabled: bool = profile.get("enabled", False)
-                    profile_info = {"name": name}
+                    data: dict = profile.get("data", {})
+
+                    profile_info = {
+                        "name": name,
+                        "description": description,
+                        "enabled": enabled,
+                        "data": data
+                    }
 
                     if not name:
                         continue
@@ -998,8 +1009,29 @@ class MainWindow:
                     )
                     name_entry.insert("end", name)
                     name_entry.bind("<Return>", lambda _: self.root.focus())
+                    name_entry.bind("<Control-s>", lambda _: self.root.focus())
                     name_entry.bind("<FocusOut>", lambda event, profile_info=profile_info: self._rename_fastflag_profile(event, profile_info))
                     name_entry.grid(column=0, row=0, sticky="nsew", pady=24)
+
+                    # Configure profile
+                    configure_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "configure.png")
+                    if not os.path.isfile(configure_icon):
+                        try:
+                            restore_from_mei(configure_icon)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+
+                    ctk.CTkButton(
+                        profile_frame,
+                        text="Configure",
+                        image=load_image(
+                            configure_icon,
+                            configure_icon,
+                            (24,24)
+                        ),
+                        height=44,
+                        command=lambda profile_info=profile_info: self._configure_fastflag_profile(profile_info)
+                    ).grid(column=2, row=0, rowspan=2, padx=(16,32), pady=16)
 
                     # Toggle active state
                     var = ctk.BooleanVar(value=enabled)
@@ -1020,9 +1052,288 @@ class MainWindow:
         load_header()
         load_content()
     
+    #region FastFlags 2
+    def _configure_fastflag_profile(self, profile_info: dict) -> None:
+        class Window(ctk.CTkToplevel):
+            
+            def __init__(self, root, profile_info: dict, *args, **kwargs) -> None:
+                super().__init__(*args, **kwargs)
+                self.root = root
+                self.profile_info = profile_info
+
+                if self.root.icon is not None:
+                    self.iconbitmap(self.root.icon)
+                    self.after(200, lambda: self.iconbitmap(self.root.icon))
+                self.title("FastFlag configuration")
+
+                self.protocol("WM_DELETE_WINDOW", self._on_close)
+                self.bind("<Escape>", lambda _: self._on_close())
+
+                self.grid_columnconfigure(0, weight=1)
+                self.grid_rowconfigure(5, weight=1)
+
+
+                # Name
+                ctk.CTkLabel(
+                    self,
+                    text="Name:",
+                    font=self.root.font_13_bold,
+                    anchor="w"
+                ).grid(column=0, row=0, sticky="nsew", padx=32, pady=(32,0))
+                self.name_entry = ctk.CTkEntry(
+                    self,
+                    width=250,
+                    height=40
+                )
+                self.name_entry.insert("end", self.profile_info["name"])
+                self.name_entry.bind("<Return>", lambda _: self.focus())
+                self.name_entry.bind("<Control-s>", lambda _: self.focus())
+                self.name_entry.bind("<FocusOut>", lambda event, profile_info=self.profile_info: self.root._rename_fastflag_profile(event, profile_info))
+                self.name_entry.grid(column=0, row=1, sticky="nsew", padx=32)
+
+                # Description
+                ctk.CTkLabel(
+                    self,
+                    text="Description:",
+                    font=self.root.font_13_bold,
+                    anchor="w"
+                ).grid(column=0, row=2, sticky="nsew", padx=32, pady=(16,0))
+                description_textbox = ctk.CTkTextbox(
+                    self,
+                    width=250,
+                    height=56,
+                    wrap="word"
+                )
+                description_textbox.insert("end", self.profile_info["description"] or "")
+                # description_textbox.bind("<Return>", lambda _: self.focus())
+                description_textbox.bind("<Control-s>", lambda _: self.focus())
+                description_textbox.bind("<FocusOut>", lambda event, profile_info=self.profile_info: self.root._set_fastflag_profile_description(event, profile_info))
+                description_textbox.grid(column=0, row=3, sticky="nsew", padx=32)
+
+                # Data
+                ctk.CTkLabel(
+                    self,
+                    text="Data:",
+                    font=self.root.font_13_bold,
+                    anchor="w"
+                ).grid(column=0, row=4, sticky="nsew", padx=32, pady=(16,0))
+                self.data_textbox = ctk.CTkTextbox(
+                    self,
+                    width=250,
+                    height=400,
+                    wrap="word",
+                    text_color="#9cdcfe"
+                )
+                self.data_textbox.insert("end", json.dumps(self.profile_info["data"], indent=4))
+                # self.data_textbox.bind("<Return>", lambda _: self.focus())
+                self.data_textbox.bind("<Control-s>", lambda _: self.focus())
+                self.data_textbox.bind("<FocusOut>", lambda event, profile_info=self.profile_info: self.root._set_fastflag_profile_data(event, profile_info))
+                self.data_textbox.grid(column=0, row=5, sticky="nsew", padx=32, pady=(0,16))
+
+                # Buttons
+                export_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "export.png")
+                import_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "import.png")
+                copy_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "copy.png")
+                rename_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "rename.png")
+                delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
+
+                if not os.path.isfile(export_icon):
+                    try:
+                        restore_from_mei(export_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+                if not os.path.isfile(import_icon):
+                    try:
+                        restore_from_mei(import_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+                if not os.path.isfile(copy_icon):
+                    try:
+                        restore_from_mei(copy_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+                if not os.path.isfile(rename_icon):
+                    try:
+                        restore_from_mei(rename_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+                if not os.path.isfile(delete_icon):
+                    try:
+                        restore_from_mei(delete_icon)
+                    except (FileRestoreError, PermissionError, FileNotFoundError):
+                        pass
+
+                icon_size: tuple[int,int] = (24,24)
+
+                buttons_per_row: int = 5
+                buttons: list[dict] = [
+                    {
+                        "text": "Import data",
+                        "image": import_icon,
+                        "command": self._on_import
+                    },
+                    {
+                        "text": "Export data",
+                        "image": export_icon,
+                        "command": self._on_export
+                    },
+                    {
+                        "text": "Copy to clipboard",
+                        "image": copy_icon,
+                        "command": self._on_copy
+                    }
+                ]
+
+                button_frame = ctk.CTkFrame(
+                    self,
+                    fg_color="transparent"
+                )
+                button_frame.grid(column=0, row=6, padx=32, pady=(0,32), sticky="nsew")
+
+                for i, data in enumerate(buttons):
+                    column: int = i % buttons_per_row
+                    row: int = i // buttons_per_row
+
+                    icon = data.get("image", "")
+
+                    ctk.CTkButton(
+                        button_frame,
+                        text=data.get("text", ""),
+                        image=load_image(
+                            icon,
+                            icon,
+                            icon_size
+                        ),
+                        command=data.get("command"),
+                        compound=ctk.LEFT,
+                        height=44
+                    ).grid(column=column, row=row, padx=(0,4), pady=(4,0))
+
+
+                self.update_idletasks()
+                # width = self.winfo_reqwidth()
+                # height = self.winfo_reqheight()
+                width = 600
+                height = 450
+                screen_width = self.winfo_screenwidth()
+                screen_height = self.winfo_screenheight()
+                x = (screen_width // 2) - (width // 2)
+                y = (screen_height // 2) - (height // 2)
+                self.geometry(f"{width}x{height}+{x}+{y}")
+                self.minsize(width, height)
+                # self.resizable(False, False)
+
+
+            def show(self) -> None:
+                self.focus()
+                self.grab_set()
+                self.wait_window()
+
+
+            def _on_close(self) -> None:
+                self.focus()
+                self.grab_release()
+                self.destroy()
+            
+
+            def _on_import(self) -> None:
+                try:
+                    data_string: str = self.data_textbox.get("0.0", "end")
+                    try:
+                        data: dict = json.loads(data_string)
+                    except Exception as e:
+                        logger.error(f"Unable to import data, reason: {type(e).__name__}: {e}")
+                        messagebox.showerror(ProjectData.NAME, f"Unable to import data!\n\n{type(e).__name__}: {e}")
+                        return
+
+                    user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
+                    initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                    files_to_import = filedialog.askopenfilenames(
+                        filetypes=[
+                            ("JSON files", "*.json"),
+                        ],
+                        initialdir=initial_dir,
+                        title="Import data"
+                    )
+
+                    if not files_to_import:
+                        return
+                    
+                    for filepath in files_to_import:
+                        try:
+                            with open(filepath, "r") as file:
+                                import_data: dict = json.load(file)
+                            data.update(import_data)
+                            self.data_textbox.delete("0.0", "end")
+                            self.data_textbox.insert("0.0", json.dumps(data, indent=4))
+                            self.profile_info["data"] = data
+                            fastflags.set_data(str(self.name_entry.get()), data)
+
+                        except Exception as e:
+                            messagebox.showerror(ProjectData.NAME, f"Unable to import data from \"{os.path.basename(filepath)}\"\n\n{type(e).__name__}: {e}")
+
+                except Exception as e:
+                    logger.error(f"Unable to import data, reason: {type(e).__name__}: {e}")
+                    messagebox.showerror(ProjectData.NAME, f"Unable to import data!\n\n{type(e).__name__}: {e}")
+            
+
+            def _on_export(self) -> None:
+                try:
+                    data_string: str = self.data_textbox.get("0.0", "end")
+                    try:
+                        data: dict = json.loads(data_string)
+                    except Exception as e:
+                        logger.error(f"Unable to export profile, reason:{type(e).__name__}: {e}")
+                        messagebox.showerror(ProjectData.NAME, f"Unable to export profile!\n\n{type(e).__name__}: {e}")
+                        return
+                    
+                    if not data:
+                        messagebox.showerror(ProjectData.NAME, "No data to export!")
+                        return
+
+                    user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
+                    initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                    filepath: str | None = filedialog.asksaveasfilename(
+                        filetypes=[
+                            ("JSON files", "*.json"),
+                        ],
+                        initialdir=initial_dir,
+                        initialfile="ClientAppSettings.json",
+                        title="Export profile"
+                    )
+
+                    if not filepath:
+                        return
+                    
+                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+                    with open(filepath, "w") as file:
+                        json.dump(data, file, indent=4)
+                    
+                except Exception as e:
+                    logger.error(f"Unable to export profile, reason:{type(e).__name__}: {e}")
+                    messagebox.showerror(ProjectData.NAME, f"Unable to export profile!\n\n{type(e).__name__}: {e}")
+            
+
+            def _on_copy(self) -> None:
+                pyperclip.copy(json.dumps(self.profile_info["data"], indent=4))
+                messagebox.showinfo(ProjectData.NAME, "Data copied to clipboard!")
+        
+        
+        window = Window(self, profile_info)
+        window.show()
+
+
+
     #region Configure FastFlag
     def _create_fastflag_profile(self) -> None:
-        pass
+        profile_info: dict = {
+            "name": f"{datetime.now().strftime('%Y-%m-%d@%H:%M:%S.%f')}",
+            "description": None,
+            "enabled": False,
+            "data": {"ExampleFlag": "ExampleValue"}
+        }
+        fastflags.create(profile_info["name"], profile_info["description"], profile_info["data"])
+        self._configure_fastflag_profile(profile_info)
         self._show_fastflags()
 
     def _rename_fastflag_profile(self, event, profile_info) -> None:
@@ -1036,8 +1347,58 @@ class MainWindow:
             event.widget.insert(0, name)
             return
 
-        fastflags.set_name(name, new_name)
-        profile_info["name"] = new_name
+        try:
+            fastflags.set_name(name, new_name)
+            profile_info["name"] = new_name
+        except fastflags.KeyExistsError as e:
+            event.widget.delete(0, "end")
+            event.widget.insert(0, name)
+            messagebox.showerror(ProjectData.NAME, f"Failed to rename FastFlag profile!\n\n{type(e).__name__}: {e}")
+
+    def _set_fastflag_profile_description(self, event, profile_info) -> None:
+        name: str = profile_info["name"]
+        description: str | None = profile_info["description"]
+        new_description: str | None = str(event.widget.get("0.0", "end"))
+
+        if description == new_description:
+            return
+        
+        if not new_description:
+            new_description = None
+            # event.widget.delete(0, "end")
+            # event.widget.insert(0, description)
+            # return
+        else:
+            new_description = new_description.strip()
+
+        fastflags.set_description(name, new_description)
+        profile_info["description"] = new_description
+        # self._show_fastflags()
+
+    def _set_fastflag_profile_data(self, event, profile_info) -> None:
+        name: str = profile_info["name"]
+        data: str | None = profile_info["data"]
+        new_data: dict | str = str(event.widget.get("0.0", "end"))
+
+        if data == new_data:
+            return
+        
+        if not new_data:
+            new_data = {}
+            # event.widget.delete(0, "end")
+            # event.widget.insert(0, data)
+            # return
+        elif isinstance(new_data, dict):
+            pass
+        else:
+            try:
+                new_data = json.loads(new_data)
+            except Exception as e:
+                messagebox.showerror(ProjectData.NAME, f"Failed to update data of FastFlag profile!\n\n{type(e).__name__}: {e}")
+                return
+
+        fastflags.set_data(name, new_data)
+        profile_info["data"] = new_data
         # self._show_fastflags()
 
     def _set_fastflag_profile_status(self, name: str, status: bool) -> None:
@@ -1049,6 +1410,9 @@ class MainWindow:
     
 
     def _delete_fastflag_profile(self, name: str) -> None:
+        if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this profile:\n\"{name}\"\n\nThis action cannot be undone!"):
+            return
+        
         try:
             fastflags.remove(name)
             self._show_fastflags()
