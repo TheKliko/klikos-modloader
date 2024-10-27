@@ -12,7 +12,7 @@ IS_FROZEN = getattr(sys, "frozen", False)
 
 
 def value(key: str) -> Any:
-    filepath = FilePath.settings()
+    filepath = FilePath.integrations()
     if not os.path.isfile(filepath):
         if IS_FROZEN:
             restore_from_mei(filepath)
@@ -39,7 +39,7 @@ def value(key: str) -> Any:
 
 
 def set_value(key: str, value: Any) -> None:
-    filepath = FilePath.settings()
+    filepath = FilePath.integrations()
     if not os.path.isfile(filepath):
         if IS_FROZEN:
             restore_from_mei(filepath)
@@ -71,7 +71,7 @@ def set_value(key: str, value: Any) -> None:
 
 
 def get(key: str) -> dict:
-    filepath = FilePath.settings()
+    filepath = FilePath.integrations()
     if not os.path.isfile(filepath):
         if IS_FROZEN:
             restore_from_mei(filepath)
@@ -94,7 +94,7 @@ def get(key: str) -> dict:
 
 
 def get_all() -> dict:
-    filepath = FilePath.settings()
+    filepath = FilePath.integrations()
     if not os.path.isfile(filepath):
         if IS_FROZEN:
             restore_from_mei(filepath)
@@ -113,10 +113,10 @@ def get_all() -> dict:
 
 
 def restore_all() -> None:
-    filepath = FilePath.settings()
+    filepath = FilePath.integrations()
     if IS_FROZEN:
         os.remove(filepath)
         restore_from_mei(filepath)
     else:
-        logger.error("Failed to restore settings, app is not frozen")
-        raise Exception("Failed to restore settings, app is not frozen")
+        logger.error("Failed to restore integrations, app is not frozen")
+        raise Exception("Failed to restore integrations, app is not frozen")

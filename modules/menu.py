@@ -13,7 +13,7 @@ from modules.filesystem import Directory
 from modules import filesystem
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
-from modules.functions.config import mods, fastflags
+from modules.functions.config import mods, fastflags, settings, integrations
 from modules.functions.get_latest_version import get_latest_version
 from modules import request
 from modules.request import RobloxApi, GitHubApi, RequestError, Response
@@ -1703,14 +1703,123 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
+
+            restore_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "restore.png")
+            if not os.path.isfile(restore_icon):
+                try:
+                    restore_from_mei(restore_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Restore integrations",
+                image=load_image(
+                    light=restore_icon,
+                    dark=restore_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._restore_all_integrations
+            ).grid(column=0, row=0, sticky="nsw")
         
         def load_content() -> None:
-            pass
+            all_integrations: dict[str, dict] = integrations.get_all()
+
+            if not all_integrations:
+                ctk.CTkLabel(
+                    self.content,
+                    text="No integrations found!",
+                    font=self.font_title
+                ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+            else:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
+
+                for i, (key, data) in enumerate(all_integrations.items()):
+                    integration_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    integration_frame.grid_columnconfigure(1, weight=1)
+                    integration_frame.grid(column=0, row=i, sticky="ew", pady=10)
+
+                    # Name and description
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        integration_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid(column=0, row=0, sticky="w", padx=(16,0), pady=16)
+
+                    ctk.CTkLabel(
+                        name_frame,
+                        text=str(data.get("name")),
+                        anchor="w",
+                        font=self.font_bold
+                    ).grid(column=0, row=0, sticky="nsew")
+
+                    if data.get("description"):
+                        ctk.CTkLabel(
+                            name_frame,
+                            text=str(data.get("description")),
+                            anchor="w",
+                            font=self.font_13
+                        ).grid(column=0, row=1, sticky="nsew")
+
+                    # Value
+                    # Toggle value
+                    if data.get("type") == "bool":
+                        var = ctk.BooleanVar(value=data.get("value"))
+                        switch: ctk.CTkSwitch = ctk.CTkSwitch(
+                            integration_frame,
+                            width=48,
+                            height=24,
+                            text="",
+                            variable=var,
+                            onvalue=True,
+                            offvalue=False,
+                            command=lambda key=key, var=var: self._toggle_integration(key, var.get())
+                        )
+                        switch.grid(column=2, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+                    
+                    # Unknown integration type
+                    else:
+                        ctk.CTkLabel(
+                            integration_frame,
+                            text=f"Value: {data.get('value')}",
+                            font=self.font_13
+                        ).grid(column=2, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
 
         self.active_section = "integrations"
         destroy()
         load_header()
         load_content()
+
+
+
+    # region Configure integrations
+    def _toggle_integration(self, key: str, value: bool) -> None:
+        integrations.set_value(key, value)
+    
+    def _restore_all_integrations(self) -> None:
+        try:
+            integrations.restore_all()
+            messagebox.showinfo(ProjectData.NAME, "integrations restored successfully!")
+            self._show_integrations()
+        except Exception as e:
+            logger.error(f"Failed to restore integrations, reason: {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to restore integrations!\n\n{type(e).__name__}: {e}")
     
 
 
@@ -1741,15 +1850,125 @@ class MainWindow:
                 font=self.font_large,
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
+
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
+
+            restore_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "restore.png")
+            if not os.path.isfile(restore_icon):
+                try:
+                    restore_from_mei(restore_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Restore settings",
+                image=load_image(
+                    light=restore_icon,
+                    dark=restore_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._restore_all_settings
+            ).grid(column=0, row=0, sticky="nsw")
         
         def load_content() -> None:
-            pass
+            all_settings: dict[str, dict] = settings.get_all()
+
+            if not all_settings:
+                ctk.CTkLabel(
+                    self.content,
+                    text="No settings found!",
+                    font=self.font_title
+                ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+            else:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
+
+                for i, (key, data) in enumerate(all_settings.items()):
+                    setting_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    setting_frame.grid_columnconfigure(1, weight=1)
+                    setting_frame.grid(column=0, row=i, sticky="ew", pady=10)
+
+                    # Name and description
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        setting_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid(column=0, row=0, sticky="w", padx=(16,0), pady=16)
+
+                    ctk.CTkLabel(
+                        name_frame,
+                        text=str(data.get("name")),
+                        anchor="w",
+                        font=self.font_bold
+                    ).grid(column=0, row=0, sticky="nsew")
+
+                    if data.get("description"):
+                        ctk.CTkLabel(
+                            name_frame,
+                            text=str(data.get("description")),
+                            anchor="w",
+                            font=self.font_13
+                        ).grid(column=0, row=1, sticky="nsew")
+
+                    # Value
+                    # Toggle value
+                    if data.get("type") == "bool":
+                        var = ctk.BooleanVar(value=data.get("value"))
+                        switch: ctk.CTkSwitch = ctk.CTkSwitch(
+                            setting_frame,
+                            width=48,
+                            height=24,
+                            text="",
+                            variable=var,
+                            onvalue=True,
+                            offvalue=False,
+                            command=lambda key=key, var=var: self._toggle_setting(key, var.get())
+                        )
+                        switch.grid(column=2, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+                    
+                    # Unknown setting type
+                    else:
+                        ctk.CTkLabel(
+                            setting_frame,
+                            text=f"Value: {data.get('value')}",
+                            font=self.font_13
+                        ).grid(column=2, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
+                    
 
         self.active_section = "settings"
         destroy()
         load_header()
         load_content()
+
+
+
+    # region Configure settings
+    def _toggle_setting(self, key: str, value: bool) -> None:
+        settings.set_value(key, value)
     
+    def _restore_all_settings(self) -> None:
+        try:
+            settings.restore_all()
+            messagebox.showinfo(ProjectData.NAME, "Settings restored successfully!")
+            self._show_settings()
+        except Exception as e:
+            logger.error(f"Failed to restore settings, reason: {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to restore settings!\n\n{type(e).__name__}: {e}")
+
 
 
     # region About
