@@ -1,0 +1,54 @@
+{
+	"common": {
+		"Libraries.zip": [],
+		"redist.zip": [],
+		"shaders.zip": ["shaders"],
+		"ssl.zip": ["ssl"],
+		
+		"WebView2.zip": [],
+		"WebView2RuntimeInstaller.zip": ["WebView2RuntimeInstaller"],
+		
+		"content-avatar.zip": ["content", "avatar"],
+		"content-configs.zip": ["content", "configs"],
+		"content-fonts.zip": ["content", "fonts"],
+		"content-models.zip": ["content", "models"],
+		"content-sky.zip": ["content", "sky"],
+		"content-sounds.zip": ["content", "sounds"],
+		"content-textures2.zip": ["content", "textures"],
+
+		"content-platform-dictionaries.zip": ["PlatformContent", "pc", "shared_compression_dictionaries"],
+		"content-platform-fonts.zip": ["PlatformContent", "pc", "fonts"],
+		"content-terrain.zip": ["PlatformContent", "pc", "terrain"],
+		"content-textures3.zip": ["PlatformContent", "pc", "textures"],
+
+		"extracontent-luapackages.zip": ["ExtraContent", "LuaPackages"],
+		"extracontent-models.zip": ["ExtraContent", "models"],
+		"extracontent-places.zip": ["ExtraContent", "places"],
+		"extracontent-textures.zip": ["ExtraContent", "textures"],
+		"extracontent-translations.zip": ["ExtraContent", "translations"]
+	},
+
+	"player": {
+		"RobloxApp.zip": []
+	},
+
+	"studio": {
+		"RobloxStudio.zip": [],
+		"LibrariesQt5.zip": [],
+
+		"content-studio_svg_textures.zip": ["content", "studio_svg_textures"],
+		"content-qt_translations.zip": ["content", "qt_translations"],
+		"content-api-docs.zip": ["content", "api_docs"],
+
+		"extracontent-scripts.zip": ["ExtraContent", "scripts"],
+
+		"BuiltInPlugins.zip": ["BuiltInPlugins"],
+		"BuiltInStandalonePlugins.zip": ["BuiltInStandalonePlugins"],
+
+		"ApplicationConfig.zip": ["ApplicationConfig"],
+		"Plugins.zip": ["Plugins"],
+		"Qml.zip": ["Qml"],
+		"StudioFonts.zip": ["StudioFonts"],
+		"RibbonConfig.zip": ["RibbonConfig"]
+	}
+}
