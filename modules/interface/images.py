@@ -21,18 +21,18 @@ def load_image(light: str, dark: str, size: tuple[int, int]) -> CTkImage | Liter
     try:
         light_image = Image.open(light)
         dark_image = Image.open(dark)
+        
+        image: CTkImage = CTkImage(
+            light_image=light_image,
+            dark_image=dark_image,
+            size=size
+        )
+        _image_cache[key] = image
+        return image
 
     except Exception as e:
         logger.error(f"Failed to load images: {os.path.basename(light)} & {os.path.basename(dark)}, reason: {type(e).__name__}! {str(e)}")
         return ""
-
-    image: CTkImage = CTkImage(
-        light_image=light_image,
-        dark_image=dark_image,
-        size=size
-    )
-    _image_cache[key] = image
-    return image
 
 
 def load_image_from_url(url: str, size: tuple[int, int]) -> CTkImage | Literal[""]:
@@ -45,15 +45,14 @@ def load_image_from_url(url: str, size: tuple[int, int]) -> CTkImage | Literal["
         response = request.get(url, attempts=1, cache=True)
         pil_image = Image.open(BytesIO(response.content))
 
+        image: CTkImage = CTkImage(
+            light_image=pil_image,
+            dark_image=pil_image,
+            size=size
+        )
+        _image_cache[key] = image
+        return image
+
     except Exception as e:
         logger.error(f"Failed to load image from URL: \"{url}\", reason: {type(e).__name__}! {str(e)}")
         return ""
-    
-
-    image: CTkImage = CTkImage(
-        light_image=pil_image,
-        dark_image=pil_image,
-        size=size
-    )
-    _image_cache[key] = image
-    return image

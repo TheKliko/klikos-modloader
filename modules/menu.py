@@ -6,9 +6,11 @@ import re
 from datetime import datetime
 from typing import Callable, Literal
 from tempfile import TemporaryDirectory
+import webbrowser
 
+from modules import error_handler
 from modules.logger import logger
-from modules.info import ProjectData
+from modules.info import ProjectData, Hyperlink, LICENSES
 from modules.filesystem import Directory
 from modules import filesystem
 from modules.interface.images import load_image
@@ -76,6 +78,8 @@ class MainWindow:
     font_navigation: ctk.CTkFont
     font_medium_bold: ctk.CTkFont
     font_large: ctk.CTkFont
+    font_large_italic: ctk.CTkFont
+    font_large_bold: ctk.CTkFont
 
 
     #region __init__()
@@ -121,6 +125,8 @@ class MainWindow:
         self.font_bold = ctk.CTkFont(weight="bold")
         self.font_title = ctk.CTkFont(size=20, weight="bold")
         self.font_large = ctk.CTkFont(size=16)
+        self.font_large_italic = ctk.CTkFont(size=16, slant="italic")
+        self.font_large_bold = ctk.CTkFont(size=16, weight="bold")
         self.font_subtitle = ctk.CTkFont(size=16, weight="bold")
         self.font_small = ctk.CTkFont(size=12)
         self.font_small_bold = ctk.CTkFont(size=12, weight="bold")
@@ -173,6 +179,22 @@ class MainWindow:
         self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
 
         self.root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+
+        self.root.report_callback_exception = self._on_error
+    
+    def _on_error(self, *args) -> None:
+        if len(args) > 1:
+            error_message = str(args[1])
+            error_type = type(args[1]).__name__
+
+            if "object has no attribute 'focus_set'" in error_message:
+                return
+
+            else:
+                print(args)
+                print(f"{error_type}: {error_message}")
+
+        error_handler.run(*args)
 
     def show(self) -> None:
         self._show_mods()
@@ -1982,25 +2004,172 @@ class MainWindow:
                 self.content,
                 fg_color="transparent"
             )
-            frame.grid_columnconfigure(0, weight=1)
-            frame.grid(column=0, row=0, sticky="nsew")
+            frame.grid_columnconfigure(1, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew", pady=(16,0))
+
+            # Logo
+            logo: str = os.path.join(Directory.root(), "resources", "menu", "about", "logo.png")
+            if not os.path.isfile(logo):
+                try:
+                    restore_from_mei(logo)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
 
             ctk.CTkLabel(
                 frame,
-                text="About",
+                text="",
+                image=load_image(
+                    logo,
+                    logo,
+                    (64,64)
+                )
+            ).grid(column=0, row=0, sticky="nsew", padx=(0,12))
+            
+            # Info
+            info_frame: ctk.CTkFrame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            info_frame.grid_columnconfigure(1, weight=1)
+            info_frame.grid(column=1, row=0, sticky="ew")
+
+            ctk.CTkLabel(
+                info_frame,
+                text=ProjectData.NAME,
                 font=self.font_title,
                 anchor="w"
-            ).grid(column=0, row=0, sticky="nsew")
+            ).grid(column=0, row=0, sticky="ew")
 
             ctk.CTkLabel(
-                frame,
+                info_frame,
+                text=f"v{ProjectData.VERSION}",
+                font=self.font_bold,
+                anchor="w"
+            ).grid(column=1, row=0, sticky="ew", padx=(12,0))
+
+            ctk.CTkLabel(
+                info_frame,
                 text=ProjectData.DESCRIPTION,
                 font=self.font_large,
                 anchor="w"
-            ).grid(column=0, row=1, sticky="nsew")
+            ).grid(column=0, row=1, columnspan=2, sticky="ew")
+
+            # Buttons
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=1, columnspan=2, sticky="nsew", pady=(12,24))
+
+            github_icon: str = os.path.join(Directory.root(), "resources", "menu", "about", "github.png")
+            if not os.path.isfile(github_icon):
+                try:
+                    restore_from_mei(github_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Source Code",
+                image=load_image(
+                    light=github_icon,
+                    dark=github_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=lambda: webbrowser.open_new_tab(Hyperlink.GITHUB)
+            ).grid(column=0, row=0, sticky="nsw")
+
+            discord_icon: str = os.path.join(Directory.root(), "resources", "menu", "about", "discord.png")
+            if not os.path.isfile(discord_icon):
+                try:
+                    restore_from_mei(discord_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Discord",
+                image=load_image(
+                    light=discord_icon,
+                    dark=discord_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=lambda: webbrowser.open_new_tab(Hyperlink.DISCORD)
+            ).grid(column=1, row=0, sticky="nsw", padx=(8,0))
         
         def load_content() -> None:
-            pass
+            # Licenses
+            licenses_per_row: int = 3
+            license_gap: int = 8
+
+            license_frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            license_frame.grid(column=0, row=1, sticky="nsew")
+            for i in range(licenses_per_row):
+                license_frame.grid_columnconfigure(i, weight=0)
+
+            ctk.CTkLabel(
+                license_frame,
+                text="Licenses",
+                font=self.font_large_bold,
+                anchor="w",
+                justify="left"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            for i, license in enumerate(LICENSES):
+                column = int(i % licenses_per_row)
+                row = int((i // licenses_per_row)) + 1
+                padx = 0 if column == 0 else (license_gap, 0)
+                pady = 0 if row == 0 else (license_gap, 0)
+                license_box: ctk.CTkFrame = ctk.CTkFrame(
+                    license_frame,
+                    width=250,
+                    height=120
+                )
+                license_box.grid_propagate(False)
+                license_box.grid(column=column, row=row, padx=padx, pady=pady, sticky="nsew")
+                
+                box_content: ctk.CTkFrame = ctk.CTkFrame(
+                    license_box,
+                    fg_color="transparent"
+                )
+                box_content.grid(column=0, row=0, padx=16, pady=16)
+
+                ctk.CTkLabel(
+                    box_content,
+                    text=license["name"],
+                    font=self.font_bold,
+                    anchor="w",
+                    justify="left"
+                ).grid(column=0, row=0, sticky="nsew")
+
+                ctk.CTkLabel(
+                    box_content,
+                    text=f"by {license['author']}",
+                    anchor="w",
+                    justify="left"
+                ).grid(column=0, row=1, sticky="nsew")
+
+                ctk.CTkLabel(
+                    box_content,
+                    text=license["type"],
+                    font=self.font_13,
+                    anchor="w",
+                    justify="left"
+                ).grid(column=0, row=2, sticky="nsew")
+
+                
+                if license.get("url"):
+                    license_box.configure(cursor="hand2")
+                    license_box.bind("<Button-1>", lambda _, url=license["url"]: webbrowser.open_new_tab(url))
+                    for widget in box_content.winfo_children():
+                        widget.bind("<Button-1>", lambda _, url=license["url"]: webbrowser.open_new_tab(url))
 
         self.active_section = "about"
         destroy()

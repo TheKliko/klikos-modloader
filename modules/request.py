@@ -35,7 +35,11 @@ class GitHubApi:
     
     @staticmethod
     def fastflag_presets() -> str:
-        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/fastflag-presets/index.json"
+        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/fastflag_presets.json"
+    
+    @staticmethod
+    def filemap() -> str:
+        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/filemap.json"
 
 
 # region RobloxApi
