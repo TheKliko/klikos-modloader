@@ -156,6 +156,11 @@ class MainWindow:
                 "command": self._show_fastflags
             },
             {
+                "text": "Launch Integrations",
+                "icon": "launch_integrations.png",
+                "command": self._show_launch_integrations
+            },
+            {
                 "text": "Integrations",
                 "icon": "integrations.png",
                 "command": self._show_integrations
@@ -378,7 +383,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Add mods",
+                text="Add mods ",
                 image=load_image(
                     light=package_icon,
                     dark=package_icon,
@@ -398,7 +403,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Open mods folder",
+                text="Open mods folder ",
                 image=load_image(
                     light=folder_icon,
                     dark=folder_icon,
@@ -418,7 +423,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Add font",
+                text="Add font ",
                 image=load_image(
                     light=font_icon,
                     dark=font_icon,
@@ -942,7 +947,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="New profile",
+                text="New profile ",
                 image=load_image(
                     light=plus_icon,
                     dark=plus_icon,
@@ -962,7 +967,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="FastFlag presets",
+                text="FastFlag presets ",
                 image=load_image(
                     light=download_icon,
                     dark=download_icon,
@@ -1063,7 +1068,7 @@ class MainWindow:
 
                     ctk.CTkButton(
                         profile_frame,
-                        text="Configure",
+                        text="Configure ",
                         image=load_image(
                             configure_icon,
                             configure_icon,
@@ -1208,17 +1213,17 @@ class MainWindow:
                 buttons_per_row: int = 5
                 buttons: list[dict] = [
                     {
-                        "text": "Import data",
+                        "text": "Import data ",
                         "image": import_icon,
                         "command": self._on_import
                     },
                     {
-                        "text": "Export data",
+                        "text": "Export data ",
                         "image": export_icon,
                         "command": self._on_export
                     },
                     {
-                        "text": "Copy to clipboard",
+                        "text": "Copy to clipboard ",
                         "image": copy_icon,
                         "command": self._on_copy
                     }
@@ -1854,6 +1859,79 @@ class MainWindow:
     
 
 
+    # region Launch Apps
+    def _show_launch_integrations(self) -> None:
+        def destroy() -> None:
+            for widget in self.content.winfo_children():
+                widget.destroy()
+
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Launch Integrations",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Launch apps when Roblox is launched",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
+
+            button_frame = ctk.CTkFrame(
+                frame,
+                fg_color="transparent"
+            )
+            button_frame.grid(column=0, row=2, sticky="nsew", pady=(16,16))
+
+            plus_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "create.png")
+            if not os.path.isfile(plus_icon):
+                try:
+                    restore_from_mei(plus_icon)
+                except (FileRestoreError, PermissionError, FileNotFoundError):
+                    pass
+            ctk.CTkButton(
+                button_frame,
+                text="Add new ",
+                image=load_image(
+                    light=plus_icon,
+                    dark=plus_icon,
+                    size=(24,24)
+                ),
+                width=1,
+                anchor="w",
+                compound=ctk.LEFT,
+                command=self._restore_all_integrations
+            ).grid(column=0, row=0, sticky="nsw")
+        
+        def load_content() -> None:
+            pass
+            # launch_integrations: list[dict] = fastflags.get_all()
+            launch_integrations = None
+
+            if not launch_integrations:
+                ctk.CTkLabel(
+                    self.content,
+                    text="No apps found!",
+                    font=self.font_title
+                ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+        self.active_section = "launch_integrations"
+        destroy()
+        load_header()
+        load_content()
+    
+
+
     # region Integrations
     def _show_integrations(self) -> None:
         def destroy() -> None:
@@ -1896,7 +1974,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Restore integrations",
+                text="Restore integrations ",
                 image=load_image(
                     light=restore_icon,
                     dark=restore_icon,
@@ -2043,7 +2121,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Restore settings",
+                text="Restore settings ",
                 image=load_image(
                     light=restore_icon,
                     dark=restore_icon,
@@ -2225,7 +2303,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Source Code",
+                text="Source Code ",
                 image=load_image(
                     light=github_icon,
                     dark=github_icon,
@@ -2245,7 +2323,7 @@ class MainWindow:
                     pass
             ctk.CTkButton(
                 button_frame,
-                text="Discord",
+                text="Discord ",
                 image=load_image(
                     light=discord_icon,
                     dark=discord_icon,
