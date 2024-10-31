@@ -558,7 +558,11 @@ class MainWindow:
     # region Importing mods
     def _import_mod(self) -> None:
         user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
-        initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+        if user_profile:
+            downloads_dir: str | None = os.path.join(user_profile, "Downloads")
+        else:
+            downloads_dir = None
+        initial_dir: str = downloads_dir if downloads_dir is not None else user_profile if user_profile is not None else os.path.abspath(os.sep)
         files_to_import = filedialog.askopenfilenames(
             filetypes=[
                 ("Archive files", "*.zip;*.7z"),
@@ -733,7 +737,11 @@ class MainWindow:
             
             def _choose_file(self) -> None:
                 user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
-                initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                if user_profile:
+                    downloads_dir: str | None = os.path.join(user_profile, "Downloads")
+                else:
+                    downloads_dir = None
+                initial_dir: str = downloads_dir if downloads_dir is not None else user_profile if user_profile is not None else os.path.abspath(os.sep)
                 font_file = filedialog.askopenfilename(
                     filetypes=[
                         ("Font files", "*.ttf;*.otf"),
@@ -1279,7 +1287,11 @@ class MainWindow:
                         return
 
                     user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
-                    initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                    if user_profile:
+                        downloads_dir: str | None = os.path.join(user_profile, "Downloads")
+                    else:
+                        downloads_dir = None
+                    initial_dir: str = downloads_dir if downloads_dir is not None else user_profile if user_profile is not None else os.path.abspath(os.sep)
                     files_to_import = filedialog.askopenfilenames(
                         filetypes=[
                             ("JSON files", "*.json"),
@@ -1324,7 +1336,11 @@ class MainWindow:
                         return
 
                     user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
-                    initial_dir: str = os.path.join(user_profile, "Downloads") if user_profile is not None else os.path.abspath(os.sep)
+                    if user_profile:
+                        downloads_dir: str | None = os.path.join(user_profile, "Downloads")
+                    else:
+                        downloads_dir = None
+                    initial_dir: str = downloads_dir if downloads_dir is not None else user_profile if user_profile is not None else os.path.abspath(os.sep)
                     filepath: str | None = filedialog.asksaveasfilename(
                         filetypes=[
                             ("JSON files", "*.json"),
