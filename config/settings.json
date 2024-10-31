@@ -26,12 +26,5 @@
         "value": false,
         "default": false,
         "type": "bool"
-    },
-    "use_stock_updater": {
-        "name": "Always reinstall Roblox",
-        "description": "Use the default Roblox updater to install Roblox updates",
-        "value": false,
-        "default": false,
-        "type": "bool"
     }
 }

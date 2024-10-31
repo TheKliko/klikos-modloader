@@ -31,7 +31,7 @@ def restore_from_mei(file: str) -> None:
     try:
         os.makedirs(os.path.dirname(file), exist_ok=True)
         shutil.copy(os.path.join(MEIPASS, relative_path), os.path.join(root, relative_path))
-        logger.warning(f"File restored from _MEI: {logged_path.get(file)}")
+        logger.info(f"File restored from _MEI: {logged_path.get(file)}")
 
     except shutil.SameFileError:
         pass

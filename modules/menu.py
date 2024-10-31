@@ -3,6 +3,8 @@ import sys
 import shutil
 import json
 import re
+import threading
+import traceback
 from datetime import datetime
 from typing import Callable, Literal
 from tempfile import TemporaryDirectory
@@ -13,7 +15,7 @@ from modules.logger import logger
 from modules.info import ProjectData, Hyperlink, LICENSES
 from modules.filesystem import Directory
 from modules import filesystem
-from modules.interface.images import load_image
+from modules.interface.images import load_image, load_image_from_url
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.config import mods, fastflags, settings, integrations
 from modules.functions.get_latest_version import get_latest_version
@@ -80,6 +82,8 @@ class MainWindow:
     font_large: ctk.CTkFont
     font_large_italic: ctk.CTkFont
     font_large_bold: ctk.CTkFont
+
+    mod_thumbnail_size: tuple[int, int] = (64,64)
 
 
     #region __init__()
@@ -168,6 +172,12 @@ class MainWindow:
             }
         ]
         self._create_navigation()
+
+        threading.Thread(
+            name="MainWindow._load_marketplace_data()-thread",
+            target=self._preload_marketplace_data,
+            daemon=True
+        ).start()
 
         self.content = ctk.CTkScrollableFrame(
             self.root,
@@ -1660,6 +1670,23 @@ class MainWindow:
     
 
 
+    # region preload marketplace
+    def _preload_marketplace_data(self) -> None:
+        try:
+            response: Response = request.get(GitHubApi.marketplace(), cache=True)
+            data: list[dict] = response.json()
+
+            for mod in data:
+                if "has_thumbnail" in mod:
+                    if mod["has_thumbnail"] == False:
+                        continue
+                load_image_from_url(GitHubApi.mod_thumbnail(mod["id"]), self.mod_thumbnail_size)
+        
+        except Exception as e:
+            logger.warning(f"Failed to preload marketplace, reason: {type(e).__name__}: {e}")
+    
+
+
     # region Marketplace
     def _show_marketplace(self) -> None:
         def destroy() -> None:
@@ -1688,13 +1715,126 @@ class MainWindow:
                 anchor="w"
             ).grid(column=0, row=1, sticky="nsew")
         
+        def load_error(*args) -> None:
+            ctk.CTkLabel(
+                self.content,
+                text="Marketplace failed to load!",
+                font=self.font_title
+            ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+
+            error_box: ctk.CTkTextbox = ctk.CTkTextbox(
+                self.content,
+                wrap="word",
+                fg_color="transparent"
+            )
+            error_box.insert("0.0", "".join(traceback.format_exception(*args)))
+            error_box.configure(state="disabled")
+            error_box.grid(column=0, row=2, sticky="nsew")
+        
         def load_content() -> None:
-            pass
+            try:
+                response: Response = request.get(GitHubApi.marketplace(), attempts=2, cache=True)
+                data: list[dict] = response.json()
+
+            except Exception as e:
+                logger.error(f"Failed to load marketplace, reason: {type(e).__name__}: {e}")
+                destroy()
+                load_header()
+                load_error(e)
+            
+            else:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
+
+                for i, mod in enumerate(data):
+                    try:
+                        mod_name: str = mod["name"]
+                        mod_id: str = mod["id"]
+                        mod_author: str | None = mod.get("author" )
+                        mod_description: str | None = mod.get("description")
+                        mod_has_thumbnail: bool = mod.get("has_thumbnail", True)
+                    
+                    except KeyError:
+                        continue
+
+                    mod_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    mod_frame.grid_columnconfigure(0, weight=1)
+                    mod_frame.grid(column=0, row=i, sticky="ew", pady=5)
+
+                    # Name, description, author
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        mod_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid(column=0, row=0, sticky="nsew", padx=(16,0), pady=16)
+                    
+                    ctk.CTkLabel(
+                        name_frame,
+                        text=mod_name,
+                        font=self.font_bold,
+                        anchor="w",
+                        justify="left"
+                    ).grid(column=0, row=0, sticky="nsew")
+
+                    if mod_description:
+                        ctk.CTkLabel(
+                            name_frame,
+                            text=mod_description,
+                            anchor="w",
+                            justify="left"
+                        ).grid(column=0, row=1, sticky="nsew")
+
+                    if mod_author:
+                        ctk.CTkLabel(
+                            name_frame,
+                            text=f"by {mod_author}",
+                            font=self.font_13,
+                            anchor="w",
+                            justify="left"
+                        ).grid(column=0, row=2, sticky="nsew")
+                    
+                    # Thumbnail
+                    if mod_has_thumbnail:
+                        ctk.CTkLabel(
+                            mod_frame,
+                            text="",
+                            image=load_image_from_url(GitHubApi.mod_thumbnail(mod_id), self.mod_thumbnail_size)
+                        ).grid(column=1, row=0, padx=32, pady=16)
+
+                    # Download button
+                    download_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "download.png")
+                    if not os.path.isfile(download_icon):
+                        try:
+                            restore_from_mei(download_icon)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+
+                    ctk.CTkButton(
+                        mod_frame,
+                        text="",
+                        image=load_image(
+                            light=download_icon,
+                            dark=download_icon,
+                            size=(24,24)
+                        ),
+                        width=44,
+                        height=44,
+                        command=lambda mod_id=mod_id: self._mod_download(mod_id)
+                    ).grid(column=2, row=0, padx=32, pady=32)
 
         self.active_section = "marketplace"
         destroy()
         load_header()
         load_content()
+    
+    def _mod_download(self, mod_id: str) -> None:
+        raise Exception("Function not implemented!")
     
 
 
