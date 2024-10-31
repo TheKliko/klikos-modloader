@@ -17,7 +17,7 @@ from modules.filesystem import Directory
 from modules import filesystem
 from modules.interface.images import load_image, load_image_from_url
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
-from modules.functions.config import mods, fastflags, settings, integrations
+from modules.functions.config import mods, fastflags, settings, integrations, launch_integrations
 from modules.functions.get_latest_version import get_latest_version
 from modules import request
 from modules.request import RobloxApi, GitHubApi, RequestError, Response
@@ -98,6 +98,7 @@ class MainWindow:
                 ctk.set_default_color_theme(os.path.join(Directory._MEI(), "resources", "theme.json"))
             else:
                 ctk.set_default_color_theme("blue")
+            messagebox.showwarning(ProjectData.NAME, "Bad theme file!\nReverted to default theme")
         
         if os.path.isfile(theme_path):
             try:
@@ -470,7 +471,7 @@ class MainWindow:
                         frame
                     )
                     mod_frame.grid_columnconfigure(1, weight=1)
-                    mod_frame.grid(column=0, row=i, sticky="ew", pady=10)
+                    mod_frame.grid(column=0, row=i, sticky="ew", pady=5)
 
                     # Delete button
                     delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
@@ -1017,7 +1018,7 @@ class MainWindow:
                         frame
                     )
                     profile_frame.grid_columnconfigure(1, weight=1)
-                    profile_frame.grid(column=0, row=i, sticky="ew", pady=10)
+                    profile_frame.grid(column=0, row=i, sticky="ew", pady=5)
 
                     # Delete button
                     delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
@@ -1910,25 +1911,186 @@ class MainWindow:
                 width=1,
                 anchor="w",
                 compound=ctk.LEFT,
-                command=self._restore_all_integrations
+                command=self._create_new_launch_integration
             ).grid(column=0, row=0, sticky="nsw")
         
         def load_content() -> None:
-            pass
-            # launch_integrations: list[dict] = fastflags.get_all()
-            launch_integrations = None
+            apps: list[dict] = launch_integrations.get_all()
 
-            if not launch_integrations:
+            if not apps:
                 ctk.CTkLabel(
                     self.content,
                     text="No apps found!",
                     font=self.font_title
                 ).grid(column=0, row=1, sticky="nsew", pady=(64,0))
+            
+            else:
+                frame: ctk.CTkFrame = ctk.CTkFrame(
+                    self.content,
+                    fg_color="transparent"
+                )
+                frame.grid_columnconfigure(0, weight=1)
+                frame.grid(column=0, row=1, sticky="nsew", padx=(0,10))
+
+                for i, integration in enumerate(apps):
+                    try:
+                        integration_name: str = integration["name"]
+                        integration_id: str = integration["id"]
+                        integration_filepath: str = integration["filepath"]
+                        integration_launch_args: str | None = integration["launch_args"]
+                        integration_status: bool = integration["enabled"]
+
+                    except KeyError:
+                        continue
+
+                    integration_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        frame
+                    )
+                    integration_frame.grid_columnconfigure(1, weight=1)
+                    integration_frame.grid_columnconfigure(2, weight=3)
+                    integration_frame.grid(column=0, row=i, sticky="ew", pady=5)
+                    
+                    # Delete button
+                    delete_icon: str = os.path.join(Directory.root(), "resources", "menu", "common", "remove.png")
+                    if not os.path.isfile(delete_icon):
+                        try:
+                            restore_from_mei(delete_icon)
+                        except (FileRestoreError, PermissionError, FileNotFoundError):
+                            pass
+                    ctk.CTkButton(
+                        integration_frame,
+                        text="",
+                        image=load_image(
+                            light=delete_icon,
+                            dark=delete_icon,
+                            size=(24,24)
+                        ),
+                        width=44,
+                        height=44,
+                        command=lambda id=integration_id: self._delete_launch_integration(id)
+                    ).grid(column=0, row=0, rowspan=2, padx=16, pady=16)
+
+                    # Name label
+                    name_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        integration_frame,
+                        fg_color="transparent"
+                    )
+                    name_frame.grid_columnconfigure(0, weight=1)
+                    name_frame.grid(column=1, row=0, sticky="nsew")
+                    name_entry = ctk.CTkEntry(
+                        name_frame,
+                        width=250,
+                        height=40,
+                        validate="key",
+                        validatecommand=(self.root.register(lambda value: not re.search(r'[\\/:*?"<>|]', value)), '%P')
+                    )
+                    name_entry.insert("end", str(integration_name))
+                    name_entry.bind("<Return>", lambda _: self.root.focus())
+                    name_entry.bind("<Control-s>", lambda _: self.root.focus())
+                    name_entry.bind("<FocusOut>", lambda event, id=integration_id: self._rename_launch_integration(event, id))
+                    name_entry.grid(column=0, row=0, sticky="nsew", pady=24)
+
+                    # launch_args
+                    args_frame: ctk.CTkFrame = ctk.CTkFrame(
+                        integration_frame,
+                        fg_color="transparent"
+                    )
+                    args_frame.grid_columnconfigure(1, weight=1)
+                    args_frame.grid(column=2, row=0, sticky="nsew", padx=(16,0))
+                    
+                    ctk.CTkLabel(
+                        args_frame,
+                        text="Launch args: ",
+                        font=self.font_13,
+                        anchor="w",
+                        justify="left"
+                    ).grid(column=0, row=0, sticky="nsew", pady=24)
+
+                    args_entry = ctk.CTkEntry(
+                        args_frame,
+                        width=250,
+                        height=40,
+                        validate="key",
+                        validatecommand=(self.root.register(lambda value: not re.search(r'[\\/:*?"<>|]', value)), '%P')
+                    )
+                    args_entry.insert("end", str(integration_launch_args))
+                    args_entry.bind("<Return>", lambda _: self.root.focus())
+                    args_entry.bind("<Control-s>", lambda _: self.root.focus())
+                    args_entry.bind("<FocusOut>", lambda event, id=integration_id: self._set_launch_integration_args(event, id))
+                    args_entry.grid(column=1, row=0, sticky="nsew", pady=24)
+
+                    # Toggle active state
+                    var = ctk.BooleanVar(value=integration_status)
+                    switch: ctk.CTkSwitch = ctk.CTkSwitch(
+                        integration_frame,
+                        width=48,
+                        height=24,
+                        text="",
+                        variable=var,
+                        onvalue=True,
+                        offvalue=False,
+                        command=lambda id=integration_id, status_var=var: self._set_launch_integration_status(id, status_var.get())
+                    )
+                    switch.grid(column=3, row=0, rowspan=2, sticky="ew", padx=32, pady=32)
 
         self.active_section = "launch_integrations"
         destroy()
         load_header()
         load_content()
+    
+
+
+    # region Configure Launch Apps
+    def _create_new_launch_integration(self) -> None:
+        user_profile: str | None = os.getenv("HOME") or os.getenv("USERPROFILE")
+        if user_profile:
+            downloads_dir: str | None = os.path.join(user_profile, "Downloads")
+        else:
+            downloads_dir = None
+        initial_dir: str = downloads_dir if downloads_dir is not None else user_profile if user_profile is not None else os.path.abspath(os.sep)
+        integrations_to_add = filedialog.askopenfilenames(
+            filetypes=[
+                ("All files", "*.*")
+            ],
+            initialdir=initial_dir,
+            title="Add Integrations"
+        )
+
+        if not integrations_to_add:
+            return
+        
+        for file in integrations_to_add:
+            try:
+                launch_integrations.create(file)
+
+            except Exception as e:
+                logger.error(f"Failed to add integration, reason: {type(e).__name__}: {e}")
+                messagebox.showerror(ProjectData.NAME, f"Failed to add integration!\n\n{type(e).__name__}: {e}")
+                return
+
+        self._show_launch_integrations()
+
+    def _set_launch_integration_status(self, id: str, status: bool) -> None:
+        try:
+            launch_integrations.set_status(id, status)
+        except Exception as e:
+            logger.error(f"Failed to update integration status, {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to update integration status!\n\n{type(e).__name__}: {e}")
+    
+    def _rename_launch_integration(self, event, id: str) -> None:
+        new_name: str = str(event.widget.get())
+        launch_integrations.set_name(id, new_name)
+    
+    def _set_launch_integration_args(self, event, id: str) -> None:
+        new_args: str = str(event.widget.get())
+        launch_integrations.set_args(id, new_args)
+    
+    def _delete_launch_integration(self, id: str) -> None:
+        if not messagebox.askokcancel(ProjectData.NAME, f"Are you sure you want to delete this integration?\n\nThis action cannot be undone!"):
+            return
+        
+        launch_integrations.remove(id)
+        self._show_launch_integrations()
     
 
 
@@ -2009,7 +2171,7 @@ class MainWindow:
                         frame
                     )
                     integration_frame.grid_columnconfigure(1, weight=1)
-                    integration_frame.grid(column=0, row=i, sticky="ew", pady=10)
+                    integration_frame.grid(column=0, row=i, sticky="ew", pady=5)
 
                     # Name and description
                     name_frame: ctk.CTkFrame = ctk.CTkFrame(
@@ -2156,7 +2318,7 @@ class MainWindow:
                         frame
                     )
                     setting_frame.grid_columnconfigure(1, weight=1)
-                    setting_frame.grid(column=0, row=i, sticky="ew", pady=10)
+                    setting_frame.grid(column=0, row=i, sticky="ew", pady=5)
 
                     # Name and description
                     name_frame: ctk.CTkFrame = ctk.CTkFrame(

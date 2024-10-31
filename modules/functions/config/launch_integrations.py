@@ -1,16 +1,18 @@
 import os
 import json
 from copy import deepcopy
+import uuid
 
 from modules.logger import logger
 from modules.filesystem import FilePath, logged_path
 
 
 FORMAT: dict = {
-    "name": "",
-    "filepath": "",
-    "args": [],
-    "active": False
+    "name": "New Integration",
+    "id": None,
+    "filepath": None,
+    "launch_args": None,
+    "enabled": False
 }
 
 
@@ -18,240 +20,227 @@ class KeyExistsError(Exception):
     pass
 
 
-def set_name(key: str, value: str) -> None:
-    if key == value:
-        return
-
-    filepath = FilePath.fastflags()
+def status(key: str) -> bool:
+    filepath: str = FilePath.launch_integrations()
     if not os.path.isfile(filepath):
         logger.error(f"No such file or directory: {logged_path.get(filepath)}")
         raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
 
     try:
         with open(filepath, "r") as file:
-            data: list = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-        raise
-
-    for i, profile in enumerate(data):
-        if profile.get("name") == value:
-            logger.error(f"KeyExistsError: Another profile with the same name already exists")
-            raise KeyExistsError("Another profile with the same name already exists")
-
-    for i, profile in enumerate(data):
-        if profile.get("name") == key:
-            data[i]["name"] = value
-            break
-    else:
-        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
-        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-    except Exception as e:
-        logger.error(f"Failed to set name of \"{key}\" in {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
-        raise
-
-    if not data:
-        try:
-            os.remove(filepath)
-        except Exception:
-            pass
-
-
-def set_status(key: str, value: bool) -> None:
-    filepath = FilePath.fastflags()
-    if not os.path.isfile(filepath):
-        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
-        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "r") as file:
-            data = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-        raise
-
-    for i, profile in enumerate(data):
-        if profile.get("name") == key:
-            if profile["enabled"] == value:
-                return
-            data[i]["enabled"] = value
-            break
-    else:
-        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
-        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-    except Exception as e:
-        logger.error(f"Failed to set status of \"{key}\" in {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
-        raise
-
-
-def set_description(key: str, value: str | None) -> None:
-    filepath = FilePath.fastflags()
-    if not os.path.isfile(filepath):
-        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
-        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
-    
-    if not value:
-        value = None
-
-    try:
-        with open(filepath, "r") as file:
-            data = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-        raise
-
-    for i, profile in enumerate(data):
-        if profile.get("name") == key:
-            data[i]["description"] = value
-            break
-    else:
-        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
-        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-    except Exception as e:
-        logger.error(f"Failed to set description of \"{key}\" in {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
-        raise
-
-
-def set_data(key: str, value: dict) -> None:
-    filepath = FilePath.fastflags()
-    if not os.path.isfile(filepath):
-        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
-        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "r") as file:
-            data = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-        raise
-
-    for i, profile in enumerate(data):
-        if profile.get("name") == key:
-            data[i]["data"] = value
-            break
-    else:
-        logger.error(f"KeyError: Could not find \"{key}\" in {logged_path.get(filepath)}")
-        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-    except Exception as e:
-        logger.error(f"Failed to set data of \"{key}\" in {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
-        raise
-
-
-def create(key: str, description: str | None, fastflags: dict | None) -> None:
-    profile: dict = deepcopy(FORMAT)
-    profile["name"] = key
-    profile["description"] = description
-    if fastflags:
-        profile["data"] = fastflags
-
-    filepath = FilePath.fastflags()
-    if not os.path.isfile(filepath):
-        data: list[dict] = [profile]
-
-    else:
-        try:
-            with open(filepath, "r") as file:
-                data: list[dict] = json.load(file)
-        except json.JSONDecodeError as e:
-            logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-            raise
-
-        for i, existing_profile in enumerate(data):
-            if existing_profile.get("name") == key:
-                logger.error(f"KeyExistsError: Another profile with the same name already exists")
-                raise KeyExistsError("Another profile with the same name already exists")
-        else:
-            data.insert(0, profile)
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-    except Exception as e:
-        logger.error(f"Failed to create profile \"{key}\" in {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
-        raise
-
-
-def remove(key: str) -> None:
-    filepath = FilePath.fastflags()
-    if not os.path.isfile(filepath):
-        logger.error(f"FileNotFoundError: No such file or directory: {logged_path.get(filepath)}")
-        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
-
-    try:
-        with open(filepath, "r") as file:
             data: list[dict] = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
-        raise
 
-    for i, profile in enumerate(data):
-        if profile.get("name") == key:
-            data.pop(i)
-            break
-    else:
-        return
-
-    try:
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
     except Exception as e:
-        logger.error(f"Failed to remove key \"{key}\" from {os.path.basename(filepath)}, reason: {type(e).__name__}: {e}")
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
         raise
 
-    if not data:
-        try:
-            os.remove(filepath)
-        except Exception:
-            pass
+    for integration in data:
+        if integration.get("id") == key:
+            return integration["enabled"]
+
+    logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
 
 
-
-def get(key: str) -> dict:
-    filepath = FilePath.fastflags()
+def create(integration_path: str) -> None:
+    filepath: str = FilePath.launch_integrations()
     if not os.path.isfile(filepath):
-        data: dict = {}
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        data: list[dict] = []
     
     else:
         try:
             with open(filepath, "r") as file:
                 data = json.load(file)
-        except json.JSONDecodeError as e:
-            logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
+
+        except Exception as e:
+            logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
             raise
 
-    for profile in data:
-        if profile.get("name") == key:
-            return profile
-    else:
-        return {}
+    integration_data = deepcopy(FORMAT)
+    integration_data["filepath"] = integration_path
+    integration_data["name"] = os.path.basename(integration_path)
+    integration_data["id"] = uuid.uuid4().hex
+
+    data.insert(0, integration_data)
+
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
 
 
-def get_all() -> list[dict]:
-    filepath = FilePath.fastflags()
+def remove(key: str) -> None:
+    filepath: str = FilePath.launch_integrations()
     if not os.path.isfile(filepath):
-        return []
-    
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
     try:
         with open(filepath, "r") as file:
             data: list[dict] = json.load(file)
-    except json.JSONDecodeError as e:
-        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
         raise
 
-    return data
+    for i, integration in enumerate(data):
+        if integration.get("id") == key:
+            data.pop(i)
+            break
+    else:
+        logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
+    
+    if not data:
+        try:
+            os.remove(filepath)
+        except Exception:
+            pass
+
+
+def get(key: str) -> dict:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        raise
+
+    for integration in data:
+        if integration.get("id") == key:
+            return integration
+
+    logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+
+
+def get_all() -> list[dict]:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        return []
+
+    try:
+        with open(filepath, "r") as file:
+            data: list = json.load(file)
+        return data
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        return []
+
+
+def set_status(key: str, value: bool) -> None:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        raise
+
+    for i, integration in enumerate(data):
+        if integration.get("id") == key:
+            if integration["enabled"] == value:
+                return
+            data[i]["enabled"] = value
+            return
+
+    logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+
+
+def set_name(key: str, value: str) -> None:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        raise
+
+    for i, integration in enumerate(data):
+        if integration.get("id") == key:
+            if integration["name"] == value:
+                return
+            data[i]["name"] = value
+            break
+    else:
+        logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
+
+
+def set_filepath(key: str, value: str) -> None:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        raise
+
+    for i, integration in enumerate(data):
+        if integration.get("id") == key:
+            if integration["filepath"] == value:
+                return
+            data[i]["filepath"] = value
+            break
+    else:
+        logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
+
+
+def set_args(key: str, value: str) -> None:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        logger.error(f"No such file or directory: {logged_path.get(filepath)}")
+        raise FileNotFoundError(f"No such file or directory: {logged_path.get(filepath)}")
+
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        raise
+
+    for i, integration in enumerate(data):
+        if integration.get("id") == key:
+            if integration["launch_args"] == value:
+                return
+            data[i]["launch_args"] = value
+            break
+    else:
+        logger.error(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+        raise KeyError(f"Could not find \"{key}\" in {logged_path.get(filepath)}")
+    
+    with open(filepath, "w") as file:
+        json.dump(data, file, indent=4)
