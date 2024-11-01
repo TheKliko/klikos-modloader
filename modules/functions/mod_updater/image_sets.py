@@ -11,10 +11,6 @@ modded_imagesets: list[str] = []
 
 
 def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new_imageset_path: str, modded_icons: dict[str,list[str]], old_icon_map: dict[str,dict[str,dict[str,str|int]]], new_icon_map: dict[str,dict[str,dict[str,str|int]]]) -> None:
-    global common_imageset_data
-    global uncommon_imageset_data
-    global modded_imagesets
-    
     mod_path: str = os.path.join(temp_directory, mod)
     old_path: str = os.path.join(mod_path, old_imageset_path)
     new_path: str = os.path.join(mod_path, new_imageset_path)
@@ -40,7 +36,7 @@ def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new
             new_data: dict = new_icon_map[size][name]
             
             old_imageset_name: str = str(old_data["set"])+".png"
-            new_imageset_name: str = str(old_data["set"])+".png"
+            new_imageset_name: str = str(new_data["set"])+".png"
             
             if new_imageset_name not in modded_imagesets:
                 modded_imagesets.append(new_imageset_name)
@@ -101,11 +97,12 @@ def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new
 
 
 def update_common_imagesets(temp_directory: str, new_path: str) -> None:
-    global common_imageset_data
     threads: list[threading.Thread] = []
 
     def worker(path: str, modded_path: str, icons: list[dict]) -> None:
             with Image.open(path) as imageset:
+                if imageset.mode != "RGBA":
+                    imageset = imageset.convert("RGBA")
                 with Image.open(modded_path) as modded_imageset:
                         for icon in icons:
                             old_x: int = int(icon["old"]["x"])
@@ -143,8 +140,6 @@ def update_common_imagesets(temp_directory: str, new_path: str) -> None:
 
 
 def update_uncommon_imagesets(temp_directory: str, new_path: str) -> None:
-    global uncommon_imageset_data
-
     for data in uncommon_imageset_data:
         old_data: dict = data["old"]
         new_data: dict = data["new"]
@@ -162,16 +157,17 @@ def update_uncommon_imagesets(temp_directory: str, new_path: str) -> None:
         new_w: int = int(new_data["w"])
         new_h: int = int(new_data["h"])
 
+        with Image.open(modded_path) as modded_imageset:
+            modded_icon = modded_imageset.crop((old_x,old_y,old_x+old_w,old_y+old_h))
+
         with Image.open(target_path) as imageset:
-            with Image.open(modded_path) as modded_imageset:
-                modded_icon = modded_imageset.crop((old_x,old_y,old_x+old_w,old_y+old_h))
-                imageset.paste(modded_icon, (new_x,new_y,new_x+new_w,new_y+new_h))
+            if imageset.mode != "RGBA":
+                imageset = imageset.convert("RGBA")
+            imageset.paste(modded_icon, (new_x,new_y,new_x+new_w,new_y+new_h))
             imageset.save(target_path)
 
 
 def delete_unmodded_imagesets(temp_directory: str, path_extension: str) -> None:
-    global modded_imagesets
-
     path_to_imagesets: str = os.path.join(temp_directory, path_extension)
     
     if not os.path.exists(path_to_imagesets):

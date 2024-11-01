@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import threading
 import time
 import queue
@@ -11,7 +12,7 @@ from modules.filesystem import Directory
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.get_latest_version import get_latest_version
-from modules.functions.config import mods, fastflags
+from modules.functions.config import mods, fastflags, settings
 from modules.functions import launcher_tasks, mod_updater
 
 import customtkinter as ctk
@@ -180,6 +181,10 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         executable_path: str = os.path.join(Directory.versions(), latest_version, executable)
 
         # Roblox updates
+        if settings.value("force_roblox_reinstallation") or settings.value("always_update_roblox"):
+            settings.set_value("force_roblox_reinstallation", False)
+            shutil.rmtree(os.path.join(Directory.versions(), latest_version), ignore_errors=True)
+            
         if not os.path.isfile(executable_path):
             textvariable.set(f"Updating Roblox{' Studio' if mode == 'WindowsStudio' else ''} . . .")
             launcher_tasks.update(latest_version)
@@ -198,6 +203,7 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         # Launch Roblox
         textvariable.set("Launching Roblox . . .")
         launcher_tasks.launch_roblox(executable_path)
+        time.sleep(0.5)
 
         # Close the window
         close_window_function()
