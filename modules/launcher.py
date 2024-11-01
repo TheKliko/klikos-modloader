@@ -12,7 +12,7 @@ from modules.filesystem import Directory
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.get_latest_version import get_latest_version
-from modules.functions.config import mods, fastflags, settings
+from modules.functions.config import mods, settings, integrations
 from modules.functions import launcher_tasks, mod_updater
 
 import customtkinter as ctk
@@ -190,11 +190,12 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
             launcher_tasks.update(latest_version)
         
         # Mod updates
-        active_mods: list[str] = [os.path.join(Directory.mods(), mod) for mod in mods.get_active()]
-        check = mod_updater.check_for_mod_updates(active_mods, latest_version)
-        if check:
-            textvariable.set("Updating mods . . .")
-            mod_updater.update_mods(check, latest_version, Directory.mods())
+        if integrations.value("mod_updater"):
+            active_mods: list[str] = [os.path.join(Directory.mods(), mod) for mod in mods.get_active()]
+            check = mod_updater.check_for_mod_updates(active_mods, latest_version)
+            if check:
+                textvariable.set("Updating mods . . .")
+                mod_updater.update_mods(check, latest_version, Directory.mods())
         
         # Apply mods & Fastflags
         textvariable.set("Applying mods . . .")
