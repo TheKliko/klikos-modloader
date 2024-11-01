@@ -6,7 +6,9 @@ from modules.functions.mod_updater import versions
 
 
 def check_for_mod_updates(mods: list[str], latest_version: str) -> dict|Literal[False]:
-    outdated_mods: dict[str,list[str]] = {}
+    if not mods:
+        return False
+    
 
     mods_to_check: list[str] = []
     for mod in mods:
@@ -18,6 +20,7 @@ def check_for_mod_updates(mods: list[str], latest_version: str) -> dict|Literal[
     
     latest_version_hash: str = versions.get_git_hash(version=latest_version)
     
+    outdated_mods: dict[str,list[str]] = {}
     for mod in mods_to_check:
         try:
             with open(os.path.join(mod, "info.json"), "r") as file:

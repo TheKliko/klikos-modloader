@@ -76,7 +76,7 @@ class ProgressWindow(ctk.CTkToplevel):
         self.wait_window()
 
     def close(self) -> None:
-        self._on_close()
+        self.after(0, self._on_close)
 
 
 def marketplace_mod_download(root: ctk.CTk, mod_id: str, mod_name: str) -> None:
@@ -136,14 +136,13 @@ def worker(mod_id: str, mod_name: str, window: ProgressWindow, exception_queue: 
                 if window.stop_event.is_set():
                     return
                 
-                if not os.path.isdir(os.path.join(temp_directory, "_updated")):
+                if not os.path.isdir(os.path.join(temp_directory, "_updated", mod_name)):
                     return
                 shutil.rmtree(target, ignore_errors=True)
-                shutil.copytree(os.path.join(temp_directory, "_updated"), target, dirs_exist_ok=True)
-
-
+                shutil.copytree(os.path.join(temp_directory, "_updated", mod_name), target, dirs_exist_ok=True)
     
     except Exception as e:
         exception_queue.put(e)
 
-    window.close()
+    finally:
+        window.close()

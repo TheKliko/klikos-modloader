@@ -14,7 +14,7 @@ if IS_FROZEN:
 def run(*args) -> None:
 
     logger.critical(f"Uncaught exception!")
-    logger.debug("".join(traceback.format_exception(*args)))
+    logger.debug("\n\n"+"".join(traceback.format_exception(*args)))
     logger.info(f"If you need any help, please join our Discord server: {Hyperlink.DISCORD}")
 
     if IS_FROZEN:
@@ -22,4 +22,3 @@ def run(*args) -> None:
             pyi_splash.close()
 
     messagebox.showerror(f"{ProjectData.NAME} ({ProjectData.VERSION})", message=f"Uncaught exception!\n\n{''.join(traceback.format_exception(*args))}\nMore information may be available in the latest log file")
-    sys.exit()

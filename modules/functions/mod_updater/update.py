@@ -12,6 +12,7 @@ from modules.functions.mod_updater import versions, path_to_imagesets, path_to_i
 
 def update_mods(data: dict, latest_version: str, output_dir: str) -> None:
     logger.debug(f"Updating mods: {data}")
+    os.makedirs(output_dir)
     latest_player_version = versions.get_player_equivalent(latest_version) or latest_version
     latest_studio_version = versions.get_studio_equivalent(latest_version) or latest_version
 
@@ -106,7 +107,7 @@ def worker(mod_studio_version: str, mods: list, latest_player_version: str, late
             )
             if modded_icon_data == modded_icons.DEFAULT:
                 continue
-            
+
             print("Generating ImageSets . . .")
             logger.info("Generating ImageSets . . .")
             image_sets.generate(
@@ -119,12 +120,13 @@ def worker(mod_studio_version: str, mods: list, latest_player_version: str, late
                 old_icon_map=old_icon_map,
                 new_icon_map=new_icon_map
             )
-        
+
             print("Finishing mod update . . .")
-            shutil.rmtree(output_dir, ignore_errors=True)
+            shutil.rmtree(os.path.join(output_dir, mod), ignore_errors=True)
+            os.makedirs(os.path.join(output_dir, mod))
             shutil.copytree(
                 os.path.join(temp_directory, os.path.basename(mod)),
-                output_dir,
+                os.path.join(output_dir, os.path.basename(mod)),
                 dirs_exist_ok=True
             )
 

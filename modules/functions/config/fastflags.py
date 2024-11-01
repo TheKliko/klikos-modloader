@@ -255,3 +255,28 @@ def get_all() -> list[dict]:
         raise
 
     return data
+
+
+def get_active() -> dict:
+    filepath = FilePath.fastflags()
+    if not os.path.isfile(filepath):
+        return {}
+    
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+    except json.JSONDecodeError as e:
+        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
+        raise
+
+    active_profiles = [
+        profile for profile in data 
+        if profile.get("enabled", False) == True
+    ]
+
+    active_fastflags: dict = {}
+    for profile in active_profiles:
+        profile_data: dict = profile.get("data", {})
+        active_fastflags.update(profile_data)
+
+    return active_fastflags

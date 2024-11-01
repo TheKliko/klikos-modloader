@@ -204,3 +204,25 @@ def get_all() -> list[dict]:
         raise
 
     return data
+
+
+def get_active() -> list[str]:
+    filepath = FilePath.mods()
+    if not os.path.isfile(filepath):
+        return []
+    
+    try:
+        with open(filepath, "r") as file:
+            data: list[dict] = json.load(file)
+    except json.JSONDecodeError as e:
+        logger.error(f"{type(e).__name__} while reading {os.path.basename(filepath)}: {e}")
+        raise
+
+    active_mods = [
+        mod for mod in data 
+        if mod.get("enabled", False) == True and mod.get("name") is not None
+    ]
+    active_mods.sort(key=lambda mod: mod.get("priority", 0))
+    active_mod_names = [mod["name"] for mod in active_mods]
+
+    return active_mod_names

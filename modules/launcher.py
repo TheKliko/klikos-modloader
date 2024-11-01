@@ -1,12 +1,18 @@
 import os
 import sys
 import threading
+import time
+import queue
+from tempfile import TemporaryDirectory
 from typing import Literal, Callable
 
-from modules.info import ProjectData
+from modules.logger import logger
 from modules.filesystem import Directory
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
+from modules.functions.get_latest_version import get_latest_version
+from modules.functions.config import mods, fastflags
+from modules.functions import launcher_tasks, mod_updater
 
 import customtkinter as ctk
 
@@ -34,7 +40,9 @@ if not os.path.isfile(theme_path):
 # region MainWindow
 class MainWindow:
     root: ctk.CTk
-    mode: str
+    mode: Literal["WindowsPlayer", "WindowsStudio"]
+    exception_queue: queue.Queue
+    _exit_flag: bool = False
 
     width: int = 520
     height: int = 320
@@ -96,6 +104,7 @@ class MainWindow:
         self.font_navigation = ctk.CTkFont()
         
         self.mode = mode
+        self.exception_queue = queue.Queue()
 
         # Logo
         launcher_logo: str = os.path.join(Directory.root(), "resources", "launcher", "icon.png")
@@ -148,19 +157,57 @@ class MainWindow:
         threading.Thread(
             name="launcher-main-thread",
             target=worker,
-            args=(self.textvar, self.close),
+            args=(self.mode, self.textvar, self.close, self.exception_queue),
             daemon=True
         ).start()
         self.root.mainloop()
 
+        if not self.exception_queue.empty():
+            error = self.exception_queue.get()
+            raise error
+
+
     def close(self) -> None:
-        self.root.destroy()
+        self.root.after(0, self.root.destroy)
 
 
-def worker(textvariable: ctk.StringVar, close_window_function: Callable) -> None:
-    import time
-    textvariable.set("Testing . . .")
-    time.sleep(2)
-    textvariable.set("Launching Roblox . . .")
-    time.sleep(2)
-    close_window_function()
+def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.StringVar, close_window_function: Callable, exception_queue: queue.Queue) -> None:
+    executable: str = "RobloxPlayerBeta.exe" if mode == "WindowsPlayer" else "RobloxStudioBeta.exe"
+    
+    try:
+        textvariable.set("Checking for updates . . .")
+        latest_version: str = get_latest_version(mode)
+        executable_path: str = os.path.join(Directory.versions(), latest_version, executable)
+
+        # Roblox updates
+        if not os.path.isfile(executable_path):
+            textvariable.set(f"Updating Roblox{' Studio' if mode == 'WindowsStudio' else ''} . . .")
+            launcher_tasks.update(latest_version)
+        
+        # Mod updates
+        active_mods: list[str] = [os.path.join(Directory.mods(), mod) for mod in mods.get_active()]
+        check = mod_updater.check_for_mod_updates(active_mods, latest_version)
+        if check:
+            textvariable.set("Updating mods . . .")
+            mod_updater.update_mods(check, latest_version, Directory.mods())
+        
+        # Apply mods & Fastflags
+        textvariable.set("Applying mods . . .")
+        launcher_tasks.apply_modifications(active_mods, latest_version)
+
+        # Launch Roblox
+        textvariable.set("Launching Roblox . . .")
+        launcher_tasks.launch_roblox(executable_path)
+
+        # Close the window
+        close_window_function()
+    
+
+    except Exception as e:
+        logger.error(f"Failed to launch Roblox, reason: {type(e).__name__}: {e}")
+        exception_queue.put(e)
+
+        textvariable.set("CRITICAL ERROR!")
+
+        time.sleep(2)
+        close_window_function()
