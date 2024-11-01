@@ -31,7 +31,7 @@ class GitHubApi:
     
     @staticmethod
     def mod_download(mod_id: str) -> str:
-        return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/mod/{mod_id}.zip"
+        return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/mods/{mod_id}.zip"
     
     @staticmethod
     def fastflag_presets() -> str:

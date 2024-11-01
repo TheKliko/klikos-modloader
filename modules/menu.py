@@ -19,6 +19,7 @@ from modules.interface.images import load_image, load_image_from_url
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.config import mods, fastflags, settings, integrations, launch_integrations
 from modules.functions.get_latest_version import get_latest_version
+from modules.functions.marketplace_mod_download import marketplace_mod_download
 from modules import request
 from modules.request import RobloxApi, GitHubApi, RequestError, Response
 
@@ -1101,7 +1102,6 @@ class MainWindow:
     #region FastFlags 2
     def _configure_fastflag_profile(self, profile_info: dict) -> None:
         class Window(ctk.CTkToplevel):
-            
             def __init__(self, root, profile_info: dict, *args, **kwargs) -> None:
                 super().__init__(*args, **kwargs)
                 self.root = root
@@ -1117,7 +1117,6 @@ class MainWindow:
 
                 self.grid_columnconfigure(0, weight=1)
                 self.grid_rowconfigure(5, weight=1)
-
 
                 # Name
                 ctk.CTkLabel(
@@ -1683,11 +1682,6 @@ class MainWindow:
         window = Window(self, data)
         window.show()
 
-        # if profile.exists():
-        #    ask_permission() to overwrite_profile()
-        #    else return
-        # overwrite_profile()
-        
         self._show_fastflags()
     
 
@@ -1847,7 +1841,7 @@ class MainWindow:
                         ),
                         width=44,
                         height=44,
-                        command=lambda mod_id=mod_id: self._mod_download(mod_id)
+                        command=lambda mod_id=mod_id, mod_name=mod_name: self._mod_download(mod_id, mod_name)
                     ).grid(column=2, row=0, padx=32, pady=32)
 
         self.active_section = "marketplace"
@@ -1855,9 +1849,19 @@ class MainWindow:
         load_header()
         load_content()
     
-    def _mod_download(self, mod_id: str) -> None:
-        raise Exception("Function not implemented!")
-    
+    def _mod_download(self, mod_id: str, mod_name: str) -> None:
+        if os.path.isdir(os.path.join(Directory.mods(), mod_name)):
+            if not messagebox.askokcancel(ProjectData.NAME, f"A mod with the same name already exists!\nDo you wish to overwrite it?"):
+                return
+
+        try:
+            marketplace_mod_download(self, mod_id, mod_name)
+            # messagebox.showinfo(ProjectData.NAME, "Mod downloaded successfully!")
+
+        except Exception as e:
+            logger.error(f"Failed to download mod \"{mod_id}\", reason: {type(e).__name__}: {e}")
+            messagebox.showerror(ProjectData.NAME, f"Failed to download mod: \"{mod_id}\"\n\n{type(e).__name__}: {e}")
+
 
 
     # region Launch Apps
