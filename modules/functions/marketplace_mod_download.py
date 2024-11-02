@@ -102,8 +102,8 @@ def marketplace_mod_download(root: ctk.CTk, mod_id: str, mod_name: str) -> None:
 
 def worker(mod_id: str, mod_name: str, window: ProgressWindow, exception_queue: queue.Queue) -> None:
     try:
-        target: str = os.path.join(Directory.mods(), mod_name)
-        os.makedirs(Directory.mods(), exist_ok=True)
+        target: str = os.path.join(Directory.downloaded_mods(), mod_name)
+        os.makedirs(Directory.downloaded_mods(), exist_ok=True)
 
         if window.stop_event.is_set():
             return

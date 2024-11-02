@@ -3,9 +3,7 @@ import sys
 
 LAUNCH_MODES: dict[str,list[str]] = {
     "menu": ["-m", "--menu"],
-    "launcher": ["-l", "--launch", "--launcher", "-p", "--player"],
-    "studio": ["-c", "--create", "-s", "--studio"],
-    "rpc": ["-rpc", "--presence"]
+    "bloxstrap": ["--bloxstrap"]
 }
 DEFAULT: str = list(LAUNCH_MODES.keys())[0]
 

@@ -19,20 +19,20 @@ class Directory:
     #     return os.path.join(Directory.root(), "Logs")
 
     @staticmethod
-    def mods() -> str:
-        return os.path.join(Directory.root(), "Mods")
+    def downloaded_mods() -> str:
+        return os.path.join(Directory.root(), "Downloaded Mods")
 
     @staticmethod
-    def versions() -> str:
-        return os.path.join(Directory.root(), "Versions")
+    def bloxstrap_mods() -> str:
+        return os.path.join(os.getenv("LOCALAPPDATA"), "Bloxstrap", "Modifications")
+
+    @staticmethod
+    def updated_mods() -> str:
+        return os.path.join(Directory.root(), "Updated Mods")
 
     @staticmethod
     def config() -> str:
         return os.path.join(Directory.root(), "config")
-
-    @staticmethod
-    def roblox_logs() -> str:
-        return os.path.join(os.getenv("LOCALAPPDATA"), "Roblox", "Logs")
 
     @staticmethod
     def _MEI() -> str:

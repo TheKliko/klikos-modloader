@@ -7,7 +7,6 @@ import webbrowser
 
 from modules.logger import logger
 from modules.filesystem import Directory, FilePath, logged_path
-from modules.functions.set_registry_keys import set_registry_keys
 from modules.functions.restore_from_mei import restore_from_mei
 from modules.info import ProjectData, Hyperlink
 from modules import request
@@ -54,14 +53,6 @@ def run() -> None:
         ).start()
 
     if IS_FROZEN:
-        pyi_splash.update_text("Setting registry keys...")
-    threading.Thread(
-        name="startup.set_registry_keys()_thread",
-        target=set_registry_keys,
-        daemon=True
-    ).start()
-
-    if IS_FROZEN:
         pyi_splash.update_text("Done!")
 
 
@@ -80,8 +71,8 @@ def check_core_files() -> None:
             else:
                 restore_from_mei(file)
     
-    os.makedirs(Directory.mods(), exist_ok=True)
-    os.makedirs(Directory.versions(), exist_ok=True)
+    os.makedirs(Directory.downloaded_mods(), exist_ok=True)
+    os.makedirs(Directory.updated_mods(), exist_ok=True)
 
 
 def check_file_content(file: str) -> None:
@@ -122,7 +113,7 @@ def check_file_content(file: str) -> None:
 def check_for_updates() -> None:
     logger.info("Checking for updates...")
     
-    response: request.Response = request.get(request.GitHubApi.latest_version())
+    response: request.Response = request.get(request.GitHubApi.latest_version(), attempts=1)
     data: dict = response.json()
     latest_version: str | None = data.get("latest")
     if latest_version is None:
