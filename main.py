@@ -10,8 +10,7 @@ if IS_FROZEN:
 else:
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), "libraries"))
 
-from modules.filesystem import Directory
-from modules import startup, menu, launcher
+from modules import startup, menu, launcher, presence
 
 
 def main():
@@ -27,15 +26,21 @@ def main():
             window = launcher.MainWindow("WindowsPlayer")
         elif mode.lower() == "studio":
             window = launcher.MainWindow("WindowsStudio")
+        elif mode.lower() == "rpc":
+            if IS_FROZEN:
+                if pyi_splash.is_alive():
+                    pyi_splash.close()
+            presence.run()
 
         else:
             raise Exception(f"Unknown launch mode: {mode}")
 
-        if IS_FROZEN:
-            if pyi_splash.is_alive():
-                pyi_splash.close()
-        
-        window.show()
+        if mode.lower() in ["menu", "launcher", "studio"]:
+            if IS_FROZEN:
+                if pyi_splash.is_alive():
+                    pyi_splash.close()
+            
+            window.show()
 
 
     except Exception as e:
