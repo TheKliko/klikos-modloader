@@ -5,12 +5,12 @@ import threading
 from PIL import Image
 
 
-common_imageset_data: dict[str,list[dict]] = {}
-uncommon_imageset_data: list[dict] = []
-modded_imagesets: list[str] = []
-
-
 def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new_imageset_path: str, modded_icons: dict[str,list[str]], old_icon_map: dict[str,dict[str,dict[str,str|int]]], new_icon_map: dict[str,dict[str,dict[str,str|int]]]) -> None:
+    common_imageset_data: dict[str,list[dict]] = {}
+    uncommon_imageset_data: list[dict] = []
+    modded_imagesets: list[str] = []
+    
+    
     mod_path: str = os.path.join(temp_directory, mod)
     old_path: str = os.path.join(mod_path, old_imageset_path)
     new_path: str = os.path.join(mod_path, new_imageset_path)
@@ -91,19 +91,17 @@ def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new
                     }
                 )
 
-    update_common_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod)
-    update_uncommon_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod)
-    delete_unmodded_imagesets(temp_directory=temp_directory, path_extension=new_path)
+    update_common_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod, common_imageset_data=common_imageset_data)
+    update_uncommon_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod, uncommon_imageset_data=uncommon_imageset_data)
+    delete_unmodded_imagesets(temp_directory=temp_directory, path_extension=new_path, modded_imagesets=modded_imagesets)
 
 
-def update_common_imagesets(temp_directory: str, new_path: str, mod: str) -> None:
+def update_common_imagesets(temp_directory: str, new_path: str, mod: str, common_imageset_data: dict[str, list[dict]]) -> None:
     threads: list[threading.Thread] = []
 
     def worker(path: str, modded_path: str, icons: list[dict]) -> None:
-            with Image.open(path) as imageset:
-                if imageset.mode != "RGBA":
-                    imageset = imageset.convert("RGBA")
-                with Image.open(modded_path) as modded_imageset:
+            with Image.open(path).convert("RGBA") as imageset:
+                with Image.open(modded_path).convert("RGBA") as modded_imageset:
                         for icon in icons:
                             old_x: int = int(icon["old"]["x"])
                             old_y: int = int(icon["old"]["y"])
@@ -117,7 +115,7 @@ def update_common_imagesets(temp_directory: str, new_path: str, mod: str) -> Non
 
                             modded_icon = modded_imageset.crop((old_x,old_y,old_x+old_w,old_y+old_h))
                             imageset.paste(modded_icon, (new_x,new_y,new_x+new_w,new_y+new_h))
-                        imageset.save(path)
+                        imageset.save(path, format="PNG", optimize=False)
 
     for imageset_name, data in common_imageset_data.items():
         path: str = os.path.join(new_path, imageset_name)
@@ -139,7 +137,7 @@ def update_common_imagesets(temp_directory: str, new_path: str, mod: str) -> Non
         thread.join()
 
 
-def update_uncommon_imagesets(temp_directory: str, new_path: str, mod: str) -> None:
+def update_uncommon_imagesets(temp_directory: str, new_path: str, mod: str, uncommon_imageset_data: list[dict]) -> None:
     for data in uncommon_imageset_data:
         old_data: dict = data["old"]
         new_data: dict = data["new"]
@@ -157,17 +155,15 @@ def update_uncommon_imagesets(temp_directory: str, new_path: str, mod: str) -> N
         new_w: int = int(new_data["w"])
         new_h: int = int(new_data["h"])
 
-        with Image.open(modded_path) as modded_imageset:
+        with Image.open(modded_path).convert("RGBA") as modded_imageset:
             modded_icon = modded_imageset.crop((old_x,old_y,old_x+old_w,old_y+old_h))
 
-        with Image.open(target_path) as imageset:
-            if imageset.mode != "RGBA":
-                imageset = imageset.convert("RGBA")
+        with Image.open(target_path).convert("RGBA") as imageset:
             imageset.paste(modded_icon, (new_x,new_y,new_x+new_w,new_y+new_h))
-            imageset.save(target_path)
+            imageset.save(target_path, format="PNG", optimize=False)
 
 
-def delete_unmodded_imagesets(temp_directory: str, path_extension: str) -> None:
+def delete_unmodded_imagesets(temp_directory: str, path_extension: str, modded_imagesets: list[str]) -> None:
     path_to_imagesets: str = os.path.join(temp_directory, path_extension)
     
     if not os.path.exists(path_to_imagesets):

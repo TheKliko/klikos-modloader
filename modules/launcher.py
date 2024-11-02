@@ -4,7 +4,6 @@ import shutil
 import threading
 import time
 import queue
-from tempfile import TemporaryDirectory
 from typing import Literal, Callable
 
 from modules.logger import logger
@@ -17,6 +16,7 @@ from modules.functions.config import mods, settings, integrations
 from modules.functions import launcher_tasks, mod_updater
 from modules.functions.process_exists import process_exists
 from modules.functions.kill_process import kill_process
+from modules import presence
 
 from tkinter import messagebox
 import customtkinter as ctk
@@ -170,6 +170,8 @@ class MainWindow:
         if not self.exception_queue.empty():
             error = self.exception_queue.get()
             raise error
+
+        presence.run(self.mode)
 
 
     def close(self) -> None:
