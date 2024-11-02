@@ -12,7 +12,7 @@ from modules.functions.mod_updater import versions, path_to_imagesets, path_to_i
 
 def update_mods(data: dict, latest_version: str, output_dir: str) -> None:
     logger.debug(f"Updating mods: {data}")
-    os.makedirs(output_dir)
+    os.makedirs(output_dir, exist_ok=True)
     latest_player_version = versions.get_player_equivalent(latest_version) or latest_version
     latest_studio_version = versions.get_studio_equivalent(latest_version) or latest_version
 
@@ -123,7 +123,7 @@ def worker(mod_studio_version: str, mods: list, latest_player_version: str, late
 
             print("Finishing mod update . . .")
             shutil.rmtree(os.path.join(output_dir, mod), ignore_errors=True)
-            os.makedirs(os.path.join(output_dir, mod))
+            os.makedirs(os.path.join(output_dir, mod), exist_ok=True)
             shutil.copytree(
                 os.path.join(temp_directory, os.path.basename(mod)),
                 os.path.join(output_dir, os.path.basename(mod)),

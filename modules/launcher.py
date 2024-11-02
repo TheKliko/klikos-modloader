@@ -8,13 +8,17 @@ from tempfile import TemporaryDirectory
 from typing import Literal, Callable
 
 from modules.logger import logger
+from modules.info import ProjectData
 from modules.filesystem import Directory
 from modules.interface.images import load_image
 from modules.functions.restore_from_mei import restore_from_mei, FileRestoreError
 from modules.functions.get_latest_version import get_latest_version
 from modules.functions.config import mods, settings, integrations
 from modules.functions import launcher_tasks, mod_updater
+from modules.functions.process_exists import process_exists
+from modules.functions.kill_process import kill_process
 
+from tkinter import messagebox
 import customtkinter as ctk
 
 
@@ -179,6 +183,7 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         textvariable.set("Checking for updates . . .")
         latest_version: str = get_latest_version(mode)
         executable_path: str = os.path.join(Directory.versions(), latest_version, executable)
+        active_mods: list[str] = [os.path.join(Directory.mods(), mod) for mod in mods.get_active()]
 
         # Roblox updates
         if settings.value("force_roblox_reinstallation") or settings.value("always_update_roblox"):
@@ -191,12 +196,19 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         
         # Mod updates
         if integrations.value("mod_updater"):
-            active_mods: list[str] = [os.path.join(Directory.mods(), mod) for mod in mods.get_active()]
             check = mod_updater.check_for_mod_updates(active_mods, latest_version)
             if check:
                 textvariable.set("Updating mods . . .")
                 mod_updater.update_mods(check, latest_version, Directory.mods())
-        
+
+        # Close existing instances
+        if process_exists(executable):
+            if settings.value("confirm_launch_if_roblox_running"):
+                if not messagebox.askokcancel(ProjectData.NAME, "Roblox is already running!\nDo you still wish to continue?"):
+                    close_window_function()
+                    return
+            kill_process(executable)
+
         # Apply mods & Fastflags
         textvariable.set("Applying mods . . .")
         launcher_tasks.apply_modifications(active_mods, latest_version)
@@ -204,6 +216,7 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         # Launch Roblox
         textvariable.set("Launching Roblox . . .")
         launcher_tasks.launch_roblox(executable_path)
+        launcher_tasks.wait_until_roblox_is_launched(executable)
         time.sleep(0.5)
 
         # Close the window

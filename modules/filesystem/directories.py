@@ -35,9 +35,5 @@ class Directory:
         return os.path.join(os.getenv("LOCALAPPDATA"), "Roblox", "Logs")
 
     @staticmethod
-    def roblox_installed_versions() -> str:
-        return os.path.join(os.getenv("LOCALAPPDATA"), "Roblox", "Versions")
-
-    @staticmethod
     def _MEI() -> str:
         return sys._MEIPASS

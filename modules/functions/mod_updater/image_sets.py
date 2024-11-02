@@ -16,7 +16,7 @@ def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new
     new_path: str = os.path.join(mod_path, new_imageset_path)
     version_path: str = os.path.join(temp_directory, version, new_imageset_path)
 
-    shutil.copytree(old_path, os.path.join(temp_directory, "mod_imagesets"))
+    shutil.copytree(old_path, os.path.join(temp_directory, f"mod_imagesets_{mod}"))
     shutil.rmtree(old_path)
     if old_path != new_path:
         while True:
@@ -91,12 +91,12 @@ def generate(temp_directory, mod: str, version: str, old_imageset_path: str, new
                     }
                 )
 
-    update_common_imagesets(temp_directory=temp_directory, new_path=new_path)
-    update_uncommon_imagesets(temp_directory=temp_directory, new_path=new_path)
+    update_common_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod)
+    update_uncommon_imagesets(temp_directory=temp_directory, new_path=new_path, mod=mod)
     delete_unmodded_imagesets(temp_directory=temp_directory, path_extension=new_path)
 
 
-def update_common_imagesets(temp_directory: str, new_path: str) -> None:
+def update_common_imagesets(temp_directory: str, new_path: str, mod: str) -> None:
     threads: list[threading.Thread] = []
 
     def worker(path: str, modded_path: str, icons: list[dict]) -> None:
@@ -121,7 +121,7 @@ def update_common_imagesets(temp_directory: str, new_path: str) -> None:
 
     for imageset_name, data in common_imageset_data.items():
         path: str = os.path.join(new_path, imageset_name)
-        modded_path: str = os.path.join(temp_directory, "mod_imagesets", imageset_name)
+        modded_path: str = os.path.join(temp_directory, f"mod_imagesets_{mod}", imageset_name)
 
         thread = threading.Thread(
             name="imageset-generator-thread",
@@ -139,12 +139,12 @@ def update_common_imagesets(temp_directory: str, new_path: str) -> None:
         thread.join()
 
 
-def update_uncommon_imagesets(temp_directory: str, new_path: str) -> None:
+def update_uncommon_imagesets(temp_directory: str, new_path: str, mod: str) -> None:
     for data in uncommon_imageset_data:
         old_data: dict = data["old"]
         new_data: dict = data["new"]
 
-        modded_path: str = os.path.join(temp_directory, "mod_imagesets", old_data["set"])
+        modded_path: str = os.path.join(temp_directory, f"mod_imagesets_{mod}", old_data["set"])
         target_path: str = os.path.join(new_path, new_data["set"])
 
         old_x: int = int(old_data["x"])

@@ -77,7 +77,7 @@ def update(latest_version: str) -> None:
 def do_local_update(version: str) -> bool:
     logger.info("Attempting local update...")
 
-    localappdata: str|None = os.getenv("LOCALAPPDATA")
+    localappdata: str | None = os.getenv("LOCALAPPDATA")
     if localappdata is None:
         logger.info("Local update failed!")
         return False
