@@ -24,3 +24,5 @@ def run(*args) -> None:
         messagebox.showerror(f"{ProjectData.NAME} ({ProjectData.VERSION})", f"Uncaught exception!\n\n{''.join(traceback.format_exception(*args))}\nMore information may be available in the latest log file")
     except Exception as e:
         print(f"Uncaught exception!\n\n{''.join(traceback.format_exception(*args))}\nMore information may be available in the latest log file")
+    
+    sys.exit(1)
