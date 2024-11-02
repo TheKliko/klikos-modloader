@@ -29,29 +29,29 @@ class PlatformError(Exception):
 
 
 def run() -> None:
-    if IS_FROZEN:
-        pyi_splash.update_text("Checking platform...")
-    if PLATFORM != "Windows":
-        error_text: str = f"Unsupported OS \"{PLATFORM}\""
+    if not os.path.exists(FilePath.skip_platform_check()):
         if IS_FROZEN:
-            if pyi_splash.is_alive():
-                pyi_splash.close()
-        logger.error(error_text)
-        raise PlatformError(error_text)
+            pyi_splash.update_text("Checking platform...")
+        if PLATFORM != "Windows":
+            error_text: str = f"Unsupported OS \"{PLATFORM}\""
+            if IS_FROZEN:
+                if pyi_splash.is_alive():
+                    pyi_splash.close()
+            logger.error(error_text)
+            raise PlatformError(error_text)
     
     if IS_FROZEN:
         pyi_splash.update_text("Checking core files...")
     check_core_files()
     
-    if not os.path.exists(FilePath.skip_update_check()):
-        if settings.value("check_for_updates") == True:
-            if IS_FROZEN:
-                pyi_splash.update_text("Checking for updates...")
-            threading.Thread(
-                name="startup.check_for_updates()_thread",
-                target=check_for_updates,
-                daemon=True
-            ).start()
+    if settings.value("check_for_updates") == True:
+        if IS_FROZEN:
+            pyi_splash.update_text("Checking for updates...")
+        threading.Thread(
+            name="startup.check_for_updates()_thread",
+            target=check_for_updates,
+            daemon=True
+        ).start()
 
     if IS_FROZEN:
         pyi_splash.update_text("Setting registry keys...")
