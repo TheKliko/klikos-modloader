@@ -2,6 +2,7 @@ import os
 import json
 from copy import deepcopy
 import uuid
+from typing import Optional
 
 from modules.logger import logger
 from modules.filesystem import FilePath, logged_path
@@ -135,6 +136,28 @@ def get_all() -> list[dict]:
     except Exception as e:
         logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
         return []
+
+
+def get_active() -> list[tuple[str, Optional[str]]]:
+    filepath: str = FilePath.launch_integrations()
+    if not os.path.isfile(filepath):
+        return []
+
+    try:
+        with open(filepath, "r") as file:
+            data: list = json.load(file)
+
+    except Exception as e:
+        logger.error(f"Failed to read launch_integrations.json, reason: {type(e).__name__}: {e}")
+        return []
+    
+    active_apps: list[tuple[str, Optional[str]]] = [
+        (app.get("filepath"), app.get("launch_args"))
+        for app in data
+        if app.get("enabled")
+        and app.get("filepath") is not None
+    ]
+    return active_apps
 
 
 def set_status(key: str, value: bool) -> None:

@@ -219,9 +219,12 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         textvariable.set("Launching Roblox . . .")
         launcher_tasks.launch_roblox(executable_path)
         launcher_tasks.wait_until_roblox_is_launched(executable)
-        time.sleep(0.5)
+
+        # Launch integrations
+        launcher_tasks.run_launch_apps()
 
         # Close the window
+        time.sleep(0.5)
         close_window_function()
     
 

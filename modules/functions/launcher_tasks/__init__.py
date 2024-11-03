@@ -3,6 +3,7 @@ from .apply_mods import apply_mods
 from .apply_fastflags import apply_fastflags
 from .launch_roblox import launch_roblox
 from .wait_until_roblox_is_launched import wait_until_roblox_is_launched
+from .run_launch_apps import run_launch_apps
 
 
 def apply_modifications(mods: list[str], version: str) -> None:

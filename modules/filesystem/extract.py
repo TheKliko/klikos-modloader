@@ -1,7 +1,7 @@
 import os
 import zipfile
 
-# import py7zr
+import py7zr
 # import rarfile
 
 from modules.logger import logger
@@ -21,9 +21,9 @@ def extract(source: str, destination: str) -> None:
                 zip.extractall(destination)
                 zip.close()
         
-        # elif source.endswith(".7z"):
-        #     with py7zr.SevenZipFile(source, mode='r') as archive:
-        #         archive.extractall(path=destination)
+        elif source.endswith(".7z"):
+            with py7zr.SevenZipFile(source, mode='r') as archive:
+                archive.extractall(path=destination)
         
         # elif source.endswith(".rar"):
         #     with rarfile.RarFile(source) as archive:
