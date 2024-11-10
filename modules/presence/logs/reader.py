@@ -51,6 +51,7 @@ last_bloxstrap_rpc_formatted_data: Optional[dict] = None
 
 # region Player
 def player() -> Optional[dict]:
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data
     allow_activity_joining: Optional[bool] = integrations.value("activity_joining")
 
     log_file: Optional[list[Entry]] = read_log_file("Player")
@@ -196,6 +197,7 @@ def player() -> Optional[dict]:
 
 # region Studio
 def studio() -> Optional[dict]:
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data
     log_file: Optional[list[Entry]] = read_log_file("Studio")
     if not log_file:
         return None
