@@ -195,6 +195,13 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
         if not os.path.isfile(executable_path):
             textvariable.set(f"Updating Roblox{' Studio' if mode == 'WindowsStudio' else ''} . . .")
             launcher_tasks.update(latest_version)
+
+            # Delete old versions
+            for directory in os.listdir(Directory.versions()):
+                target_folder: str = os.path.join(Directory.versions(), directory)
+                if os.path.isdir(target_folder):
+                    if latest_version != directory and os.path.isfile(os.path.join(target_folder, executable)):
+                        shutil.rmtree(target_folder, ignore_errors=True)
         
         # Mod updates
         if integrations.value("mod_updater"):

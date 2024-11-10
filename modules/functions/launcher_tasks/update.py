@@ -4,7 +4,6 @@ import re
 import threading
 import queue
 from tempfile import TemporaryDirectory
-from typing import Literal
 
 from modules.logger import logger
 from modules import request
