@@ -48,11 +48,12 @@ last_place_id: Optional[str] = None
 last_rpc_data: Optional[dict] = None
 last_bloxstrap_rpc_formatted_data: Optional[dict] = None
 last_timestamp: Optional[int] = None
+last_allow_activity_joining: bool = False
 
 
 # region Player
 def player() -> Optional[dict]:
-    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp, last_allow_activity_joining
     allow_activity_joining: Optional[bool] = integrations.value("activity_joining")
 
     log_file: Optional[list[Entry]] = read_log_file("Player")
@@ -143,7 +144,7 @@ def player() -> Optional[dict]:
                     place_id = game_join_data[i]
             
             # Prevent flooding the logs with cached requests
-            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp:
+            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp and allow_activity_joining == last_allow_activity_joining:
                 return last_rpc_data
             
             if job_id is None:
@@ -190,6 +191,7 @@ def player() -> Optional[dict]:
             last_place_id = place_id
             last_rpc_data = rpc_data
             last_timestamp = entry.timestamp
+            last_allow_activity_joining = allow_activity_joining
             
             return rpc_data
     
