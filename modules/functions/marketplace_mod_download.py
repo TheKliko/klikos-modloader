@@ -12,10 +12,13 @@ from modules.functions import mod_updater
 from modules.functions.get_latest_version import get_latest_version
 
 import customtkinter as ctk
+from tkinter import messagebox
 
 
 class ProgressWindow(ctk.CTkToplevel):
     stop_event: threading.Event
+    _has_closed: bool = False
+    
     def __init__(self, root: ctk.CTk, mod_id: str, mod_name: str, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.root = root
@@ -63,9 +66,12 @@ class ProgressWindow(ctk.CTkToplevel):
             self.stop_event.set()
 
     def _on_close(self) -> None:
+        if self._has_closed is True:
+            return
         self._set_stop_event()
         self.grab_release()
         self.destroy()
+        self._has_closed = True
 
     def show(self) -> None:
         self.attributes('-topmost', True)
@@ -132,7 +138,16 @@ def worker(mod_id: str, mod_name: str, window: ProgressWindow, exception_queue: 
                 return
             elif check:
                 window.label.configure(text=f"Updating mod: {mod_name}")
-                mod_updater.update_mods(check, latest_version, os.path.join(temp_directory, "_updated"))
+
+                try:
+                    mod_updater.update_mods(check, latest_version, os.path.join(temp_directory, "_updated"))
+
+                except Exception as e:
+                    logger.error(f"Failed to update mod after download! {type(e).__name__}: {e}")
+                    window.close()
+                    messagebox.showwarning(ProjectData.NAME, f"Failed to update mod after download!\n\n{type(e).__name__}: {e}")
+                    return
+                
                 if window.stop_event.is_set():
                     return
                 

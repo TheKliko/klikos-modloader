@@ -2,33 +2,25 @@ class LogData:
     class OldLogFile:
         prefix: str = "[FLog::SingleSurfaceApp]"
         startswith: str = "unregisterMemoryPrioritizationCallback"
-    class GameJoining:
-        prefix: str = "[FLog::SingleSurfaceApp]"
-        startswith: str = "launchUGCGameInternal"
+    
+    class GameCrash:
+        startswith: str = "RBXCRASH"
 
     class GameJoin:
-        prefix: str = "[FLog::GameJoinUtil]"
-        startswith: str = "Game join succeeded."
-
-    class GameTeleport:
-        prefix: str = "[FLog::SingleSurfaceApp]"
-        startswith: str = "initiateTeleport"
-
-    class GamePrivateServer:
-        prefix: str = "[FLog::GameJoinUtil]"
-        startswith: str = "GameJoinUtil::joinGamePostPrivateServer"
-
-    class GameReservedServer:
-        prefix: str = "[FLog::GameJoinUtil]"
-        startswith: str = "GameJoinUtil::initiateTeleportToReservedServer"
-
-    class GameServerId:
-        prefix: str = "[FLog::Network]"
-        startswith: str = "serverId: "
-
-    class GameData:
         prefix: str = "[FLog::Output]"
-        startswith: str = "! Joining game"
+        startswith: str = "! Joining game "
+
+    # class GameTeleport:
+    #     prefix: str = "[FLog::SingleSurfaceApp]"
+    #     startswith: str = "initiateTeleport"
+
+    # class GamePrivateServer:
+    #     prefix: str = "[FLog::GameJoinUtil]"
+    #     startswith: str = "GameJoinUtil::joinGamePostPrivateServer"
+
+    # class GameReservedServer:
+    #     prefix: str = "[FLog::GameJoinUtil]"
+    #     startswith: str = "GameJoinUtil::initiateTeleportToReservedServer"
 
     class BloxstrapRPC:
         prefix: str = "[FLog::Output]"
@@ -41,17 +33,18 @@ class LogData:
 
 class StudioLogData:
     class OldLogFile:
-        prefix: str = "[FLog::StudioApplicationState]"
-        startswith: str = "AboutToQuit"
+        prefix: str = "[FLog::Output]"
+        startswith: str = "About to exit the application, doing cleanup."
 
     class GameJoin:
-        prefix: str = "[FLog::RobloxIDEDoc]"
-        startswith: str = "RobloxIDEDoc::open - start"
+        prefix: str = "[FLog::StudioKeyEvents]"
+        startswith: str = "open place (identifier = "
+        endswith: str = ") [start]"
 
     class BloxstrapRPC:
         prefix: str = "[FLog::Output]"
         startswith: str = "[BloxstrapRPC] "
 
     class GameLeave:
-        prefix: str = "[FLog::RobloxIDEDoc]"
-        startswith: str = "RobloxIDEDoc::doClose"
+        prefix: str = "[FLog::Output]"
+        startswith: str = "close IDE doc"

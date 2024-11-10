@@ -10,7 +10,7 @@ from modules.functions.process_exists import process_exists
 from .rpc import DiscordRPC
 
 
-def run(mode: Optional[Literal["WindowsPlayer", "WindowsStudio"]]) -> None:
+def run(mode: Optional[Literal["WindowsPlayer", "WindowsStudio"]] = None) -> None:
     if not integrations.value("discord_rpc"):
         return
     

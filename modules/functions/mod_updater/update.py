@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import queue
 import threading
 from tempfile import TemporaryDirectory
 
@@ -17,6 +18,7 @@ def update_mods(data: dict, latest_version: str, output_dir: str) -> None:
     latest_studio_version = versions.get_studio_equivalent(latest_version) or latest_version
 
     threads: list[threading.Thread] = []
+    exception_queue: queue.Queue = queue.Queue()
 
     with TemporaryDirectory() as temp_directory:
         for git_hash, mods in data.items():
@@ -41,6 +43,13 @@ def update_mods(data: dict, latest_version: str, output_dir: str) -> None:
         
         for thread in threads:
             thread.join()
+
+    if not exception_queue.empty():
+        error = exception_queue.get()
+        logger.error(f"Error while updating mods: {type(error).__name__}: {error}")
+        raise error
+    
+    logger.info("Mod update(s) complete!")
 
 
 
@@ -135,6 +144,7 @@ def worker(mod_studio_version: str, mods: list, latest_player_version: str, late
         logger.warning("mod updater thread failed!")
         logger.error(type(e).__name__+": "+str(e))
         print("mod updater thread! "+type(e).__name__+": "+str(e))
+        raise
 
 
 def download_luapackages(temp_directory, version: str) -> None:
