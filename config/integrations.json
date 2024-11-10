@@ -1,0 +1,23 @@
+{
+    "discord_rpc": {
+        "name": "Discord RPC",
+        "description": "Replace the default Discord RPC to show more details",
+        "value": true,
+        "default": true,
+        "type": "bool"
+    },
+    "activity_joining": {
+        "name": "Activity Joining",
+        "description": "Allow anyone to join your game through Discord",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "mod_updater": {
+        "name": "Kliko's mod updater",
+        "description": "Enables automatic mod updates",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    }
+}
