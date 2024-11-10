@@ -47,11 +47,12 @@ STUDIO_DEFAULT: dict = {
 last_place_id: Optional[str] = None
 last_rpc_data: Optional[dict] = None
 last_bloxstrap_rpc_formatted_data: Optional[dict] = None
+last_timestamp: Optional[int] = None
 
 
 # region Player
 def player() -> Optional[dict]:
-    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp
     allow_activity_joining: Optional[bool] = integrations.value("activity_joining")
 
     log_file: Optional[list[Entry]] = read_log_file("Player")
@@ -142,7 +143,7 @@ def player() -> Optional[dict]:
                     place_id = game_join_data[i]
             
             # Prevent flooding the logs with cached requests
-            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data:
+            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp:
                 return last_rpc_data
             
             if job_id is None:
@@ -188,6 +189,7 @@ def player() -> Optional[dict]:
             last_bloxstrap_rpc_formatted_data = bloxstrap_rpc_formatted_data
             last_place_id = place_id
             last_rpc_data = rpc_data
+            last_timestamp = entry.timestamp
             
             return rpc_data
     
@@ -197,7 +199,7 @@ def player() -> Optional[dict]:
 
 # region Studio
 def studio() -> Optional[dict]:
-    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp
     log_file: Optional[list[Entry]] = read_log_file("Studio")
     if not log_file:
         return None
@@ -276,7 +278,7 @@ def studio() -> Optional[dict]:
             place_id: str = entry.data.rstrip().removeprefix(StudioLogData.GameJoin.startswith).removesuffix(StudioLogData.GameJoin.endswith)
             
             # Prevent flooding the logs with cached requests
-            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data:
+            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp:
                 return last_rpc_data
 
             response1: Response = request.get(request.RobloxActivityApi.game_universe_id(place_id), cache=True)
@@ -313,6 +315,7 @@ def studio() -> Optional[dict]:
             last_bloxstrap_rpc_formatted_data = bloxstrap_rpc_formatted_data
             last_place_id = place_id
             last_rpc_data = rpc_data
+            last_timestamp = entry.timestamp
             
             return rpc_data
     
