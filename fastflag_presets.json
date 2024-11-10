@@ -15,33 +15,6 @@
         }
     },
     {
-        "name": "Old escape menu",
-        "description": "Old topbar and escape menu",
-        "data": {
-            "FFlagDisableNewIGMinDUA": true,
-            "FFlagEnableInGameMenuControls": false,
-            "FFlagEnableInGameMenuModernization": false,
-            "FFlagEnableInGameMenuChrome": false,
-            "FFlagEnableMenuControlsABTest": false,
-            "FFlagEnableV3MenuABTest3": false,
-            "FFlagEnableInGameMenuChromeABTest3": false,
-            "FFlagFixReportButtonCutOff": false
-        }
-    },
-    {
-        "name": "Chrome UI",
-        "description": "New topbar and escape menu",
-        "data": {
-            "FFlagEnableInGameMenuChromeABTest3": false,
-            "FFlagEnableV3MenuABTest3": false,
-            "FFlagEnableMenuControlsABTest": false,
-            "FFlagEnableInGameMenuChrome": true,
-            "FFlagEnableInGameMenuModernization": true,
-            "FFlagEnableInGameMenuControls": true,
-            "FFlagDisableNewIGMinDUA": true
-        }
-    },
-    {
         "name": "Lighting technology (Voxel)",
         "description": null,
         "data": {
