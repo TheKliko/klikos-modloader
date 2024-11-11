@@ -8,6 +8,13 @@
         }
     },
     {
+        "name": "Disable Chrome UI",
+        "description": "Switch back to the old topbar",
+        "data": {
+            "FFlagEnableInGameMenuChromeABTest4": false
+        }
+    },
+    {
         "name": "Hide fullscreen titlebar",
         "description": "\"Hides\" the titlebar by adding a massive delay",
         "data": {
