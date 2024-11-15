@@ -1,0 +1,9 @@
+:root {
+    --header-height: 55px;
+    --header-padding-x: 12px;
+    --header-padding-y: 12px;
+    
+    --footer-height: 70px;
+    --footer-padding-x: 64px;
+    --footer-padding-y: 32px;
+}

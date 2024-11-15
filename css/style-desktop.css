@@ -1,0 +1,111 @@
+.desktop-hidden {
+    display: none;
+}
+
+
+
+section {
+    padding: 64px;
+    padding-left: 128px;
+    padding-right: 128px;
+}
+section:nth-of-type(1) {
+    padding-top: calc(var(--header-height) + 64px);
+}
+
+
+
+/* header */
+header {
+    grid-template-columns: max-content 1fr max-content;
+    grid-template-areas: "branding navigation action";
+}
+
+#header-branding {
+    grid-area: branding;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--font-branding);
+    font-size: 1.5rem;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    display: flex;
+    gap: 8px;
+
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+    align-items: center;
+}
+
+#header-navigation a, #header-action a {
+    padding: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 150ms ease-in-out;
+}
+#header-navigation a:hover {
+    background-color: var(--background-header-hover);
+}
+#header-navigation a.active {
+    background-color: var(--background-header-active);
+}
+#header-navigation a.active:hover {
+    background-color: var(--background-header-active-hover);
+}
+
+#header-action ul :first-child a {
+    background-color: var(--accent);
+}
+#header-action ul :first-child a:hover {
+    background-color: var(--accent-hover);
+}
+
+#header-action ul a {
+    border: solid 2px var(--accent);
+}
+#header-action ul a:hover {
+    border-color: var(--accent-hover);
+}
+
+
+
+/* Footer */
+footer {
+    grid-template-areas: "left middle right";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+}
+
+#footer-navigation {
+    width: auto;
+    grid-area: left;
+}
+
+#footer-branding {
+    grid-area: middle;
+}
+
+#footer-info {
+    grid-area: right;
+    justify-self: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+/* Button images */
+header svg, .button svg {
+    fill: var(--foreground-primary);
+    width: 20px;
+}

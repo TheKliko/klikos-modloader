@@ -1,0 +1,64 @@
+@font-face {
+    font-family: "Monsterrat";
+    src: url("../fonts/Montserrat/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Jura";
+    src: url("../fonts/Jura/Jura-VariableFont_wght.ttf");
+}
+
+@font-face {
+    font-family: "Code";
+    src: url("../fonts/Source_Code_Pro/SourceCodePro-VariableFont_wght.ttf");
+}
+
+:root {
+    --background-primary: #f8f8f8;
+    --background-secondary: #fcfcfc;
+    
+    --foreground-primary: #242424;
+    --foreground-url: #242424;
+    --foreground-url-visisted: #1a1a1a;
+
+    --background-header: #f0f0f0;
+    --background-header-hover: #eaeaea;
+    --background-header-active: #ededed;
+    --background-header-active-hover: #eaeaea;
+
+    --background-footer: var(--background-header);
+
+    --accent: #f20041;
+    --accent-hover: #cc0037;
+    --accent-2: #ffe5eb;
+
+    --font-branding: "Jura";
+    --font-main: "Segoe UI";
+    
+    --icon-shadow: rgba(98, 101, 105, 0.2) 0px 4px 4px;
+    --card-shadow: rgba(0, 0, 0, 0.1) 0px 4px 8px;
+
+    --hero-gradient: linear-gradient(35deg, #f0f0f0, #ffe5eb, var(--background-secondary));
+}
+
+.dark {
+    --background-primary: #1c1c1c;
+    --background-secondary: #101010;
+
+    --foreground-primary: #d6d6d6;
+    --foreground-url: #d6d6d6;
+    --foreground-url-visisted: #b8b8b8;
+
+    --background-header: #191919;
+    --background-header-hover: #2d2d2d;
+    --background-header-active: #292929;
+    --background-header-active-hover: #2d2d2d;
+
+    --background-footer: var(--background-header);
+
+    --accent: #cc0037;
+    --accent-hover: #f20041;
+    --accent-2: #33001b;
+
+    --hero-gradient: linear-gradient(35deg, #050505, #33001b, var(--background-secondary));
+}

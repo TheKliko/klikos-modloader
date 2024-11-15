@@ -1,0 +1,258 @@
+body.dark .darkmode-hidden {
+    display: none;
+}
+body:not(.dark) .lightmode-hidden {
+    display: none;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+a {
+    color: var(--foreground-url);
+}
+a:visited:not(.button, header a) {
+    color: var(--foreground-url-visisted);
+}
+
+body {
+    background-color: var(--background-primary);
+    color: var(--foreground-primary);
+    margin: 0;
+    font-family: var(--font-main);
+    z-index: 0;
+}
+
+section:first-of-type {
+    padding-top: var(--header-height);
+}
+section:nth-of-type(2n) {
+    background-color: var(--background-secondary);
+}
+
+img.logo {
+    filter: drop-shadow(rgba(0, 0, 0, 0.35) -8px 4px 8px);
+}
+img {
+    user-select: none;
+}
+
+.card {
+    box-shadow: var(--card-shadow);
+    background-color: var(--background-secondary);
+    box-sizing: border-box;
+    border-radius: 8px;
+    padding: 16px;
+}
+section:nth-of-type(2n) .card {
+    background-color: var(--background-primary);
+}
+
+
+h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+
+
+
+header {
+    position: fixed;
+    width: 100vw;
+    z-index: 999;
+    box-sizing: border-box;
+    user-select: none;
+
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+    grid-template-areas: "branding navigation action";
+    gap: var(--header-padding-x);
+
+    height: var(--header-height);
+    background-color: var(--background-header);
+
+    padding: var(--header-padding-y) var(--header-padding-x);
+}
+header > * {
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+}
+header .logo {
+    width: calc(var(--header-height) - 2 * var(--header-padding-y));
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+}
+header a {
+    text-decoration: none;
+    color: var(--foreground-primary);
+}
+
+#header-branding {
+    grid-area: branding;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--font-branding);
+    font-size: 1.5rem;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    display: flex;
+    gap: 8px;
+
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+    align-items: center;
+}
+
+#header-navigation {
+    grid-area: navigation;
+}
+#header-action {
+    grid-area: action;
+}
+
+
+
+/* footer */
+footer {
+    box-sizing: border-box;
+    background-color: var(--background-footer);
+    display: grid;
+    justify-items: center;
+    align-items: center;
+
+    min-height: var(--footer-height);
+    padding: var(--footer-padding-y) var(--footer-padding-x);
+    gap: var(--footer-padding-x);
+
+    user-select: none;
+}
+
+footer > * {
+    width: 100%;
+    height: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer img {
+    width: 48px;
+    height: 48px;
+}
+
+#footer-branding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+#footer-branding div {
+    grid-area: branding;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--font-branding);
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+footer ul {
+    list-style-type: none;
+    margin-top: 8px;
+    margin-bottom: 24px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+footer a {
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+
+
+/* buttons */
+.button {
+    padding: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 150ms ease-in-out;
+}
+.button.primary {
+    background-color: var(--accent);
+}
+.button.primary:hover {
+    background-color: var(--accent-hover);
+}
+.button {
+    border: solid 2px var(--accent);
+    user-select: none;
+}
+.button:hover {
+    border-color: var(--accent-hover);
+}
+
+
+.button-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    display: flex;
+    gap: 8px;
+
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.button-list a {
+    padding: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--foreground-primary);
+}
+
+
+
+.file-structure {
+    font-family: "Code";
+    font-size: 0.9rem;
+    width: fit-content;
+    user-select: none;
+}
+.file-structure, .file-structure li {
+    list-style-type: none;
+}
+.file-structure > li::before {
+    content: "Mods Folder";
+    padding-right: 5px;
+}
+.file-structure li ul > li::before {
+    content: "├── ";
+    padding-right: 5px;
+}
+.file-structure li ul > li:last-child::before {
+    content: "└── ";
+}

@@ -1,0 +1,243 @@
+#hero {
+    box-sizing: border-box;
+    background-image: var(--hero-gradient);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+
+    /* min-height: calc(100vh + var(--header-height)); */
+    min-height: 100vh;
+
+    display: grid;
+    grid-template-areas: "top""bottom";
+    justify-items: center;
+    align-items: center;
+    gap: 64px;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: calc(var(--header-height) + 32px);
+    padding-bottom: 32px;
+}
+
+#hero img.logo {
+    width: 35vw;
+    height: 35vw;
+    max-width: 384px;
+    max-height: 384px;
+}
+
+#hero-stats {
+    grid-area: top;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    /* flex-wrap: wrap; */
+}
+#hero-stats > div {
+    display: flex;
+    flex-direction: column;
+}
+#hero-stats h1 {
+    font-family: var(--font-branding);
+    font-size: 3rem;
+    text-align: center;
+    margin: 0;
+}
+#hero-stats > div > ul:first-of-type {
+    margin-top: 24px;
+    margin-bottom: 32px;
+}
+
+#hero-description {
+    grid-area: bottom;
+    align-self: baseline;
+}
+
+#hero-stats ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+}
+
+#hero img:not(.logo) {
+    filter: drop-shadow(rgba(0, 0, 0, 0.3) -2px 2px 4px);
+}
+
+/* Scroll indicator */
+#hero-scroll-indicator {
+    width: 64px;
+    height: 64px;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-areas: "top""bottom";
+    grid-template-rows: 1fr 1fr;
+}
+
+#hero-scroll-indicator span {
+    width: 30%;
+    height: 2px;
+
+    display: block;
+
+    background-color: var(--foreground-primary);
+    border-radius: 999px;
+
+    transition: all 300ms ease-in-out;
+    box-shadow: var(--icon-shadow);
+    opacity: 0.5;
+}
+
+#hero-scroll-indicator span:nth-child(1) {
+    grid-area: top;
+    transform: translate(-35%, 6px) rotate(45deg);
+}
+#hero-scroll-indicator span:nth-child(2) {
+    grid-area: top;
+    transform: translate(35%, 6px) rotate(-45deg);
+}
+#hero-scroll-indicator span:nth-child(3) {
+    grid-area: bottom;
+    transform: translate(-35%, -5px) rotate(45deg);
+}
+#hero-scroll-indicator span:nth-child(4) {
+    grid-area: bottom;
+    transform: translate(35%, -5px) rotate(-45deg);
+}
+
+#hero-scroll-indicator:hover span:nth-child(1) {
+    transform: translate(-35%, 7px) rotate(45deg);
+    opacity: 0.7;
+}
+#hero-scroll-indicator:hover span:nth-child(2) {
+    transform: translate(35%, 7px) rotate(-45deg);
+    opacity: 0.7;
+}
+#hero-scroll-indicator:hover span:nth-child(3) {
+    transform: translate(-35%, -4px) rotate(45deg);
+    opacity: 0.7;
+}
+#hero-scroll-indicator:hover span:nth-child(4) {
+    transform: translate(35%, -4px) rotate(-45deg);
+    opacity: 0.7;
+}
+
+
+
+/* Features */
+#features {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#features > div:has(> .card) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+@media (max-width: 1400px) {
+    #features > div:has(> .card) {
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+}
+
+.card {
+    justify-self: right;
+}
+.card:nth-of-type(2n) {
+    justify-self: left;
+}
+
+
+.card {
+    width: 100%;
+    max-width: 600px;
+}
+
+
+
+/* Install guide */
+#install-guide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#install-guide > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+@media (max-width: 1225px) {
+    #install-guide > div {
+        grid-template-columns: 1fr;
+    }
+}
+
+#install-guide iframe {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+#install-guide div:has(> .card) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+
+/* Discord */
+#discord {
+    display: grid;
+    grid-template-areas: "title""content";
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+#discord > div {
+    grid-area: content;
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+}
+#discord h2 {
+    grid-area: title;
+    justify-self: center;
+}
+
+#discord iframe {
+    box-shadow: var(--card-shadow);
+    border-radius: 8px;
+}
+#discord div:has(> .card) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+@media (max-width: 1100px) {
+    #discord > div {
+        flex-direction: column;
+        align-items: center;
+        flex-direction: column-reverse;
+    }
+}

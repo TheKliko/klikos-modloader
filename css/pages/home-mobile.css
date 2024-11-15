@@ -1,0 +1,159 @@
+#hero {
+    box-sizing: border-box;
+    background-image: var(--hero-gradient);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+
+    /* min-height: calc(100vh + var(--header-height)); */
+
+    display: grid;
+    grid-template-areas: "top""bottom";
+    justify-items: center;
+    align-items: center;
+    gap: 64px;
+
+    padding-left: 32px;
+    padding-right: 32px;
+    padding-top: calc(var(--header-height) + 48px);
+    padding-bottom: 32px;
+}
+
+#hero img.logo {
+    width: 256px;
+    height: 256px;
+}
+
+#hero-stats {
+    grid-area: top;
+    align-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* gap: 48px; */
+    flex-wrap: wrap;
+}
+#hero-stats > div {
+    display: flex;
+    flex-direction: column;
+}
+#hero-stats h1 {
+    font-family: var(--font-branding);
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 48px;
+}
+#hero-stats > div > ul:first-of-type {
+    margin-top: 24px;
+    margin-bottom: 32px;
+}
+
+#hero-description {
+    grid-area: bottom;
+    align-self: baseline;
+    max-width: 100vw;
+}
+
+#hero-stats ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    gap: 6px;
+}
+
+#hero img:not(.logo) {
+    filter: drop-shadow(rgba(0, 0, 0, 0.3) -2px 2px 4px);
+}
+
+
+
+/* Features */
+#features {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#features > div:has(> .card) {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr);
+    gap: 16px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    justify-self: center;
+}
+.card:nth-of-type(2n) {
+    justify-self: center;
+}
+
+
+.card {
+    width: 100%;
+    max-width: 600px;
+}
+
+
+
+/* Install guide */
+#install-guide > div {
+    display: grid;
+    grid-template-rows: max-content 1fr;
+    gap: 32px;
+}
+
+#install-guide iframe {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+#install-guide div:has(> .card) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+
+/* Discord */
+#discord {
+    display: grid;
+    grid-template-areas: "title""content";
+    grid-template-rows: max-content 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+}
+#discord > div {
+    grid-area: content;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 32px;
+}
+#discord h2 {
+    grid-area: title;
+    justify-self: center;
+}
+
+#discord iframe {
+    box-shadow: var(--card-shadow);
+    border-radius: 8px;
+}
+#discord div:has(> .card) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}

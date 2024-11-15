@@ -1,0 +1,191 @@
+.mobile-hidden {
+    display: none;
+}
+
+
+
+section {
+    padding: 32px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+section:nth-of-type(1) {
+    padding-top: calc(var(--header-height) + 32px);
+}
+
+
+/* header */
+header {
+    grid-template-columns: max-content 1fr;
+    grid-template-rows: var(--header-height), max-content 1fr;
+    grid-template-areas: "branding toggle""navigation navigation""action action";
+}
+
+#header-branding {
+    grid-area: branding;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    font-family: var(--font-branding);
+    font-size: 1.5rem;
+}
+
+header ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    display: flex;
+    gap: 8px;
+
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+    align-items: center;
+}
+
+#header-navigation, #header-action {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    transform: translateX(100vh);
+    transition: all 150ms ease-in-out;
+    opacity: 0;
+}
+#header-navigation {
+    top: var(--header-height);
+    padding: var(--header-padding-y) var(--header-padding-x);
+}
+#header-action {
+    padding: var(--header-padding-y) var(--header-padding-x);
+    bottom: 0;
+}
+#header-navigation.active, #header-navigation.active ~ #header-action {
+    transform: translate(0);
+    opacity: 100;
+    background-color: var(--background-header);
+}
+#header-navigation ul, #header-action ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: auto;
+}
+#header-navigation li, #header-action li {
+    display: flex;
+    justify-content: left;
+    width: 100%;
+}
+
+#header-navigation a, #header-action a {
+    padding: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+}
+#header-navigation a:hover , #header-action a:hover {
+    background-color: var(--background-header-hover);
+}
+#header-navigation a.active {
+    background-color: var(--background-header-active);
+}
+#header-navigation a.active:hover {
+    background-color: var(--background-header-active-hover);
+}
+
+
+/* Footer */
+footer {
+    min-height: calc(100vh - var(--header-height));
+    grid-template-areas: "top""middle""bottom";
+    grid-template-columns: 1fr;
+    grid-template-rows: max-content max-content max-content;
+    gap: 16px;
+}
+
+#footer-navigation {
+    grid-area: top;
+    padding-bottom: 12px;
+}
+
+#footer-branding {
+    grid-area:  bottom;
+}
+
+#footer-info {
+    grid-area: middle;
+    
+    padding-top: 24px;
+    width: 100vw;
+    border-top: solid 1px var(--foreground-primary);
+    margin-left: calc(-1 * var(--footer-padding-x));
+    margin-right: calc(-1 * var(--footer-padding-x));
+
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Hamburger icon */
+#hamburger-toggle {
+    width: calc(var(--header-height) - 2 * var(--header-padding-y));
+    height: calc(var(--header-height) - 2 * var(--header-padding-y));
+    justify-self: right;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    grid-template-areas: "top""middle""bottom";
+    grid-template-rows: 1fr max-content 1fr;
+}
+
+#hamburger-toggle span {
+    width: 80%;
+    height: 3px;
+
+    display: block;
+
+    background-color: var(--foreground-primary);
+    border-radius: 999px;
+
+    transition: all 300ms ease-in-out;
+    box-shadow: var(--icon-shadow);
+}
+
+#hamburger-toggle span:nth-child(1) {
+    grid-area: top;
+}
+#hamburger-toggle span:nth-child(2) {
+    grid-area: middle;
+}
+#hamburger-toggle span:nth-child(3) {
+    grid-area: middle;
+}
+#hamburger-toggle span:nth-child(4) {
+    grid-area: bottom;
+}
+
+#header-navigation.active ~ #hamburger-toggle span:nth-child(1) {
+    transform: translateY(8px);
+    opacity: 0;
+}
+#header-navigation.active ~ #hamburger-toggle span:nth-child(2) {
+    transform: rotate(45deg);
+}
+#header-navigation.active ~ #hamburger-toggle span:nth-child(3) {
+    transform: rotate(-45deg);
+}
+#header-navigation.active ~ #hamburger-toggle span:nth-child(4) {
+    transform: translateY(-8px);
+    opacity: 0;
+}
+
+header svg, .button svg {
+    fill: var(--foreground-primary);
+    width: 16px;
+}

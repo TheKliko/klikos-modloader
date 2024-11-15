@@ -1,0 +1,74 @@
+#navigation h1 {
+    text-align: center;
+}
+#navigation svg {
+    width: 128px;
+    height: 128px;
+}
+#navigation > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+}
+#navigation .card {
+    width: 500px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: 2rem;
+    text-decoration: none;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    user-select: none;
+}
+#navigation .card span {
+    width: 50%;
+}
+
+
+
+#mods {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+#mods div:has(> img) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+#mods img {
+    width: calc(50% - 8px);
+    min-width: 400px;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+
+
+/* #fastflags {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+} */
+#fastflags img {
+    width: 50%;
+    min-width: 500px;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+
+
+/* #modloader {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+} */

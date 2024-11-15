@@ -1,0 +1,57 @@
+#navigation h1 {
+    text-align: center;
+}
+#navigation svg {
+    width: 64px;
+    height: 64px;
+}
+#navigation > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+}
+#navigation .card {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: 1.5rem;
+    text-decoration: none;
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    user-select: none;
+}
+#navigation .card span {
+    width: 50%;
+}
+
+
+
+#mods {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+#mods div:has(> img) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+#mods img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+
+
+#fastflags img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
