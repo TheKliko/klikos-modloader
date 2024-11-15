@@ -13,7 +13,7 @@
 <h3>Roblox mods made easy</h3>
 
 
-Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher. <a href="https://www.python.org">Python 3.12</a> and a PC running Windows are required.
+Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher.
 
 <img src="GitHub Files/Images/preview.gif" alt="preview"/>
 
