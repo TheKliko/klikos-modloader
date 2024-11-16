@@ -337,7 +337,7 @@ def read_log_file(mode: Literal["Player", "Studio"]) -> Optional[list[Entry]]:
 
     filepath: str = max(log_files, key=os.path.getmtime)
 
-    with open(filepath, "r", encoding="utf-8") as file:
+    with open(filepath, "r", encoding="utf-8", errors="replace") as file:
         content: list[str] = file.readlines()
     content.reverse()
 
