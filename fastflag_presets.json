@@ -25,7 +25,7 @@
         "name": "FPS Unlocker",
         "description": "Change the FPS cap to a custom value",
         "data": {
-            "DFIntTaskSchedulerTargetFps": 60
+            "DFIntTaskSchedulerTargetFps": 0
         }
     },
     {
