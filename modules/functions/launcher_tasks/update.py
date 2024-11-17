@@ -3,12 +3,13 @@ import shutil
 import re
 import threading
 import queue
+from typing import Literal
 from tempfile import TemporaryDirectory
 
 from modules.logger import logger
 from modules import request
 from modules.request import RobloxApi, GitHubApi, Response
-from modules.filesystem import Directory, download, extract
+from modules.filesystem import Directory, download, extract, compress
 from modules.functions.config import settings
 
 
@@ -21,7 +22,7 @@ APPSETTINGS: str = "\n".join([
 ])
 
 
-def update(latest_version: str) -> None:
+def update(latest_version: str, mode: Literal["WindowsPlayer", "WindowsStudio"]) -> None:
     logger.info(f"Downloading Roblox version: {latest_version}")
 
     if settings.value("use_local_installations"):
@@ -71,6 +72,13 @@ def update(latest_version: str) -> None:
     logger.info("Writing AppSettings.xml")
     with open(os.path.join(Directory.versions(), latest_version, "AppSettings.xml"), "w") as file:
         file.write(APPSETTINGS)
+    
+    downloads: str = Directory.downloads_player() if mode == "WindowsPlayer" else Directory.downloads_studio()
+    shutil.rmtree(downloads, ignore_errors=True)
+    compress(
+        os.path.join(Directory.versions(), latest_version),
+        os.path.join(downloads, f"{latest_version}.zip")
+    )
 
 
 def do_local_update(version: str) -> bool:

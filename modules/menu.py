@@ -196,8 +196,13 @@ class MainWindow:
         self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
 
         self.root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
         self.root.report_callback_exception = self._on_error
+    
+    def _on_close(self) -> None:
+        self.root.quit()
+        self.root.destroy()
     
     def _on_error(self, *args) -> None:
         if len(args) > 1:
@@ -1688,6 +1693,7 @@ class MainWindow:
 
     # region preload marketplace
     def _preload_marketplace_data(self) -> None:
+        logger.info("Preloading community mods...")
         try:
             response: Response = request.get(GitHubApi.marketplace(), cache=True)
             data: list[dict] = response.json()

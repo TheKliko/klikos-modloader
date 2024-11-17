@@ -27,6 +27,14 @@ class Directory:
         return os.path.join(Directory.root(), "Versions")
 
     @staticmethod
+    def downloads_player() -> str:
+        return os.path.join(Directory.root(), "Downloads","Player")
+
+    @staticmethod
+    def downloads_studio() -> str:
+        return os.path.join(Directory.root(), "Downloads", "Studio")
+
+    @staticmethod
     def config() -> str:
         return os.path.join(Directory.root(), "config")
 

@@ -156,6 +156,8 @@ class MainWindow:
         y = (screen_height // 2) - (height // 2)
         self.root.geometry(f"{width}x{height}+{x}+{y}")
         self.root.resizable(False, False)
+
+        self.root.protocol("WM_DELETE_WINDOW", self.close)
     
 
     def show(self) -> None:
@@ -180,6 +182,7 @@ class MainWindow:
 
 def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.StringVar, close_window_function: Callable, exception_queue: queue.Queue) -> None:
     executable: str = "RobloxPlayerBeta.exe" if mode == "WindowsPlayer" else "RobloxStudioBeta.exe"
+    has_updated: bool = False
     
     try:
         textvariable.set("Checking for updates . . .")
@@ -194,14 +197,8 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
             
         if not os.path.isfile(executable_path):
             textvariable.set(f"Updating Roblox{' Studio' if mode == 'WindowsStudio' else ''} . . .")
-            launcher_tasks.update(latest_version)
-
-            # Delete old versions
-            for directory in os.listdir(Directory.versions()):
-                target_folder: str = os.path.join(Directory.versions(), directory)
-                if os.path.isdir(target_folder):
-                    if latest_version != directory and os.path.isfile(os.path.join(target_folder, executable)):
-                        shutil.rmtree(target_folder, ignore_errors=True)
+            launcher_tasks.update(latest_version, mode)
+            has_updated = True
         
         # Mod updates
         if integrations.value("mod_updater"):
@@ -220,7 +217,7 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
 
         # Apply mods & Fastflags
         textvariable.set("Applying mods . . .")
-        launcher_tasks.apply_modifications(active_mods, latest_version)
+        launcher_tasks.apply_modifications(active_mods, latest_version, mode, skip_file_restore=has_updated)
 
         # Launch Roblox
         textvariable.set("Launching Roblox . . .")
@@ -229,6 +226,13 @@ def worker(mode: Literal["WindowsPlayer", "WindowsStudio"], textvariable: ctk.St
 
         # Launch integrations
         launcher_tasks.run_launch_apps()
+
+        # Delete old versions
+        for directory in os.listdir(Directory.versions()):
+            target_folder: str = os.path.join(Directory.versions(), directory)
+            if os.path.isdir(target_folder):
+                if directory != latest_version and os.path.isfile(os.path.join(target_folder, executable)):
+                    shutil.rmtree(target_folder, ignore_errors=True)
 
         # Close the window
         time.sleep(0.5)
