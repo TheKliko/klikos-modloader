@@ -20,6 +20,10 @@ class GitHubApi:
     @staticmethod
     def latest_version() -> str:
         return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/main/GitHub%20Files/version.json"
+
+    @staticmethod
+    def latest_release_data() -> str:
+        return r"https://api.github.com/repos/thekliko/klikos-modloader/releases/latest"
     
     @staticmethod
     def marketplace() -> str:

@@ -14,13 +14,13 @@ class LogData:
     #     prefix: str = "[FLog::SingleSurfaceApp]"
     #     startswith: str = "initiateTeleport"
 
-    # class GamePrivateServer:
-    #     prefix: str = "[FLog::GameJoinUtil]"
-    #     startswith: str = "GameJoinUtil::joinGamePostPrivateServer"
+    class GamePrivateServer:
+        prefix: str = "[FLog::GameJoinUtil]"
+        startswith: str = "GameJoinUtil::joinGamePostPrivateServer"
 
-    # class GameReservedServer:
-    #     prefix: str = "[FLog::GameJoinUtil]"
-    #     startswith: str = "GameJoinUtil::initiateTeleportToReservedServer"
+    class GameReservedServer:
+        prefix: str = "[FLog::GameJoinUtil]"
+        startswith: str = "GameJoinUtil::initiateTeleportToReservedServer"
 
     class BloxstrapRPC:
         prefix: str = "[FLog::Output]"

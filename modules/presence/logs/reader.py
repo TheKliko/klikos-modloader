@@ -48,7 +48,9 @@ last_place_id: Optional[str] = None
 last_rpc_data: Optional[dict] = None
 last_bloxstrap_rpc_formatted_data: Optional[dict] = None
 last_timestamp: Optional[int] = None
-last_allow_activity_joining: bool = False
+last_allow_activity_joining: Optional[bool] = False
+last_user_in_private_server: bool = False
+last_user_in_reserved_server: bool = False
 
 
 # region Player
@@ -65,15 +67,26 @@ def player() -> Optional[dict]:
     
     # if log_file[0].prefix == LogData.OldLogFile.prefix and log_file[0].data.startswith(LogData.OldLogFile.startswith):
     #     return None
+    bloxstrap_rpc_formatted_data: Optional[dict] = None
+    user_in_private_server: bool = False
+    user_in_reserved_server: bool = False
     
     for entry in log_file:
         is_game_join: bool = entry.prefix == LogData.GameJoin.prefix and entry.data.startswith(LogData.GameJoin.startswith)
         is_game_leave: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
         is_bloxstrap_rpc: bool = entry.prefix == LogData.BloxstrapRPC.prefix and entry.data.startswith(LogData.BloxstrapRPC.startswith)
-        bloxstrap_rpc_formatted_data: Optional[dict] = None
+
+        is_private_server: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
+        is_reserved_server: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
 
         if is_game_leave:
             return deepcopy(PLAYER_DEFAULT)
+        
+        elif is_private_server:
+            user_in_private_server = True
+        
+        elif is_reserved_server:
+            user_in_reserved_server = True
         
         elif is_bloxstrap_rpc:
             try:
@@ -144,7 +157,12 @@ def player() -> Optional[dict]:
                     place_id = game_join_data[i]
             
             # Prevent flooding the logs with cached requests
-            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp and allow_activity_joining == last_allow_activity_joining:
+            if place_id == last_place_id \
+                and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data \
+                    and entry.timestamp == last_timestamp \
+                        and allow_activity_joining == last_allow_activity_joining \
+                            and user_in_private_server == last_user_in_private_server \
+                                and user_in_reserved_server == last_user_in_reserved_server:
                 return last_rpc_data
             
             if job_id is None:
@@ -184,8 +202,25 @@ def player() -> Optional[dict]:
                 ]
             }
 
+            if user_in_private_server is True:
+                rpc_data.update({
+                    "state": "In a private server"
+                })
+
+            if user_in_reserved_server is True:
+                rpc_data.update({
+                    "state": "In a reserved server"
+                })
+
             if bloxstrap_rpc_formatted_data is not None:
                 rpc_data.update(bloxstrap_rpc_formatted_data)
+            
+            if user_in_reserved_server is True and allow_activity_joining is True:
+                rpc_data.update({
+                    "buttons": [
+                        {"label": "View on Roblox", "url": RobloxActivityApi.game_page(root_place_id)}
+                    ]
+                })
 
             last_bloxstrap_rpc_formatted_data = bloxstrap_rpc_formatted_data
             last_place_id = place_id
