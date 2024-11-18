@@ -27,16 +27,16 @@
         "default": false,
         "type": "bool"
     },
-    "always_update_roblox": {
-        "name": "Always reinstall Roblox",
-        "description": "The same as \"Force Roblox reinstallation\", but stays enabled",
+    "confirm_launch_if_roblox_running": {
+        "name": "Confirm launch when Roblox is running",
+        "description": "Ask for confirmation to kill existing Roblox instances before launching Roblox",
         "value": false,
         "default": false,
         "type": "bool"
     },
-    "confirm_launch_if_roblox_running": {
-        "name": "Confirm launch when Roblox is running",
-        "description": "Ask for confirmation to kill existing Roblox instances before launching Roblox",
+    "always_update_roblox": {
+        "name": "Always reinstall Roblox",
+        "description": "The same as \"Force Roblox reinstallation\", but stays enabled",
         "value": false,
         "default": false,
         "type": "bool"
