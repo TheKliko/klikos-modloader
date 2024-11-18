@@ -131,8 +131,8 @@ def worker(mod_studio_version: str, mods: list, latest_player_version: str, late
             )
 
             print("Finishing mod update . . .")
-            shutil.rmtree(os.path.join(output_dir, mod), ignore_errors=True)
-            os.makedirs(os.path.join(output_dir, mod), exist_ok=True)
+            shutil.rmtree(os.path.join(output_dir, os.path.basename(mod)), ignore_errors=True)
+            os.makedirs(os.path.join(output_dir, os.path.basename(mod)), exist_ok=True)
             shutil.copytree(
                 os.path.join(temp_directory, os.path.basename(mod)),
                 os.path.join(output_dir, os.path.basename(mod)),
