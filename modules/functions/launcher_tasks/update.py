@@ -10,7 +10,9 @@ from modules.logger import logger
 from modules import request
 from modules.request import RobloxApi, GitHubApi, Response
 from modules.filesystem import Directory, download, extract, compress
-from modules.functions.config import settings
+# from modules.functions.config import settings
+
+from .revert_original_files import revert_original_files
 
 
 APPSETTINGS: str = "\n".join([
@@ -25,10 +27,27 @@ APPSETTINGS: str = "\n".join([
 def update(latest_version: str, mode: Literal["WindowsPlayer", "WindowsStudio"]) -> None:
     logger.info(f"Downloading Roblox version: {latest_version}")
 
-    if settings.value("use_local_installations"):
-        check: bool = do_local_update(latest_version)
-        if check:
+    downloads: str = Directory.downloads_player() if mode == "WindowsPlayer" else Directory.downloads_studio()
+
+    # Removed in 1.6.3
+    # if settings.value("use_local_installations"):
+    #     check: bool = do_local_update(latest_version)
+    #     if check:
+    #         return
+
+
+    # Use previously downloaded files if available
+    previously_downloaded_files: str = os.path.join(downloads, f"{latest_version}.zip")
+    if os.path.isfile(previously_downloaded_files):
+        try:
+            if os.path.isdir(os.path.join(Directory.versions(), latest_version)):
+                shutil.rmtree(os.path.join(Directory.versions(), latest_version), ignore_errors=True)
+            revert_original_files(latest_version, mode)
+            logger.info(f"Installed update from previously downloaded file: Downloads\\{latest_version}.zip")
             return
+
+        except Exception as e:
+            logger.warning(f"Failed to install update from previously downloaded file! {type(e).__name__}: {e}")
 
 
     logger.info("Getting filemap...")
@@ -73,7 +92,6 @@ def update(latest_version: str, mode: Literal["WindowsPlayer", "WindowsStudio"])
     with open(os.path.join(Directory.versions(), latest_version, "AppSettings.xml"), "w") as file:
         file.write(APPSETTINGS)
     
-    downloads: str = Directory.downloads_player() if mode == "WindowsPlayer" else Directory.downloads_studio()
     shutil.rmtree(downloads, ignore_errors=True)
     compress(
         os.path.join(Directory.versions(), latest_version),
@@ -81,26 +99,26 @@ def update(latest_version: str, mode: Literal["WindowsPlayer", "WindowsStudio"])
     )
 
 
-def do_local_update(version: str) -> bool:
-    logger.info("Attempting local update...")
+# def do_local_update(version: str) -> bool:
+#     logger.info("Attempting local update...")
 
-    localappdata: str | None = os.getenv("LOCALAPPDATA")
-    if localappdata is None:
-        logger.info("Local update failed!")
-        return False
+#     localappdata: str | None = os.getenv("LOCALAPPDATA")
+#     if localappdata is None:
+#         logger.info("Local update failed!")
+#         return False
     
-    if not os.path.isdir(os.path.join(localappdata, "Roblox", "Versions", version)):
-        logger.info("Local update failed!")
-        return False
+#     if not os.path.isdir(os.path.join(localappdata, "Roblox", "Versions", version)):
+#         logger.info("Local update failed!")
+#         return False
     
-    try:
-        shutil.copytree(os.path.join(localappdata, "Roblox", "Versions", version), os.path.join(Directory.versions(), version), dirs_exist_ok=True)
-        logger.debug("Updated from local installation")
-        return True
+#     try:
+#         shutil.copytree(os.path.join(localappdata, "Roblox", "Versions", version), os.path.join(Directory.versions(), version), dirs_exist_ok=True)
+#         logger.debug("Updated from local installation")
+#         return True
 
-    except Exception as e:
-        logger.info("Local update failed!")
-        return False
+#     except Exception as e:
+#         logger.info("Local update failed!")
+#         return False
 
 
 def get_manifest(version: str) -> list[str]:

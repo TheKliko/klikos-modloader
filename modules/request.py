@@ -96,6 +96,14 @@ class RobloxActivityApi:
     @staticmethod
     def game_asset(asset_id: str) -> str:
         return rf"https://assetdelivery.roblox.com/v1/asset/?id={asset_id}"
+    
+    @staticmethod
+    def user_info(user_id: str) -> str:
+        return rf"https://users.roblox.com/v1/users/{user_id}"
+    
+    @staticmethod
+    def user_thumbnail(user_id: str, size: tuple[int,int] = (48,48), format: str = "png", circular: bool = False) -> str:
+        return rf"https://thumbnails.roblox.com/v1/users/avatar-bust?userIds={user_id}&size={size[0]}x{size[1]}&format={format}&isCircular={circular}"
 
 
 # region get()

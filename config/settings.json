@@ -6,13 +6,6 @@
         "default": true,
         "type": "bool"
     },
-    "use_local_installations": {
-        "name": "Use local installations",
-        "description": "Check for existing installations before downloading Roblox updates",
-        "value": true,
-        "default": true,
-        "type": "bool"
-    },
     "force_roblox_reinstallation": {
         "name": "Force Roblox reinstallation",
         "description": "Force Roblox to reinstall, useful after disabling a mod to make sure all modded files get restored",
@@ -23,6 +16,13 @@
     "always_update_roblox": {
         "name": "Always reinstall Roblox",
         "description": "The same as \"Force Roblox reinstallation\", but stays enabled",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
+    "confirm_launch_if_roblox_running": {
+        "name": "Confirm launch when Roblox is running",
+        "description": "Ask for confirmation to kill existing Roblox instances when launching Roblox",
         "value": false,
         "default": false,
         "type": "bool"

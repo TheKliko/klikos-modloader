@@ -14,6 +14,11 @@ def apply_fastflags(version: str) -> None:
     os.makedirs(os.path.dirname(target), exist_ok=True)
 
     data: dict = fastflags.get_active()
+
+    # Force FLogNetwork: 7
+    data.update({
+        "FLogNetwork": "7"
+    })
     
     with open(target, "w") as file:
         json.dump(data, file, indent=4)

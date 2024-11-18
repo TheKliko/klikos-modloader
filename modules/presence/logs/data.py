@@ -30,6 +30,10 @@ class LogData:
         prefix: str = "[FLog::SingleSurfaceApp]"
         startswith: str = "handleGameWillClose"
 
+    class GameJoinLoadTime:
+        prefix: str = "[FLog::GameJoinLoadTime]"
+        startswith: str = "Report game_join_loadtime: "
+
 
 class StudioLogData:
     class OldLogFile:

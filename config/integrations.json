@@ -13,11 +13,18 @@
         "default": false,
         "type": "bool"
     },
+    "show_user_profile_in_rpc": {
+        "name": "Show avatar in RPC",
+        "description": "Shows your Roblox avatar in your Discord RPC",
+        "value": false,
+        "default": false,
+        "type": "bool"
+    },
     "mod_updater": {
         "name": "Kliko's mod updater",
         "description": "Enables automatic mod updates",
-        "value": false,
-        "default": false,
+        "value": true,
+        "default": true,
         "type": "bool"
     }
 }
