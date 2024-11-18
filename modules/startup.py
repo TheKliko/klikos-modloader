@@ -153,23 +153,19 @@ def update() -> None:
         installer_download_url: str = data["assets"][0]["browser_download_url"]
         target: str = os.path.join(Directory.root(), "Installer", installer_name)
         filesystem.download(installer_download_url, target)
+        
+        logger.info("Running the installer...")
+        command: list = [
+            target
+        ]
+        input(Directory.root())
+        subprocess.Popen(command)
     
     except Exception as e:
         logger.error(f"Failed to download the installer for the latest release! {type(e).__name__}: {e}")
         logger.info("Opening tab in browser!")
         messagebox.showwarning(ProjectData.NAME, f"Failed to download the installer for the latest release!\n{type(e).__name__}: {e}\n\nThe URL for the latest release will be opened in your browser.")
         webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)
-    
-    else:
-        # TODO: Figure out how to run installer in silent mode (only show the progess bar, automatically install in current directory) and relaunch the modloader with the current launch args (sys.argv)
-        logger.info("Running the installer...")
-        # launch_args: list[str] = sys.argv[1:]
-        command: list = [
-            target,
-            # "/SILENT",
-            f"/DIR=\"{Directory.root()}\""
-        ]
-        subprocess.Popen(command)
     
     logger.info("Shutting down...")
     os._exit(0)
