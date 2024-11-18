@@ -1,4 +1,5 @@
 import os
+import shutil
 from typing import Literal
 
 from modules.logger import logger
@@ -15,4 +16,5 @@ def revert_original_files(version: str, mode: Literal["WindowsPlayer", "WindowsS
     if not os.path.isfile(source):
         logger.warning(f"Failed to revert original files: {logged_path.get(source)} not found!")
     
+    shutil.rmtree(target, ignore_errors=True)
     extract(source, target)

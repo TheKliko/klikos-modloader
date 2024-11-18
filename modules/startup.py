@@ -161,6 +161,7 @@ def update() -> None:
         webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)
     
     else:
+        # TODO: Figure out how to run installer in silent mode (only show the progess bar, automatically install in current directory) and relaunch the modloader with the current launch args (sys.argv)
         logger.info("Running the installer...")
         # launch_args: list[str] = sys.argv[1:]
         command: list = [

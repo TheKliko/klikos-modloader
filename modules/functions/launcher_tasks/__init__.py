@@ -1,5 +1,7 @@
 from typing import Literal
 
+from modules.functions.config import settings
+
 from .update import update
 from .revert_original_files import revert_original_files
 from .apply_mods import apply_mods
@@ -12,5 +14,9 @@ from .run_launch_apps import run_launch_apps
 def apply_modifications(mods: list[str], version: str, mode: Literal["WindowsPlayer", "WindowsStudio"], skip_file_restore: bool = False) -> None:
     if skip_file_restore is not True:
         revert_original_files(version, mode)
-    apply_mods(mods, version)
-    apply_fastflags(version)
+
+    if settings.value("disable_all_mods") is not True:
+        apply_mods(mods, version)
+        
+    if settings.value("disable_all_fastflags") is not True:
+        apply_fastflags(version)
