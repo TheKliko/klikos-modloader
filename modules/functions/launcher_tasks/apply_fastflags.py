@@ -9,8 +9,6 @@ from modules.functions.config import fastflags
 def apply_fastflags(version: str) -> None:
     logger.info("Applying FastFlags...")
     target: str = os.path.join(Directory.versions(), version, "ClientSettings", "ClientAppSettings.json")
-    if os.path.isfile(target):
-        os.remove(target)
     os.makedirs(os.path.dirname(target), exist_ok=True)
 
     data: dict = fastflags.get_active()
