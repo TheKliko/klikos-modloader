@@ -1,11 +1,11 @@
 import logging
-import time
 import os
 import sys
 import platform
 from typing import Optional
 import inspect
 import threading
+from datetime import datetime
 
 from modules.info import ProjectData
 
@@ -27,7 +27,7 @@ class Logger:
     def __init__(self, name: Optional[str] = None) -> None:
         os.makedirs(self.directory, exist_ok=True)
 
-        timestamp: str = time.strftime('%Y-%m-%d_%H-%M-%S', time.localtime())
+        timestamp: str = datetime.now().strftime('%Y-%m-%d_%H-%M-%S_%f')
         if name:
             self.filename = f"{timestamp}_{name}.log"
         else:

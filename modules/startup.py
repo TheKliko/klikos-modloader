@@ -4,9 +4,11 @@ import sys
 import threading
 import json
 import webbrowser
+import subprocess
 
 from modules.logger import logger
 from modules.filesystem import Directory, FilePath, logged_path
+from modules import filesystem
 from modules.functions.set_registry_keys import set_registry_keys
 from modules.functions.restore_from_mei import restore_from_mei
 from modules.info import ProjectData, Hyperlink
@@ -28,6 +30,7 @@ class PlatformError(Exception):
     pass
 
 
+# region run()
 def run() -> None:
     if not os.path.exists(FilePath.skip_platform_check()):
         if IS_FROZEN:
@@ -63,8 +66,10 @@ def run() -> None:
 
     if IS_FROZEN:
         pyi_splash.update_text("Done!")
+# endregion
 
 
+# region check_core_files()
 def check_core_files() -> None:
     logger.info("Checking core files...")
     core_files: list[str] = FilePath.core_files()
@@ -117,8 +122,10 @@ def check_file_content(file: str) -> None:
 
     except Exception as e:
         logger.warning(f"Failed to verify content of {logged_path.get(file)}, reason: {type(e).__name__}: {e}")
+# endregion
 
 
+# region check_for_updates()
 def check_for_updates() -> None:
     logger.info("Checking for updates...")
     
@@ -130,7 +137,34 @@ def check_for_updates() -> None:
     
     if latest_version > ProjectData.VERSION:
         logger.debug(f"A newer version is available: {latest_version}")
-        if messagebox.askyesno(ProjectData.NAME, f"A newer version is available! Do you wish to update?"):
-            webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)
-            logger.info("User chose to update! Shutting down...")
-            os._exit(0)
+        if messagebox.askyesno(ProjectData.NAME, f"A newer version is available!\nVersion  {latest_version}\n\nDo you wish to update?"):
+            update()
+
+
+def update() -> None:
+    logger.info("User chose to update!")
+
+    try:
+        logger.info("Attempting to download the installer...")
+        response: request.Response = request.get(request.GitHubApi.latest_release_data())
+        data: dict = response.json()
+        installer_name: str = data["assets"][0]["name"]
+        installer_download_url: str = data["assets"][0]["browser_download_url"]
+        target: str = os.path.join(Directory.root(), "Installer", installer_name)
+        filesystem.download(installer_download_url, target)
+        
+        logger.info("Running the installer...")
+        command: list = [
+            target
+        ]
+        subprocess.Popen(command)
+    
+    except Exception as e:
+        logger.error(f"Failed to download the installer for the latest release! {type(e).__name__}: {e}")
+        logger.info("Opening tab in browser!")
+        messagebox.showwarning(ProjectData.NAME, f"Failed to download the installer for the latest release!\n{type(e).__name__}: {e}\n\nThe URL for the latest release will be opened in your browser.")
+        webbrowser.open_new_tab(Hyperlink.LATEST_RELEASE)
+    
+    logger.info("Shutting down...")
+    os._exit(0)
+# end_region

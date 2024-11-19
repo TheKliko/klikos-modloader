@@ -82,11 +82,13 @@ class DiscordRPC:
             while not self._stop_event.is_set():
                 time.sleep(self.MAINLOOP_COOLDOWN)
 
-                if not integrations.value("discord_rpc"):
+                if integrations.value("discord_rpc") is not True:
+                    logger.info("RPC Disabled!")
                     self._stop()
 
                 self.current: Optional[dict] = logs.read(self.mode)
                 if self.current is None and self._launch_confirmed is True:
+                    logger.info("Roblox closed!")
                     self._stop_event.set()
                     break
                 

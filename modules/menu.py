@@ -152,6 +152,12 @@ class MainWindow:
                 "icon": "marketplace.png",
                 "command": self._show_marketplace
             },
+            # Mod creator will be postponed to a later version
+            # {
+            #     "text": "Mod creator [BETA]",
+            #     "icon": "mod-creator.png",
+            #     "command": self._show_mod_creator
+            # },
             {
                 "text": "FastFlags",
                 "icon": "fastflags.png",
@@ -196,8 +202,13 @@ class MainWindow:
         self.content.grid(column=1, row=0, sticky="nsew", padx=(4,0))
 
         self.root.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
         self.root.report_callback_exception = self._on_error
+    
+    def _on_close(self) -> None:
+        self.root.quit()
+        self.root.destroy()
     
     def _on_error(self, *args) -> None:
         if len(args) > 1:
@@ -216,6 +227,9 @@ class MainWindow:
     def show(self) -> None:
         self._show_mods()
         self.root.mainloop()
+    # endregion
+
+
 
     # region Navigation
     def _create_navigation(self) -> None:
@@ -342,6 +356,9 @@ class MainWindow:
 
         create_header()
         create_buttons()
+    # endregion
+
+
 
     # region Mods
     def _show_mods(self) -> None:
@@ -561,6 +578,9 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
+
+
 
     # region Importing mods
     def _import_mod(self) -> None:
@@ -599,6 +619,7 @@ class MainWindow:
                 messagebox.showerror(ProjectData.NAME, f"Failed to import mod:\n\"{mod_name}\"\n\n{type(e).__name__}: {e}")
 
         self._show_mods()
+    # endregion
 
     # region Font mods
     # TODO: Load fonts from URL
@@ -840,6 +861,7 @@ class MainWindow:
         #     messagebox.showinfo("test", "URLMODE")
 
         self._show_mods()
+    # endregion
 
     # region Configure mod
     def _set_mod_status(self, name: str, status: bool) -> None:
@@ -906,6 +928,7 @@ class MainWindow:
         except Exception:
             pass
         self._show_mods()
+    # endregion
 
     # region FastFlags
     def _show_fastflags(self) -> None:
@@ -1098,6 +1121,7 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
     
     #region FastFlags 2
     def _configure_fastflag_profile(self, profile_info: dict) -> None:
@@ -1374,6 +1398,7 @@ class MainWindow:
         
         window = Window(self, profile_info)
         window.show()
+    # endregion
 
 
 
@@ -1472,6 +1497,7 @@ class MainWindow:
         except Exception as e:
             logger.error(f"Failed to remove FastFlag profile, {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to remove FastFlag profile!\n\n{type(e).__name__}: {e}")
+    # endregion
     
 
 
@@ -1683,11 +1709,13 @@ class MainWindow:
         window.show()
 
         self._show_fastflags()
+    # endregion
     
 
 
     # region preload marketplace
     def _preload_marketplace_data(self) -> None:
+        logger.info("Preloading community mods...")
         try:
             response: Response = request.get(GitHubApi.marketplace(), cache=True)
             data: list[dict] = response.json()
@@ -1700,6 +1728,7 @@ class MainWindow:
         
         except Exception as e:
             logger.warning(f"Failed to preload marketplace, reason: {type(e).__name__}: {e}")
+    # endregion
     
 
 
@@ -1861,6 +1890,7 @@ class MainWindow:
         except Exception as e:
             logger.error(f"Failed to download mod \"{mod_id}\", reason: {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to download mod: \"{mod_id}\"\n\n{type(e).__name__}: {e}")
+    # endregion
 
 
 
@@ -2041,6 +2071,7 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
     
 
 
@@ -2095,6 +2126,7 @@ class MainWindow:
         
         launch_integrations.remove(id)
         self._show_launch_integrations()
+    # endregion
     
 
 
@@ -2227,6 +2259,7 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
 
 
 
@@ -2242,6 +2275,7 @@ class MainWindow:
         except Exception as e:
             logger.error(f"Failed to restore integrations, reason: {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to restore integrations!\n\n{type(e).__name__}: {e}")
+    # endregion
     
 
 
@@ -2375,6 +2409,7 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
 
 
 
@@ -2390,6 +2425,7 @@ class MainWindow:
         except Exception as e:
             logger.error(f"Failed to restore settings, reason: {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to restore settings!\n\n{type(e).__name__}: {e}")
+    # endregion
 
 
 
@@ -2575,3 +2611,45 @@ class MainWindow:
         destroy()
         load_header()
         load_content()
+    # endregion
+
+
+
+    # region Mod Creator
+    def _show_mod_creator(self) -> None:
+        def destroy() -> None:
+            for widget in self.content.winfo_children():
+                widget.destroy()
+
+        def load_header() -> None:
+            frame: ctk.CTkFrame = ctk.CTkFrame(
+                self.content,
+                fg_color="transparent"
+            )
+            frame.grid_columnconfigure(0, weight=1)
+            frame.grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Mod Creator [BETA]",
+                font=self.font_title,
+                anchor="w"
+            ).grid(column=0, row=0, sticky="nsew")
+
+            ctk.CTkLabel(
+                frame,
+                text="Create mods",
+                font=self.font_large,
+                anchor="w"
+            ).grid(column=0, row=1, sticky="nsew")
+        
+        def load_content() -> None:
+            # TODO
+            pass
+    
+        self.active_section = "mod-creator"
+        destroy()
+        load_header()
+        load_content()
+    # endregion
+# endregion

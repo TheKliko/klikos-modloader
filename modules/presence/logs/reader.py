@@ -9,6 +9,7 @@ from modules import request
 from modules.request import RobloxActivityApi, Response
 from modules.filesystem import Directory
 from modules.functions.config import integrations
+from modules.functions.process_exists import process_exists
 
 from .data import LogData, StudioLogData
 
@@ -48,13 +49,21 @@ last_place_id: Optional[str] = None
 last_rpc_data: Optional[dict] = None
 last_bloxstrap_rpc_formatted_data: Optional[dict] = None
 last_timestamp: Optional[int] = None
-last_allow_activity_joining: bool = False
+last_allow_activity_joining: Optional[bool] = False
+last_user_in_private_server: bool = False
+last_user_in_reserved_server: bool = False
+last_user_id: Optional[str] = None
+last_show_user_profile: Optional[bool] = False
 
 
 # region Player
 def player() -> Optional[dict]:
-    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp, last_allow_activity_joining
+    global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp, last_allow_activity_joining, last_user_id, last_show_user_profile
     allow_activity_joining: Optional[bool] = integrations.value("activity_joining")
+    show_user_profile: Optional[bool] = integrations.value("show_user_profile_in_rpc")
+
+    if not process_exists("RobloxPlayerBeta.exe"):
+        return None
 
     log_file: Optional[list[Entry]] = read_log_file("Player")
     if not log_file:
@@ -65,15 +74,31 @@ def player() -> Optional[dict]:
     
     # if log_file[0].prefix == LogData.OldLogFile.prefix and log_file[0].data.startswith(LogData.OldLogFile.startswith):
     #     return None
+    bloxstrap_rpc_formatted_data: Optional[dict] = None
+    user_in_private_server: bool = False
+    user_in_reserved_server: bool = False
+
+    known_universe_id: Optional[str] = None
+    known_user_id: Optional[str] = None
     
     for entry in log_file:
         is_game_join: bool = entry.prefix == LogData.GameJoin.prefix and entry.data.startswith(LogData.GameJoin.startswith)
         is_game_leave: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
         is_bloxstrap_rpc: bool = entry.prefix == LogData.BloxstrapRPC.prefix and entry.data.startswith(LogData.BloxstrapRPC.startswith)
-        bloxstrap_rpc_formatted_data: Optional[dict] = None
+
+        is_private_server: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
+        is_reserved_server: bool = entry.prefix == LogData.GameLeave.prefix and entry.data.startswith(LogData.GameLeave.startswith)
+        
+        is_game_join_load_time: bool = entry.prefix == LogData.GameJoinLoadTime.prefix and entry.data.startswith(LogData.GameJoinLoadTime.startswith)
 
         if is_game_leave:
             return deepcopy(PLAYER_DEFAULT)
+        
+        elif is_private_server:
+            user_in_private_server = True
+        
+        elif is_reserved_server:
+            user_in_reserved_server = True
         
         elif is_bloxstrap_rpc:
             try:
@@ -129,9 +154,21 @@ def player() -> Optional[dict]:
                     "small_text": bloxstrap_rpc_data_small_text,
                     "buttons": bloxstrap_rpc_data_buttons
                 }
-            
+
             except Exception:
                 continue
+        
+        elif is_game_join_load_time:
+            data_string: str = entry.data.removeprefix("Report game_join_loadtime: ")
+            for item in data_string.split():
+                split_item = item.removesuffix(",").split(":")
+                key: str = split_item[0]
+                value: str = split_item[1]
+
+                if key == "userid":
+                    known_user_id = value
+                if key == "universeid":
+                    known_universe_id = value
         
         elif is_game_join:
             job_id: Optional[str] = None
@@ -143,8 +180,15 @@ def player() -> Optional[dict]:
                 elif item == "place":
                     place_id = game_join_data[i]
             
-            # Prevent flooding the logs with cached requests
-            if place_id == last_place_id and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data and entry.timestamp == last_timestamp and allow_activity_joining == last_allow_activity_joining:
+            # Prevent flooding the logs with cached requests if nothing of the rpc data changed
+            if place_id == last_place_id \
+                and bloxstrap_rpc_formatted_data == last_bloxstrap_rpc_formatted_data \
+                    and entry.timestamp == last_timestamp \
+                        and allow_activity_joining == last_allow_activity_joining \
+                            and user_in_private_server == last_user_in_private_server \
+                                and user_in_reserved_server == last_user_in_reserved_server \
+                                    and last_show_user_profile == show_user_profile \
+                                        and (last_user_id == known_user_id or known_user_id is None):
                 return last_rpc_data
             
             if job_id is None:
@@ -153,9 +197,13 @@ def player() -> Optional[dict]:
                 logger.error(f"Failed to get place_id from log entry: {entry.prefix} {entry.data}")
                 raise Exception("place_id is None")
 
-            response1: Response = request.get(request.RobloxActivityApi.game_universe_id(place_id), cache=True)
-            data1: dict = response1.json()
-            universe_id: str = str(data1["universeId"])
+            if known_universe_id is not None:
+                universe_id: str = known_universe_id
+
+            else:
+                response1: Response = request.get(request.RobloxActivityApi.game_universe_id(place_id), cache=True)
+                data1: dict = response1.json()
+                universe_id = str(data1["universeId"])
 
             response2: Response = request.get(request.RobloxActivityApi.game_info(universe_id), cache=True)
             data2: dict = response2.json()
@@ -184,14 +232,61 @@ def player() -> Optional[dict]:
                 ]
             }
 
+            if user_in_private_server is True:
+                rpc_data.update({
+                    "state": "In a private server"
+                })
+
+            if user_in_reserved_server is True:
+                rpc_data.update({
+                    "state": "In a reserved server"
+                })
+
             if bloxstrap_rpc_formatted_data is not None:
                 rpc_data.update(bloxstrap_rpc_formatted_data)
+            
+            if user_in_reserved_server is True and allow_activity_joining is True:
+                rpc_data.update({
+                    "buttons": [
+                        {"label": "View on Roblox", "url": RobloxActivityApi.game_page(root_place_id)}
+                    ]
+                })
+            
+            if show_user_profile is True and (known_user_id is not None or last_user_id is not None):
+                try:
+                    if known_user_id is None:
+                        known_user_id = last_user_id
+                    response4: Response = request.get(request.RobloxActivityApi.user_info(known_user_id), cache=True)
+                    data4: dict = response4.json()
+                    user_name: str = str(data4["name"])
+                    user_display_name: str = str(data4["displayName"])
+                    
+                    response5: Response = request.get(request.RobloxActivityApi.user_thumbnail(known_user_id), cache=True)
+                    data5: dict = response5.json()
+                    user_avatar_thumbnail: str = str(data5["data"][0]["imageUrl"])
+
+                except Exception as e:
+                    logger.error(f"Failed to show user profile in Discord RPC! {type(e).__name__}: {e}")
+                
+                else:
+                    if user_name == user_display_name or user_display_name is None:
+                        rpc_data.update({
+                            "small_image": user_avatar_thumbnail,
+                            "small_text": f"{user_name}"
+                        })
+                    else:
+                        rpc_data.update({
+                            "small_image": user_avatar_thumbnail,
+                            "small_text": f"{user_display_name} (@{user_name})"
+                        })
 
             last_bloxstrap_rpc_formatted_data = bloxstrap_rpc_formatted_data
             last_place_id = place_id
             last_rpc_data = rpc_data
             last_timestamp = entry.timestamp
             last_allow_activity_joining = allow_activity_joining
+            last_user_id = known_user_id
+            last_show_user_profile = show_user_profile
             
             return rpc_data
     
@@ -202,6 +297,11 @@ def player() -> Optional[dict]:
 # region Studio
 def studio() -> Optional[dict]:
     global last_place_id, last_rpc_data, last_bloxstrap_rpc_formatted_data, last_timestamp
+    # show_user_profile: Optional[bool] = integrations.value("show_user_profile_in_rpc")
+
+    if not process_exists("RobloxStudioBeta.exe"):
+        return None
+    
     log_file: Optional[list[Entry]] = read_log_file("Studio")
     if not log_file:
         return None
