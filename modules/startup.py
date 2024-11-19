@@ -148,7 +148,6 @@ def update() -> None:
         logger.info("Attempting to download the installer...")
         response: request.Response = request.get(request.GitHubApi.latest_release_data())
         data: dict = response.json()
-        logger.debug(json.dumps(data, indent=4))
         installer_name: str = data["assets"][0]["name"]
         installer_download_url: str = data["assets"][0]["browser_download_url"]
         target: str = os.path.join(Directory.root(), "Installer", installer_name)
@@ -158,7 +157,6 @@ def update() -> None:
         command: list = [
             target
         ]
-        input(Directory.root())
         subprocess.Popen(command)
     
     except Exception as e:
