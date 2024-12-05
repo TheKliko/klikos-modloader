@@ -5,7 +5,8 @@ REQUIRED_LIBRARIES: list[str] = [
     "requests",
     "pypresence",
     "PIL",
-    "customtkinter"
+    "customtkinter",
+    "py7zr"
 ]
 
 
