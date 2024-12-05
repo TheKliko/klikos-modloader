@@ -22,6 +22,7 @@ def main() -> None:
                 input("Studio")
             case "rpc":
                 input("RPC")
+            
 
     except Exception as e:
         exception_handler.run(e)
