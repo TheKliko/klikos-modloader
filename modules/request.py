@@ -23,7 +23,7 @@ class Api:
     class Roblox:
         FASTFLAGS: str = r"https://clientsettingscdn.roblox.com/v2/settings/application/PCDesktopClient"
 
-        class Deployments:
+        class Deployment:
             HISTORY: str = r"https://setup.rbxcdn.com/DeployHistory.txt"
             @staticmethod
             def channel(binaryType: str) -> str:
