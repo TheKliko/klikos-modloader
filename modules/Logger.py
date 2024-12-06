@@ -77,9 +77,10 @@ def get_prefix() -> str:
         if frame is None:
             return UNKNOWN
 
-        filename = os.path.basename(frame.f_code.co_filename).removesuffix(".py")
-        function_name = frame.f_code.co_name
-        return f"{filename}.{function_name}()"
+        filepath: Path = Path(frame.f_code.co_filename)
+        module: str = filepath.parent.stem if filepath.stem == "__init__" else filepath.stem
+        function: str = frame.f_code.co_name
+        return f"{module}.{function}()"
 
 
 def info(message: object) -> None:

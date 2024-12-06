@@ -8,3 +8,4 @@ class ProjectData:
 class Help:
     DISCORD: str = r"https://discord.gg/nEjUwdSP9P"
     GITHUB: str = r"https://github.com/TheKliko/klikos-modloader"
+    LATEST_VERSION: str = r"https://github.com/TheKliko/klikos-modloader/releases/latest"
