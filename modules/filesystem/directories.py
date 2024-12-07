@@ -7,5 +7,6 @@ class Directory:
     UNINSTALLER: Path = ROOT / "Uninstaller"
     DOWNLOADS: Path = ROOT / "Downloads"
     CONFIG: Path = ROOT / "config"
+    RESOURCES: Path = ROOT / "resources"
     VERSIONS: Path = ROOT / "Versions"
     MODS: Path = ROOT / "Mods"

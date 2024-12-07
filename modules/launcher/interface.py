@@ -1,0 +1,82 @@
+from pathlib import Path
+
+from modules.info import ProjectData
+from modules.filesystem import Directory, restore_from_meipass
+from modules.functions.interface.image import load as load_image
+
+import customtkinter as ctk
+
+
+class MainWindow(ctk.CTk):
+    class Constants:
+        WIDTH: int = 520
+        HEIGHT: int = 320
+        FAVICON: Path = Directory.RESOURCES / "favicon.ico"
+        PLAYER_LOGO: Path = Directory.RESOURCES / "launcher" / "player.png"
+        STUDIO_LOGO: Path = Directory.RESOURCES / "launcher" / "studio.png"
+    
+    class WindowMovement:
+        start_x: int
+        start_y: int
+
+
+
+    def __init__(self, mode: str) -> None:
+        super().__init__()
+        self.title(ProjectData.NAME)
+        if not self.Constants.FAVICON.is_file():
+            restore_from_meipass(self.Constants.FAVICON)
+        self.iconbitmap(self.Constants.FAVICON.resolve())
+
+        self.overrideredirect(True)
+        self.bind("<ButtonPress-1>", self._set_window_start_position)
+        self.bind("<B1-Motion>", self._do_window_movement)
+        
+        # self.attributes("-alpha", 0.8)
+        # self.configure(bg="")
+        
+        if not self.Constants.PLAYER_LOGO.is_file():
+            restore_from_meipass(self.Constants.PLAYER_LOGO)
+        if not self.Constants.STUDIO_LOGO.is_file():
+            restore_from_meipass(self.Constants.STUDIO_LOGO)
+
+        logo: ctk.CTkLabel
+        if mode == "Player":
+            logo = ctk.CTkLabel(self, text="", image=load_image(self.Constants.PLAYER_LOGO, size=(122,122)))
+        elif mode == "Studio":
+            logo = ctk.CTkLabel(self, text="", image=load_image(self.Constants.STUDIO_LOGO, size=(122,122)))
+        logo.place(x=(self.Constants.WIDTH // 2) - (122 // 2), y=56)
+
+        self.progress_label_textvariable: ctk.StringVar = ctk.StringVar(value="")
+        label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.progress_label_textvariable, width=self.Constants.WIDTH)
+        label.place(x=0, y=203)
+
+        progress_bar: ctk.CTkProgressBar = ctk.CTkProgressBar(self, mode="indeterminate", corner_radius=0, width=460, height=20)
+        progress_bar.place(x=(self.Constants.WIDTH // 2) - (460 // 2), y=245)
+        progress_bar.start()
+
+        close_button = ctk.CTkButton(self, text="Cancel", width=130, height=34, corner_radius=2, command=self._on_close)
+        close_button.place(x=(self.Constants.WIDTH // 2) - (130 // 2), y=273)
+        
+        self.geometry(self._get_geometry())
+
+
+    def _get_geometry(self) -> str:
+        x: int = (self.winfo_screenwidth() // 2) - (self.Constants.WIDTH // 2)
+        y: int = (self.winfo_screenheight() // 2) - (self.Constants.HEIGHT // 2)
+        return f"{self.Constants.WIDTH}x{self.Constants.HEIGHT}+{x}+{y}"
+
+
+    def _set_window_start_position(self, event) -> None:
+        self.WindowMovement.start_x = event.x
+        self.WindowMovement.start_y = event.y
+
+
+    def _do_window_movement(self, event) -> None:
+        x = self.winfo_x() + event.x - self.WindowMovement.start_x
+        y = self.winfo_y() + event.y - self.WindowMovement.start_y
+        self.geometry(f"+{x}+{y}")
+    
+
+    def _on_close(self, *args, **kwargs) -> None:
+        self.destroy()
