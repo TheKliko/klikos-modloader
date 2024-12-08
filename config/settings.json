@@ -28,11 +28,5 @@
         "description": "Ask for confirmation to kill existing Roblox instances before launching Roblox",
         "value": false,
         "default": false
-    },
-    "always_update_roblox": {
-        "name": "Always reinstall Roblox",
-        "description": "The same as \"Force Roblox reinstallation\", but stays enabled",
-        "value": false,
-        "default": false
     }
 }
