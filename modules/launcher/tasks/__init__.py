@@ -1,28 +1,37 @@
 from typing import Literal, Callable
-import json
+from tkinter import messagebox
+import time
 
 from modules import Logger
+from modules.info import ProjectData
+from modules.config import settings
+from modules.functions.process_exists import process_exists
+from modules.functions.kill_process import kill_process
 
 from ..deployment_info import Deployment
 from .check_downloaded_files import check_downloaded_files
 from .download_missing_files import download_missing_files
 from .restore_default_files import restore_default_files
+from .apply_fastflags import apply_fastflags
+from .apply_mods import apply_mods
+from .launch_roblox import launch_roblox
 
 from customtkinter import StringVar
 
 
-def run(mode: Literal["Player", "Studio"], textvariable: StringVar, end_signal: Callable) -> None:
+def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfovariable: StringVar, end_signal: Callable) -> None:
     Logger.info("Getting deployment info...")
     deployment: Deployment = Deployment(mode)
-    textvariable.set(f"{deployment.version.capitalize()} ({deployment.channel})")
+    if settings.get_value("show_deployment_info_on_launch"):
+        versioninfovariable.set(f"{deployment.version} ({deployment.channel})")
 
     Logger.info("Checking Downloads folder...")
     missing_file_hashes: list[str] = check_downloaded_files(deployment, mode)
 
-    # TODO: CHECK IF ROBLOX IS RUNNING
-    # ASK IF USER WANTS TO CONTINUE IF IT IS
-
-    # FORCE CLOSE ROBLOX
+    if process_exists(deployment.executable_name):
+        if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+            return
+        kill_process(deployment.executable_name)
 
     if missing_file_hashes:
         Logger.info("Downloading missing files...")
@@ -32,9 +41,19 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, end_signal: 
     Logger.info("Restoring default files...")
     textvariable.set("Installing Roblox...")
     restore_default_files(deployment, mode)
-    
-    # print(deployment.manifest_version)
-    # for item in deployment.package_manifest:
-    #     print(json.dumps(item, indent=4))
+
+    # TODO: mod updater
+
+    Logger.info("Applying modifications...")
+    textvariable.set("Applying modifications...")
+    if not settings.get_value("disable_all_mods"):
+        apply_mods(deployment.base_directory)
+    if not settings.get_value("disable_all_fastflags"):
+        apply_fastflags(deployment.base_directory)
+
+    Logger.info("Launching Roblox...")
+    textvariable.set("Launching Roblox...")
+    launch_roblox(str(deployment.executable_path.resolve()))
+    time.sleep(1.5)
 
     end_signal()

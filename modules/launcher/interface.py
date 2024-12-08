@@ -48,6 +48,10 @@ class MainWindow(ctk.CTk):
         if not self.Constants.STUDIO_LOGO.is_file():
             restore_from_meipass(self.Constants.STUDIO_LOGO)
 
+        self.versioninfovariable: ctk.StringVar = ctk.StringVar(value="")
+        info_label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.versioninfovariable, justify="left", font=ctk.CTkFont(size=13))
+        info_label.place(x=20, y=10)
+
         logo: ctk.CTkLabel
         if mode == "Player":
             logo = ctk.CTkLabel(self, text="", image=load_image(self.Constants.PLAYER_LOGO, size=(122,122)))
@@ -56,7 +60,7 @@ class MainWindow(ctk.CTk):
         logo.place(x=(self.Constants.WIDTH // 2) - (122 // 2), y=56)
 
         self.textvariable: ctk.StringVar = ctk.StringVar(value="")
-        label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.textvariable, width=self.Constants.WIDTH)
+        label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.textvariable, width=self.Constants.WIDTH, font=ctk.CTkFont(size=14))
         label.place(x=0, y=203)
 
         progress_bar: ctk.CTkProgressBar = ctk.CTkProgressBar(self, mode="indeterminate", corner_radius=0, width=460, height=20)

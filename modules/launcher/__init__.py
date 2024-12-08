@@ -14,7 +14,7 @@ def run(mode: Literal["Player", "Studio"]) -> None:
     Thread(
         name="launcher.tasks.run()_Thread",
         target=tasks.run,
-        args=(mode, interface.textvariable, interface._on_close),
+        args=(mode, interface.textvariable, interface.versioninfovariable, interface._on_close),
         daemon=True
     ).start()
 

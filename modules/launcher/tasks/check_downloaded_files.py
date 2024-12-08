@@ -22,13 +22,13 @@ def check_downloaded_files(deployment: Deployment, mode: Literal["Player", "Stud
         for item in deployment.package_manifest
     ]
     missing_file_hashes: list[str] = [
-        file for file in required_file_hashes
-        if not Path(file).is_file()
+        hash for hash in required_file_hashes
+        if not directory.joinpath(hash).is_file()
     ]
 
     # Remove files for older versions
     for file in os.listdir(directory):
-        file_as_path = Path(file)
+        file_as_path = directory / file
         if file_as_path.is_file() and file_as_path.name not in required_file_hashes:
             file_as_path.unlink()
 
