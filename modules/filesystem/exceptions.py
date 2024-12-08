@@ -6,3 +6,6 @@ class FileExtractError(Exception):
 
 class FileCompressError(Exception):
     pass
+
+class FileDownloadError(Exception):
+    pass

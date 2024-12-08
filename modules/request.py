@@ -1,4 +1,5 @@
 from typing import Optional
+import time
 
 from modules import Logger
 
@@ -83,6 +84,7 @@ def get(url: str, attempts: int = 3, cached: bool = False) -> Response:
         except Exception as e:
             Logger.error(f"Request failed! {type(e).__name__}: {e}")
             exception = e
+            time.sleep(COOLDOWN)
     
     if exception is not None:
         raise exception

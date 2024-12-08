@@ -1,3 +1,4 @@
+from typing import Literal
 from pathlib import Path
 
 from modules.info import ProjectData
@@ -11,6 +12,7 @@ class MainWindow(ctk.CTk):
     class Constants:
         WIDTH: int = 520
         HEIGHT: int = 320
+        THEME: Path = Directory.RESOURCES / "theme.json"
         FAVICON: Path = Directory.RESOURCES / "favicon.ico"
         PLAYER_LOGO: Path = Directory.RESOURCES / "launcher" / "player.png"
         STUDIO_LOGO: Path = Directory.RESOURCES / "launcher" / "studio.png"
@@ -20,10 +22,16 @@ class MainWindow(ctk.CTk):
         start_y: int
 
 
+    def __init__(self, mode: Literal["Player", "Studio"]) -> None:
+        ctk.set_appearance_mode("System")
 
-    def __init__(self, mode: str) -> None:
+        if not self.Constants.THEME.is_file():
+            restore_from_meipass(self.Constants.THEME)
+        ctk.set_default_color_theme(self.Constants.THEME.resolve())
+
         super().__init__()
         self.title(ProjectData.NAME)
+        self.resizable(False, False)
         if not self.Constants.FAVICON.is_file():
             restore_from_meipass(self.Constants.FAVICON)
         self.iconbitmap(self.Constants.FAVICON.resolve())
@@ -47,8 +55,8 @@ class MainWindow(ctk.CTk):
             logo = ctk.CTkLabel(self, text="", image=load_image(self.Constants.STUDIO_LOGO, size=(122,122)))
         logo.place(x=(self.Constants.WIDTH // 2) - (122 // 2), y=56)
 
-        self.progress_label_textvariable: ctk.StringVar = ctk.StringVar(value="")
-        label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.progress_label_textvariable, width=self.Constants.WIDTH)
+        self.textvariable: ctk.StringVar = ctk.StringVar(value="")
+        label: ctk.CTkLabel = ctk.CTkLabel(self, textvariable=self.textvariable, width=self.Constants.WIDTH)
         label.place(x=0, y=203)
 
         progress_bar: ctk.CTkProgressBar = ctk.CTkProgressBar(self, mode="indeterminate", corner_radius=0, width=460, height=20)
@@ -79,4 +87,4 @@ class MainWindow(ctk.CTk):
     
 
     def _on_close(self, *args, **kwargs) -> None:
-        self.destroy()
+        self.after(1, self.destroy)
