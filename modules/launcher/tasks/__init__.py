@@ -1,10 +1,14 @@
 from typing import Literal, Callable
 from tkinter import messagebox
+from queue import Queue
+from pathlib import Path
 import time
 
 from modules import Logger
 from modules.info import ProjectData
-from modules.config import settings
+from modules.filesystem import Directory
+from modules.config import settings, mods
+from modules.mod_updater import check_for_mod_updates, update_mods
 from modules.functions.process_exists import process_exists
 from modules.functions.kill_process import kill_process
 
@@ -19,41 +23,52 @@ from .launch_roblox import launch_roblox
 from customtkinter import StringVar
 
 
-def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfovariable: StringVar, end_signal: Callable) -> None:
-    Logger.info("Getting deployment info...")
-    deployment: Deployment = Deployment(mode)
-    if settings.get_value("show_deployment_info_on_launch"):
-        versioninfovariable.set(f"{deployment.version} ({deployment.channel})")
+def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfovariable: StringVar, end_signal: Callable, exception_queue: Queue) -> None:
+    try:
+        Logger.info("Getting deployment info...")
+        deployment: Deployment = Deployment(mode)
+        if settings.get_value("show_deployment_info_on_launch"):
+            versioninfovariable.set(f"{deployment.version} ({deployment.channel})")
 
-    Logger.info("Checking Downloads folder...")
-    missing_file_hashes: list[str] = check_downloaded_files(deployment, mode)
+        Logger.info("Checking Downloads folder...")
+        missing_file_hashes: list[str] = check_downloaded_files(deployment, mode)
 
-    if process_exists(deployment.executable_name):
-        if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
-            return
-        kill_process(deployment.executable_name)
+        if process_exists(deployment.executable_name):
+            if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+                return
+            kill_process(deployment.executable_name)
 
-    if missing_file_hashes:
-        Logger.info("Downloading missing files...")
-        textvariable.set("Updating Roblox...")
-        download_missing_files(deployment, mode, missing_file_hashes)
+        if missing_file_hashes:
+            Logger.info("Downloading missing files...")
+            textvariable.set("Updating Roblox...")
+            download_missing_files(deployment, mode, missing_file_hashes)
+        
+        Logger.info("Restoring default files...")
+        textvariable.set("Installing Roblox...")
+        restore_default_files(deployment, mode)
+
+        # TODO: mod updater
+        active_mods: list[str] = mods.get_active()
+        check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(active_mods, deployment.version)
+        if check:
+            Logger.info("Updating mods...")
+            textvariable.set("Updating mods...")
+            update_mods(check, deployment.version, Directory.MODS)
+
+        Logger.info("Applying modifications...")
+        textvariable.set("Applying modifications...")
+        if not settings.get_value("disable_all_mods"):
+            apply_mods(deployment.base_directory)
+        if not settings.get_value("disable_all_fastflags"):
+            apply_fastflags(deployment.base_directory)
+
+        Logger.info("Launching Roblox...")
+        textvariable.set("Launching Roblox...")
+        launch_roblox(str(deployment.executable_path.resolve()))
+        time.sleep(2)
     
-    Logger.info("Restoring default files...")
-    textvariable.set("Installing Roblox...")
-    restore_default_files(deployment, mode)
-
-    # TODO: mod updater
-
-    Logger.info("Applying modifications...")
-    textvariable.set("Applying modifications...")
-    if not settings.get_value("disable_all_mods"):
-        apply_mods(deployment.base_directory)
-    if not settings.get_value("disable_all_fastflags"):
-        apply_fastflags(deployment.base_directory)
-
-    Logger.info("Launching Roblox...")
-    textvariable.set("Launching Roblox...")
-    launch_roblox(str(deployment.executable_path.resolve()))
-    time.sleep(1.5)
-
-    end_signal()
+    except Exception as e:
+        exception_queue.put(e)
+    
+    finally:
+        end_signal()

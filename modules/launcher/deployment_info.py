@@ -32,7 +32,7 @@ class Deployment:
 
 
     def __init__(self, mode: Literal["Player", "Studio"]):
-        self.binaryType = f"Windows{mode}"
+        self.binaryType = f"WindowsStudio64" if mode == "Studio" else f"WindowsPlayer"
         self.executable_name = f"Roblox{mode}Beta.exe"
 
         self.channel = user_channel.get(self.binaryType)
