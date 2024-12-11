@@ -49,7 +49,7 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
 
         # TODO: mod updater
         active_mods: list[str] = mods.get_active()
-        check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(active_mods, deployment.version)
+        check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(Directory.MODS, active_mods, deployment.version)
         if check:
             Logger.info("Updating mods...")
             textvariable.set("Updating mods...")

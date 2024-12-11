@@ -6,10 +6,14 @@ import shutil
 import json
 
 from modules import Logger
-from modules.request import Api
-from modules.filesystem import download, extract
 
 from .deploy_history import DeployHistory, get_deploy_history
+from .download_luapackages import download_luapackages
+from .locate_imagesets import locate_imagesets
+from .locate_imagesetdata_file import locate_imagesetdata_file
+from .get_icon_map import get_icon_map
+from .detect_modded_icons import detect_modded_icons
+from .finish_mod_update import finish_mod_update
 
 
 def update_mods(check: dict[str, list[Path]], latest_version: str, output_directory: str | Path) -> None:
@@ -25,7 +29,7 @@ def update_mods(check: dict[str, list[Path]], latest_version: str, output_direct
         thread: Thread = Thread(
             name=f"mod_updater.hash_specific_worker_thread({hash})",
             target=hash_specific_worker_thread,
-            args=(deploy_history, exception_queue, hash, mods),
+            args=(deploy_history, exception_queue, hash, mods, output_directory),
             daemon=True
         )
         threads.append(thread)
@@ -39,7 +43,7 @@ def update_mods(check: dict[str, list[Path]], latest_version: str, output_direct
         raise e
 
 
-def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: Queue, hash: str, mods: list[Path]) -> None:
+def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: Queue, hash: str, mods: list[Path], output_directory: Path) -> None:
     if hash == deploy_history.get_hash(deploy_history.LatestVersion.player) or not mods:
         return
 
@@ -60,18 +64,29 @@ def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: 
                 with open(temporary_directory / mod.name, "w") as file:
                     json.dump(data, file, indent=4)
 
-            Logger.info("Downloading LuaPackages...")
+            Logger.info(f"Downloading LuaPackages for {hash}")
             download_luapackages(deploy_history.LatestVersion.studio, temporary_directory)
             download_luapackages(mod_version, temporary_directory)
 
-            # locate imagesets
-            # locate imagesetdata and extract icon data
+            Logger.info("Locating ImageSets...")
+            mod_imageset_path: Path = locate_imagesets(temporary_directory / mod.name)
+            latest_imageset_path: Path = locate_imagesets(temporary_directory / deploy_history.LatestVersion.studio)
+            
+            Logger.info("Locating ImageSets...")
+            mod_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / mod_version)
+            latest_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / deploy_history.LatestVersion.studio)
+
+            Logger.info("Getting icon map...")
+            mod_icon_map: dict[str, dict[str, dict[str, str | int]]] = get_icon_map(temporary_directory / mod_version / mod_imagesetdata_path)
+            latest_icon_map: dict[str, dict[str, dict[str, str | int]]] = get_icon_map(temporary_directory / deploy_history.LatestVersion.studio / latest_imagesetdata_path)
+            
+            Logger.info("Detecting modded icons...")
             # detect modded icons
                 # ignore mod if no modded icons were found
-                # Just updating info.json will be enough
+                # finish_mod_update()
             # get icon movement
                 # ignore mod if no movement was found
-                # Just updating info.json will be enough
+                # finish_mod_update()
             # generate new imagesets
                 # use imagesets from mod_version
             # finish mod update
@@ -79,10 +94,3 @@ def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: 
     except Exception as e:
         Logger.error(f"{type(e).__name__}: {e}")
         exception_queue.put(e)
-
-
-def download_luapackages(version: str, output_directory: str | Path) -> None:
-    output_directory = Path(output_directory)
-    download(Api.Roblox.Deployment.download(version, "extracontent-luapackages.zip"), output_directory / f"{version}-extracontent-luapackages.zip")
-    extract(output_directory / f"{version}-extracontent-luapackages.zip", output_directory / version / "ExtraContent" / "LuaPackages")
-    (output_directory / f"{version}-extracontent-luapackages.zip").unlink()
