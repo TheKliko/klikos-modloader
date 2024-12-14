@@ -15,25 +15,33 @@ def set_registry_keys() -> None:
     
     try:
         executable_path: str = sys.executable
+        registry_keys: list[dict] = [
+            {
+                "key_name": r"roblox",
+                "path": r"Software\Classes\roblox\shell\open\command",
+                "value": rf"{executable_path} -l %1"
+            },
+            {
+                "key_name": r"roblox-player",
+                "path": r"Software\Classes\roblox-player\shell\open\command",
+                "value": rf"{executable_path} -l %1"
+            },
+            {
+                "key_name": r"roblox-studio",
+                "path": r"Software\Classes\roblox-studio\shell\open\command",
+                "value": rf"{executable_path} -s %1"
+            }
+        ]
 
-        registry_path: str = r"Software\Classes\roblox\shell\open\command"
-        roblox_player_registry_path: str = r"Software\Classes\roblox-player\shell\open\command"
-        roblox_studio_registry_path: str = r"Software\Classes\roblox-studio\shell\open\command"
+        for item in registry_keys:
+            key_name: str = item["key_name"]
+            path: str = item["path"]
+            value: str = item["value"]
 
-        roblox_player_value: str = f"{executable_path} -l %1"
-        roblox_studio_value: str = f"{executable_path} -s %1"
-
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, registry_path, 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, "", 0, winreg.REG_SZ, roblox_player_value)
-        winreg.CloseKey(key)
-        
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, roblox_player_registry_path, 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, "", 0, winreg.REG_SZ, roblox_player_value)
-        winreg.CloseKey(key)
-        
-        key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, roblox_studio_registry_path, 0, winreg.KEY_SET_VALUE)
-        winreg.SetValueEx(key, "", 0, winreg.REG_SZ, roblox_studio_value)
-        winreg.CloseKey(key)
+            print(f"Setting {key_name} key...")
+            key: winreg.HKEYType = winreg.CreateKey(winreg.HKEY_CURRENT_USER, path)
+            winreg.SetValueEx(key, "", 0, winreg.REG_SZ, value)
+            winreg.CloseKey(key)
 
     except Exception as e:
         logger.error(f"{type(e).__name__}: {e}")
