@@ -3,28 +3,24 @@
         "name": "Discord RPC",
         "description": "Replace the default Discord RPC to show more details",
         "value": true,
-        "default": true,
-        "type": "bool"
+        "default": true
     },
     "activity_joining": {
         "name": "Activity Joining",
         "description": "Allow anyone to join your game through Discord",
         "value": false,
-        "default": false,
-        "type": "bool"
+        "default": false
     },
     "show_user_profile_in_rpc": {
         "name": "Show avatar in RPC",
         "description": "Shows your Roblox avatar in your Discord RPC",
         "value": false,
-        "default": false,
-        "type": "bool"
+        "default": false
     },
     "mod_updater": {
         "name": "Kliko's mod updater",
         "description": "Enables automatic mod updates",
         "value": true,
-        "default": true,
-        "type": "bool"
+        "default": true
     }
 }
