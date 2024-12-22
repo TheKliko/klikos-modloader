@@ -1,54 +1,54 @@
-import os
 import sys
+from pathlib import Path
 
-from modules.logger import logger
-from modules import error_handler, launch_mode
-
-IS_FROZEN = getattr(sys, "frozen", False)
-if IS_FROZEN:
-    import pyi_splash
-else:
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "libraries"))
-
-from modules import startup, menu, launcher, presence
+from modules import Logger  # Imported first to initialize the logger
+from modules import LaunchMode, exception_handler
 
 
-def main():
+ROOT: Path = Path(__file__).parent
+LIBRARIES_PATH: Path = Path(ROOT, "libraries")
+
+
+def main() -> None:
     try:
+        if getattr(sys, "frozen", False):
+            try:
+                import pyi_splash
+                if pyi_splash.is_alive():
+                    pyi_splash.close()
+            except ModuleNotFoundError:
+                pass
+        else:
+            sys.path.insert(0, str(LIBRARIES_PATH))
+
+
+        from modules import startup
         startup.run()
 
-        mode: str = launch_mode.get()
-        logger.info(f"Launch mode: {mode}")
 
-        if mode.lower() == "menu":
-            window = menu.MainWindow()
-        elif mode.lower() == "launcher":
-            window = launcher.MainWindow("WindowsPlayer")
-        elif mode.lower() == "studio":
-            window = launcher.MainWindow("WindowsStudio")
-        elif mode.lower() == "rpc":
-            if IS_FROZEN:
-                if pyi_splash.is_alive():
-                    pyi_splash.close()
-            presence.run()
+        match LaunchMode.get().lower():
+            case "menu":
+                from modules import menu
+                menu.run()
 
-        else:
-            raise Exception(f"Unknown launch mode: {mode}")
+            case "player":
+                from modules import launcher
+                launcher.run("Player")
 
-        if mode.lower() in ["menu", "launcher", "studio"]:
-            if IS_FROZEN:
-                if pyi_splash.is_alive():
-                    pyi_splash.close()
-            
-            window.show()
+            case "studio":
+                from modules import launcher
+                launcher.run("Studio")
+
+            case "rpc":
+                from modules import activity_watcher
+                activity_watcher.run()
 
 
     except Exception as e:
-        error_handler.run(e)
-
-
+        exception_handler.run(e)
+    
     finally:
-        logger.info("Shuting down...")
+        Logger.info("Shutting down...")
 
 
 if __name__ == "__main__":
