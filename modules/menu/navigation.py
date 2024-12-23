@@ -33,56 +33,49 @@ class NavigationFrame(ctk.CTkFrame):
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "mods.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "mods.png"
-                },
-                "command": None
+                }
             },
             {
                 "name": "Community Mods",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "marketplace.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "marketplace.png"
-                },
-                "command": None
+                }
             },
             {
                 "name": "FastFlags",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "fastflags.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "fastflags.png"
-                },
-                "command": None
+                }
             },
             {
-                "name": "Launch Integrations",
+                "name": "Launch Apps",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "launch-integrations.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "launch-integrations.png"
-                },
-                "command": None
+                }
             },
             {
                 "name": "Integrations",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "integrations.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "integrations.png"
-                },
-                "command": None
+                }
             },
             {
                 "name": "Settings",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "settings.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "settings.png"
-                },
-                "command": None
+                }
             },
             {
                 "name": "About",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "about.png",
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "about.png"
-                },
-                "command": None
+                }
             }
         ]
 
@@ -91,8 +84,8 @@ class NavigationFrame(ctk.CTkFrame):
     footer: ctk.CTkFrame
 
 
-    def __init__(self, window) -> None:
-        super().__init__(window, width=self.Constants.WIDTH, corner_radius=0)
+    def __init__(self, root) -> None:
+        super().__init__(root, width=self.Constants.WIDTH, corner_radius=0)
         self.grid_propagate(False)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -100,7 +93,7 @@ class NavigationFrame(ctk.CTkFrame):
         self.header = self._create_header_frame()
         self.header.grid(column=0, row=0, padx=self.Constants.PADDING, pady=self.Constants.PADDING, sticky="nsew")
 
-        self.buttons = self._create_buttons_frame()
+        self.buttons = self._create_buttons_frame(root)
         self.buttons.grid(column=0, row=1, padx=self.Constants.PADDING, sticky="nsew")
 
         self.footer = self._create_footer_frame()
@@ -140,7 +133,7 @@ class NavigationFrame(ctk.CTkFrame):
         return frame
 
 
-    def _create_buttons_frame(self) -> ctk.CTkFrame:
+    def _create_buttons_frame(self, root) -> ctk.CTkFrame:
         width: int = self.Constants.WIDTH - 2 * self.Constants.PADDING
         icon_size: tuple[int, int] = (20, 20)
         frame: ctk.CTkFrame = ctk.CTkFrame(self, width=width, fg_color="transparent")
@@ -149,7 +142,24 @@ class NavigationFrame(ctk.CTkFrame):
             name: str = section["name"]
             light_icon: Path = section["icon"]["light"]
             dark_icon: Path = section["icon"]["dark"]
-            command: Callable = section["command"]
+            command: Callable = None
+
+            # idk ¯\_(ツ)_/¯
+            match name.lower():
+                case "mods":
+                    command = root.Sections.mods.show
+                case "community mods":
+                    command = root.Sections.marketplace.show
+                case "fastflags":
+                    command = root.Sections.fastflags.show
+                case "launch apps":
+                    command = root.Sections.launch_apps.show
+                case "integrations":
+                    command = root.Sections.integrations.show
+                case "settings":
+                    command = root.Sections.settings.show
+                case "about":
+                    command = root.Sections.about.show
 
             button: ctk.CTkButton = self._create_button(master=frame, text=name, command=command, image=load_image(light=light_icon, dark=dark_icon, size=icon_size))
             pady: int | tuple[int, int] = (4,0)

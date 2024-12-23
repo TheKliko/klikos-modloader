@@ -1,11 +1,16 @@
+import sys
+import subprocess
 from typing import Literal
 from threading import Thread
 from queue import Queue
 
 from modules import Logger
+from modules.config import integrations
 
 from .interface import MainWindow
 from . import tasks
+
+IS_FROZEN: bool = getattr(sys, "frozen", False)
 
 
 def run(mode: Literal["Player", "Studio"]) -> None:
@@ -26,4 +31,8 @@ def run(mode: Literal["Player", "Studio"]) -> None:
     if not exception_queue.empty():
         raise exception_queue.get()
 
-    # TODO: Run activity watcher
+    if integrations.get_value("discord_rpc"):
+        if IS_FROZEN:
+            subprocess.Popen([sys.executable, "-rpc", mode])
+        else:
+            Logger.warning("Environment not frozen, RPC module will not run")

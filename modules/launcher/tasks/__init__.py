@@ -33,15 +33,15 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         Logger.info("Checking Downloads folder...")
         missing_file_hashes: list[str] = check_downloaded_files(deployment, mode)
 
-        if process_exists(deployment.executable_name):
-            if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
-                return
-            kill_process(deployment.executable_name)
-
         if missing_file_hashes:
             Logger.info("Downloading missing files...")
             textvariable.set(f"Downloading Roblox {mode}...")
             download_missing_files(deployment, mode, missing_file_hashes)
+
+        if process_exists(deployment.executable_name):
+            if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+                return
+            kill_process(deployment.executable_name)
         
         Logger.info("Restoring default files...")
         textvariable.set(f"Installing Roblox {mode}...")
@@ -55,11 +55,14 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
                 textvariable.set("Updating mods...")
                 update_mods(check, deployment.version, Directory.MODS)
 
-        Logger.info("Applying modifications...")
-        textvariable.set("Applying modifications...")
-        if not settings.get_value("disable_all_mods"):
+        disable_all_mods: bool = settings.get_value("disable_all_mods")
+        disable_all_fastflags: bool = settings.get_value("disable_all_fastflags")
+        if not disable_all_mods or not disable_all_fastflags:
+            Logger.info("Applying modifications...")
+            textvariable.set("Applying modifications...")
+        if not disable_all_mods:
             apply_mods(deployment.base_directory)
-        if not settings.get_value("disable_all_fastflags"):
+        if not disable_all_fastflags:
             apply_fastflags(deployment.base_directory)
 
         Logger.info(f"Launching Roblox {mode}...")
