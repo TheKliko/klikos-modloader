@@ -1,8 +1,12 @@
 import sys
 import subprocess
+import shutil
+from pathlib import Path
 from tkinter import messagebox
 
 from modules.info import ProjectData
+from modules.filesystem import Directory
+from modules import filesystem
 
 
 IS_FROZEN: bool = getattr(sys, "frozen", False)
@@ -27,4 +31,10 @@ def add_mods() -> None:
 
 
 def open_mods_folder() -> None:
+    filesystem.open(Directory.MODS)
+
+
+def remove_mod(mod: str) -> None:
+    target: Path = Directory.MODS / mod
+
     pass

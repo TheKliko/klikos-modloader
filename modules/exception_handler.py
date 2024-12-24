@@ -18,7 +18,7 @@ def run(e: Exception) -> None:
             import pyi_splash
             if pyi_splash.is_alive():
                 pyi_splash.close()
-        except ModuleNotFoundError:
+        except (ModuleNotFoundError, ImportError):
             pass
     
     showerror(title=f"{ProjectData.NAME} ({ProjectData.VERSION})", message=f"{shortened_traceback}\nMore information may be available in the latest log file")

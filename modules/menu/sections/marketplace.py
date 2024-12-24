@@ -12,12 +12,18 @@ class MarketplaceSection:
 
 
     container: ctk.CTkScrollableFrame
+    data: dict
 
 
     def __init__(self, container: ctk.CTkScrollableFrame) -> None:
         self.container = container
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
+        self._preload_data()
+    
+
+    def _preload_data(self) -> None:
+        pass
 
 
     def show(self) -> None:
