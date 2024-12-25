@@ -9,6 +9,7 @@ from modules.filesystem import Directory, restore_from_meipass
 from .navigation import NavigationFrame
 from .sections.mods import ModsSection
 from .sections.marketplace import MarketplaceSection
+from .sections.mod_generator import ModGeneratorSection
 from .sections.fastflags import FastFlagsSection
 from .sections.launch_apps import LaunchAppsSection
 from .sections.integrations import IntegrationsSection
@@ -29,6 +30,7 @@ class MainWindow(ctk.CTk):
     class Sections:
         mods: ModsSection
         marketplace: MarketplaceSection
+        mod_generator: ModGeneratorSection
         fastflags: FastFlagsSection
         launch_apps: LaunchAppsSection
         integrations: IntegrationsSection
@@ -65,8 +67,9 @@ class MainWindow(ctk.CTk):
         container: ctk.CTkScrollableFrame = ctk.CTkScrollableFrame(self, fg_color=self.background_color, width=self.Constants.WIDTH-NavigationFrame.Constants.WIDTH, height=self.Constants.HEIGHT, corner_radius=0)
         container.grid_columnconfigure(0, weight=1)
         container.grid(column=1, row=0, sticky="nsew", padx=(8,0), pady=4)
-        self.Sections.mods = ModsSection(container)
+        self.Sections.mods = ModsSection(self, container)
         self.Sections.marketplace = MarketplaceSection(container)
+        self.Sections.mod_generator = ModGeneratorSection(container)
         self.Sections.fastflags = FastFlagsSection(container)
         self.Sections.launch_apps = LaunchAppsSection(container)
         self.Sections.integrations = IntegrationsSection(container)
@@ -76,12 +79,20 @@ class MainWindow(ctk.CTk):
         self.navigation: NavigationFrame = NavigationFrame(self)
         self.navigation.grid(column=0, row=0, sticky="nsew")
 
-        self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+        self.bind_all("<Button-1>", lambda event: self._set_widget_focus(event))
         self.report_callback_exception = self._on_error
         self.geometry(self._get_geometry())
 
         # Default
         self.Sections.mods.show()
+    
+
+    def _set_widget_focus(self, event) -> None:
+        if not hasattr(event, "widget"):
+            return
+        if not hasattr(event.widget, "focus_set"):
+            return
+        event.widget.focus_set()
 
 
     def _get_geometry(self) -> str:

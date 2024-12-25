@@ -16,19 +16,11 @@ def check_for_updates() -> None:
     
     Logger.debug(f"A newer version is available: {latest_version}")
     if not messagebox.askokcancel(title=ProjectData.NAME, message=f"A newer version is available: Version {latest_version}\nDo you wish to update?"):
+        Logger.warning("Update cancelled!")
         return
     
     Logger.info("User chose to update!")
-
-    try:
-        raise Exception("test")
-
-    except Exception as e:
-        Logger.error(f"Failed to install update! {type(e).__name__}: {e}")
-
-        messagebox.showerror(title=ProjectData.NAME, message=f"Failed to install update!\n{type(e).__name__}: {e}\n\nThe latest release will open in your web browser")
-        webbrowser.open(Help.LATEST_VERSION)
-
+    webbrowser.open(Help.LATEST_VERSION)
     sys.exit()
 
 

@@ -43,6 +43,13 @@ class NavigationFrame(ctk.CTkFrame):
                 }
             },
             {
+                "name": "Mod Generator",
+                "icon": {
+                    "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "mod-creator.png",
+                    "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "mod-creator.png"
+                }
+            },
+            {
                 "name": "FastFlags",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "fastflags.png",
@@ -150,6 +157,8 @@ class NavigationFrame(ctk.CTkFrame):
                     command = root.Sections.mods.show
                 case "community mods":
                     command = root.Sections.marketplace.show
+                case "mod generator":
+                    command = root.Sections.mod_generator.show
                 case "fastflags":
                     command = root.Sections.fastflags.show
                 case "launch apps":
