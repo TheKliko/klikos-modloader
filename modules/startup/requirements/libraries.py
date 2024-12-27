@@ -12,7 +12,7 @@ REQUIRED_LIBRARIES: list[str] = [
     "customtkinter",
     "PIL",
     "psutil",
-    "fonttools"
+    "fontTools"
 ]
 
 

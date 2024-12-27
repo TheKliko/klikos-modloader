@@ -1,13 +1,17 @@
 from _tkinter import TclError
 from tkinter import filedialog, messagebox
 from pathlib import Path
-from typing import Optional, Literal
+from typing import Optional, Literal, Callable
 from tempfile import TemporaryDirectory
+import json
+import shutil
 
 from modules import Logger
 from modules.info import ProjectData
-from modules.filesystem import Directory, restore_from_meipass
+from modules.filesystem import Directory, restore_from_meipass, download, extract
+from modules.request import Api
 from modules.functions.interface.image import load as load_image
+from modules.launcher.deployment_info import Deployment
 
 import customtkinter as ctk
 from fontTools.ttLib import TTFont
@@ -17,8 +21,9 @@ class FontImportWindow(ctk.CTkToplevel):
     BUTTON_SIZE: int = 40
     ENTRY_RATIO: float = 7.5
     root: ctk.CTk
-    chosen_path: Path
+    chosen_path: Optional[Path] = None
     text_var: ctk.StringVar
+    on_success: Callable | None = None
     
 
     def __init__(self, root: ctk.CTk, *args, **kwargs) -> None:
@@ -41,7 +46,7 @@ class FontImportWindow(ctk.CTkToplevel):
         frame: ctk.CTkFrame = ctk.CTkFrame(self, fg_color="transparent")
         frame.grid(column=0, row=0, sticky="nsew", padx=32, pady=32)
 
-        ctk.CTkLabel(frame, text="Chosen font:", anchor="w").grid(column=0, row=0, sticky="w")
+        ctk.CTkLabel(frame, text="Choose a font:", anchor="w").grid(column=0, row=0, sticky="w")
         entry: ctk.CTkEntry = ctk.CTkEntry(frame, textvariable=self.text_var, state="disabled", width=int(self.ENTRY_RATIO * self.BUTTON_SIZE), height=self.BUTTON_SIZE)
         entry.grid(column=0, row=1, sticky="w")
 
@@ -80,15 +85,17 @@ class FontImportWindow(ctk.CTkToplevel):
         path: Path = Path(file)
         self.text_var.set(path.with_suffix("").name)
         self.chosen_path = path
+    
+
+    def set_refresh_function(self, func: Callable) -> None:
+        self.on_success = func
 
 
     def show(self) -> None:
         self.deiconify()
         self.geometry(self._get_geometry())
-        self.focus()
         self.grab_set()
-        self.wait_window()
-        self._hide()
+        self.wm_transient(self.root)
 
 
     def _get_geometry(self, width: Optional[int] = None, height: Optional[int] = None) -> str:
@@ -116,15 +123,26 @@ class FontImportWindow(ctk.CTkToplevel):
 
     def _create_font_mod(self) -> None:
         try:
+            if self.chosen_path is None:
+                return
+                
             if not self.chosen_path.is_file():
-                raise FileExistsError(f"File not found: {self.chosen_path.name}")
+                messagebox.showerror(ProjectData.NAME, f"File not found: {self.chosen_path.name}")
+                return
             mod_name: str = f"Custom Font ({self.chosen_path.with_suffix('').name})"
+            target_path: Path = Directory.MODS / mod_name
+
+            if target_path.is_dir():
+                if not messagebox.askokcancel(ProjectData.NAME, "Another mod with the same name already exists!\nDo you wish to replace it?"):
+                    return
+                shutil.rmtree(target_path)
             
             with TemporaryDirectory() as tmp:
                 temporary_directory: Path = Path(tmp)
                 fonts_basepath: Path = temporary_directory / mod_name / "content" / "fonts"
                 font_filepath: Path = fonts_basepath / "CustomFont.ttf"
                 font_families_path: Path = fonts_basepath / "families"
+                font_families_path.mkdir(parents=True, exist_ok=True)
 
                 # Move fonts to temporary folder, convert to .ttf if needed
                 match self.chosen_path.suffix:
@@ -137,7 +155,36 @@ class FontImportWindow(ctk.CTkToplevel):
                     case _:
                         raise Exception("Unsupported filetype!")
             
-            raise NotImplementedError("Function not implemented!")
+                deployment: Deployment = Deployment("Player")
+                download(Api.Roblox.Deployment.download(deployment.version, "content-fonts.zip"), temporary_directory / "content-fonts.zip")
+                extract(temporary_directory / "content-fonts.zip", temporary_directory / "content-fonts-extracted")
+                shutil.copytree(temporary_directory / "content-fonts-extracted" / "families", font_families_path, dirs_exist_ok=True)
+                
+                # Overwrite each font's json file to direct to our custom font
+                new_rbxasset: str = "rbxasset://fonts//CustomFont.ttf"
+                json_files: list[Path] = [
+                    font_families_path / file for file in font_families_path.iterdir()
+                    if file.is_file() and file.suffix == "json"
+                ]
+                for json_file in json_files:
+                    with open(json_file, "r") as read_file:
+                        data: dict = json.load(read_file)
+
+                    faces: Optional[list[dict]] = data.get("faces")
+                    if faces is None:
+                        continue
+
+                    for i, _ in enumerate(faces):
+                        faces[i]["assetId"] = new_rbxasset
+                    data["faces"] = faces
+
+                    with open(json_file, "w") as write_file:
+                        json.dump(data, write_file, indent=4)
+                
+                shutil.copytree(temporary_directory / mod_name, target_path, dirs_exist_ok=True)
+            self._hide()
+            if self.on_success is not None:
+                self.on_success()
 
         except Exception as e:
             Logger.error(f"{type(e).__name__}: {e}")

@@ -35,6 +35,7 @@ class ModsSection:
     def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, font_import_window: FontImportWindow) -> None:
         self.root = root
         self.container = container
+        font_import_window.set_refresh_function(self.show)
         self.font_import_window = font_import_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
@@ -150,6 +151,7 @@ class ModsSection:
 
             # Name label
             name_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
+            name_frame.grid_columnconfigure(0, weight=1)
             name_frame.grid(column=1, row=0, sticky="ew", padx=4, pady=8)
             
             entry: ctk.CTkEntry = ctk.CTkEntry(
@@ -160,7 +162,7 @@ class ModsSection:
             entry.bind("<Return>", lambda _: self.root.focus())
             entry.bind("<Control-s>", lambda _: self.root.focus())
             entry.bind("<FocusOut>", lambda event, mod_info=mod_info: self._rename_mod(event, mod_info))
-            entry.grid(column=0, row=0, sticky="e")
+            entry.grid(column=0, row=0, sticky="ew")
 
             # logo (maybe)
             # logo: Path = Directory.MODS / name / "logo.png"
@@ -168,7 +170,7 @@ class ModsSection:
             #     ctk.CTkLabel(
             #         name_frame, text="", width=32, height=32, fg_color="transparent",
             #         image=load_image(logo, size=(32,32))
-            #     ).grid(column=1, row=0, sticky="e", padx=(4,0))
+            #     ).grid(column=1, row=0, sticky="w", padx=(4,0))
 
             # Mod priority
             priority_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
@@ -219,10 +221,6 @@ class ModsSection:
         
     def _add_font_mod(self) -> None:
         self.font_import_window.show()
-        try:
-            self.show()
-        except TclError:
-            pass
 
 
     def _remove_mod(self, mod_info: dict) -> None:
