@@ -11,7 +11,8 @@ REQUIRED_LIBRARIES: list[str] = [
     "pyperclip",
     "customtkinter",
     "PIL",
-    "psutil"
+    "psutil",
+    "fonttools"
 ]
 
 

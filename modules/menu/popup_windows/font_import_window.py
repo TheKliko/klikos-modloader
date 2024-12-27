@@ -2,6 +2,7 @@ from _tkinter import TclError
 from tkinter import filedialog, messagebox
 from pathlib import Path
 from typing import Optional, Literal
+from tempfile import TemporaryDirectory
 
 from modules import Logger
 from modules.info import ProjectData
@@ -9,6 +10,7 @@ from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
 
 import customtkinter as ctk
+from fontTools.ttLib import TTFont
 
 
 class FontImportWindow(ctk.CTkToplevel):
@@ -69,7 +71,7 @@ class FontImportWindow(ctk.CTkToplevel):
 
         file: str | Literal[''] = filedialog.askopenfilename(
             title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
-            filetypes=[("TrueType Fonts", "*.ttf")]
+            filetypes=[("Supported Fonts", "*.ttf;*.otf"), ("TrueType Fonts", "*.ttf"), ("OpenType Fonts", "*.otf")]
         )
 
         if file == '':
@@ -114,6 +116,27 @@ class FontImportWindow(ctk.CTkToplevel):
 
     def _create_font_mod(self) -> None:
         try:
+            if not self.chosen_path.is_file():
+                raise FileExistsError(f"File not found: {self.chosen_path.name}")
+            mod_name: str = f"Custom Font ({self.chosen_path.with_suffix('').name})"
+            
+            with TemporaryDirectory() as tmp:
+                temporary_directory: Path = Path(tmp)
+                fonts_basepath: Path = temporary_directory / mod_name / "content" / "fonts"
+                font_filepath: Path = fonts_basepath / "CustomFont.ttf"
+                font_families_path: Path = fonts_basepath / "families"
+
+                # Move fonts to temporary folder, convert to .ttf if needed
+                match self.chosen_path.suffix:
+                    case ".ttf":
+                        pass
+
+                    case ".otf":
+                        TTFont(self.chosen_path).save(font_filepath)
+
+                    case _:
+                        raise Exception("Unsupported filetype!")
+            
             raise NotImplementedError("Function not implemented!")
 
         except Exception as e:
