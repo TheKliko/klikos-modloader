@@ -6,11 +6,19 @@ import webbrowser
 from modules import Logger
 from modules.info import ProjectData, Help
 from modules import request
-from modules.request import Api, Response
+from modules.request import Api, Response, ConnectionError
 
 
 def check_for_updates() -> None:
-    latest_version: str = get_latest_version()
+    try:
+        latest_version: str = get_latest_version()
+    except ConnectionError:
+        Logger.warning("Failed to check for updates! User is offline.")
+        return
+    except Exception as e:
+        Logger.warning(f"Failed to check for updates! {type(e).__name__}: {e}")
+        return
+    
     if latest_version <= ProjectData.VERSION:
         return
     
@@ -25,7 +33,7 @@ def check_for_updates() -> None:
 
 
 def get_latest_version() -> str:
-    response: Response = request.get(Api.GitHub.LATEST_VERSION)
+    response: Response = request.get(Api.GitHub.LATEST_VERSION, attempts=1, timeout=(2,15))
     data: dict = response.json()
     version: str = data["latest"]
     return version

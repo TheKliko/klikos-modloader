@@ -61,7 +61,7 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             Logger.info("Applying modifications...")
             textvariable.set("Applying modifications...")
         if not disable_all_mods:
-            apply_mods(deployment.base_directory)
+            apply_mods(deployment.base_directory, mode)
         if not disable_all_fastflags:
             apply_fastflags(deployment.base_directory)
 

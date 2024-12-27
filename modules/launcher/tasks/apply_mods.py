@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Literal
 import shutil
 
 from modules import Logger
@@ -6,11 +7,11 @@ from modules.filesystem import Directory
 from modules.config import mods
 
 
-def apply_mods(version_folder_root: str | Path) -> None:
+def apply_mods(version_folder_root: str | Path, mode: Literal["Player", "Studio"]) -> None:
     version_folder_root = Path(version_folder_root)
 
     Logger.info("Applying mods...")
-    active_mods: list[str] = mods.get_active()
+    active_mods: list[str] = mods.get_active(mode)
     if not active_mods:
         Logger.info("No active mods!")
         return

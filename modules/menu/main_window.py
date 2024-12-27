@@ -16,6 +16,8 @@ from .sections.integrations import IntegrationsSection
 from .sections.settings import SettingsSection
 from .sections.about import AboutSection
 
+from .popup_windows.font_import_window import FontImportWindow
+
 import customtkinter as ctk
 
 
@@ -36,6 +38,10 @@ class MainWindow(ctk.CTk):
         integrations: IntegrationsSection
         settings: SettingsSection
         about: AboutSection
+    
+
+    class PopupWindows:
+        font_import_window: FontImportWindow
 
 
     background_color: str | tuple[str, str] = "transparent"
@@ -67,7 +73,10 @@ class MainWindow(ctk.CTk):
         container: ctk.CTkScrollableFrame = ctk.CTkScrollableFrame(self, fg_color=self.background_color, width=self.Constants.WIDTH-NavigationFrame.Constants.WIDTH, height=self.Constants.HEIGHT, corner_radius=0)
         container.grid_columnconfigure(0, weight=1)
         container.grid(column=1, row=0, sticky="nsew", padx=(8,0), pady=4)
-        self.Sections.mods = ModsSection(self, container)
+
+        self.PopupWindows.font_import_window = FontImportWindow(self)
+
+        self.Sections.mods = ModsSection(self, container, self.PopupWindows.font_import_window)
         self.Sections.marketplace = MarketplaceSection(container)
         self.Sections.mod_generator = ModGeneratorSection(container)
         self.Sections.fastflags = FastFlagsSection(container)

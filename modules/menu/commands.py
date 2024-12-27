@@ -32,7 +32,7 @@ def launch_roblox_studio() -> None:
 
 
 # region mods
-def add_mods() -> None:
+def add_mods() -> bool:
     initial_dir: Path = Path().home()
     if (initial_dir / "Downloads").is_dir():
         initial_dir = initial_dir / "Downloads"
@@ -43,8 +43,9 @@ def add_mods() -> None:
     )
 
     if files == '':
-        return
+        return False
 
+    cancelled_imports: int = 0
     for mod in files:
         path: Path = Path(mod)
         name: str = path.with_suffix("").name
@@ -52,17 +53,29 @@ def add_mods() -> None:
 
         if target.exists():
             if not messagebox.askokcancel(ProjectData.NAME, "Another mod with the same name already exists!\nDo you wish to replace it?"):
-                return
-            if target.is_file():
-                target.unlink()
-            else:
-                shutil.rmtree(target)
+                cancelled_imports += 1
+                continue
+
+            try:
+                if target.is_file():
+                    target.unlink()
+                else:
+                    shutil.rmtree(target)
+            except Exception as e:
+                Logger.error(f"Failed to import mod: {name}! {type(e).__name__}: {e}")
+                cancelled_imports += 1
+                messagebox.showerror(ProjectData.NAME, f"Failed to import mod: {name}!\n{type(e).__name__}: {e}")
+                continue
+
 
         try:
             filesystem.extract(path, target)
         except Exception as e:
             Logger.error(f"Failed to import mod: {name}! {type(e).__name__}: {e}")
+            cancelled_imports += 1
             messagebox.showerror(ProjectData.NAME, f"Failed to import mod: {name}!\n{type(e).__name__}: {e}")
+    
+    return cancelled_imports < len(files)
 
 
 def open_mods_folder() -> None:

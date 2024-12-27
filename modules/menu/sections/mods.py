@@ -1,6 +1,7 @@
 from pathlib import Path
 import re
 from tkinter import messagebox
+from _tkinter import TclError
 
 from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
@@ -8,6 +9,7 @@ from modules.config import mods
 from modules.info import ProjectData
 
 from ..commands import add_mods, open_mods_folder, add_mods, remove_mod, rename_mod
+from ..popup_windows.font_import_window import FontImportWindow
 
 import customtkinter as ctk
 
@@ -26,12 +28,14 @@ class ModsSection:
 
 
     root: ctk.CTk
+    font_import_window: ctk.CTkToplevel
     container: ctk.CTkScrollableFrame
 
 
-    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame) -> None:
+    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, font_import_window: FontImportWindow) -> None:
         self.root = root
         self.container = container
+        self.font_import_window = font_import_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
         self.Fonts.large_bold = ctk.CTkFont(size=16, weight="bold")
@@ -75,9 +79,9 @@ class ModsSection:
             restore_from_meipass(font_icon)
         font_image = load_image(font_icon)
 
-        ctk.CTkButton(buttons, text="Add mods", image=package_image, command=add_mods, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+        ctk.CTkButton(buttons, text="Add mods", image=package_image, command=self._add_mods, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
         ctk.CTkButton(buttons, text="Open mods folder", image=folder_image, command=open_mods_folder, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))
-        ctk.CTkButton(buttons, text="Add font", image=font_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=2, row=0, sticky="nsw", padx=(8,0))
+        ctk.CTkButton(buttons, text="Add font", image=font_image, command=self._add_font_mod, width=1, anchor="w", compound=ctk.LEFT).grid(column=2, row=0, sticky="nsw", padx=(8,0))
     # endregion
 
 
@@ -208,13 +212,23 @@ class ModsSection:
 
     # region functions
     def _add_mods(self) -> None:
-        add_mods()
-        self.show()
+        success: bool = add_mods()
+        if success:
+            self.show()
+
+        
+    def _add_font_mod(self) -> None:
+        self.font_import_window.show()
+        try:
+            self.show()
+        except TclError:
+            pass
 
 
     def _remove_mod(self, mod_info: dict) -> None:
-        remove_mod(mod_info["name"])
-        self.show()
+        if messagebox.askokcancel(ProjectData.NAME, "Are you sure you want to remove this mod?\nThis action cannot be undone!"):
+            remove_mod(mod_info["name"])
+            self.show()
 
     
     def _rename_mod(self, event, mod_info: dict) -> None:

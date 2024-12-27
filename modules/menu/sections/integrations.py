@@ -48,11 +48,9 @@ class IntegrationsSection:
         buttons: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
         buttons.grid(column=0, row=2, sticky="nsw", pady=(8,0))
 
-        package_icon: Path = (Directory.RESOURCES / "menu" / "common" / "package").with_suffix(".png")
+        restore_icon: Path = (Directory.RESOURCES / "menu" / "common" / "restore").with_suffix(".png")
+        if not restore_icon.is_file():
+            restore_from_meipass(restore_icon)
+        restore_image = load_image(restore_icon)
 
-        if not package_icon.is_file():
-            restore_from_meipass(package_icon)
-        
-        package_image = load_image(package_icon)
-
-        ctk.CTkButton(buttons, text="Reset", image=package_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+        ctk.CTkButton(buttons, text="Reset", image=restore_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")

@@ -4,7 +4,7 @@ import time
 from modules import Logger
 
 import requests
-from requests import Response
+from requests import Response, ConnectionError
 
 
 COOLDOWN: float = 2
@@ -66,7 +66,7 @@ class Api:
 
 
 # region get()
-def get(url: str, attempts: int = 3, cached: bool = False) -> Response:
+def get(url: str, attempts: int = 3, cached: bool = False, timeout: Optional[tuple[int, int]] = None) -> Response:
     if cached and url in _cache:
         Logger.info(f"Cached GET request: {url}")
         return _cache[url]
@@ -76,7 +76,7 @@ def get(url: str, attempts: int = 3, cached: bool = False) -> Response:
     for _ in range(attempts):
         try:
             Logger.info(f"GET request: {url}")
-            response: Response = requests.get(url, timeout=TIMEOUT)
+            response: Response = requests.get(url, timeout=timeout or TIMEOUT)
             response.raise_for_status()
             _cache[url] = response
             return response
