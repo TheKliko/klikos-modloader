@@ -80,5 +80,5 @@ class ModDownloadWindow(ctk.CTkToplevel):
     
 
     def hide(self, *args, **kwargs) -> None:
-        self.textvariable.set("placeholder")
         self._hide()
+        self.textvariable.set("placeholder")

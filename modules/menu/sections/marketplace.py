@@ -35,13 +35,15 @@ class MarketplaceSection:
         small: ctk.CTkFont
         bold: ctk.CTkFont
 
+    root: ctk.CTk
     container: ctk.CTkScrollableFrame
     mod_download_window: ModDownloadWindow
     data: list[dict] = []
     placeholder_image = None
 
 
-    def __init__(self, container: ctk.CTkScrollableFrame, mod_download_window: ModDownloadWindow) -> None:
+    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, mod_download_window: ModDownloadWindow) -> None:
+        self.root = root
         self.container = container
         self.mod_download_window = mod_download_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
@@ -73,6 +75,7 @@ class MarketplaceSection:
             widget.destroy()
 
 
+    # region title
     def _load_title(self) -> None:
         frame: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         frame.grid_columnconfigure(0, weight=1)
@@ -80,8 +83,10 @@ class MarketplaceSection:
 
         ctk.CTkLabel(frame, text=self.Constants.SECTION_TITLE, anchor="w", font=self.Fonts.title).grid(column=0, row=0, sticky="nsew")
         ctk.CTkLabel(frame, text=self.Constants.SECTION_DESCRIPTION, anchor="w", font=self.Fonts.large).grid(column=0, row=1, sticky="nsew")
-    
+    # endregion
 
+
+    # region content
     def _load_content(self) -> None:
         container: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         container.grid_columnconfigure(0, weight=1)
@@ -161,10 +166,17 @@ class MarketplaceSection:
             # Download
             ctk.CTkButton(
                 frame, image=download_image, width=1, height=40, text="Download", anchor="w", compound=ctk.LEFT,
-                command=lambda name=name, id=id: self._download_mod(name, id)
+                command=lambda name=name, id=id: Thread(name=f"mod-download-thread_{id}", target=self._download_mod, args=(name, id), daemon=True).start()
             ).grid(column=2, row=0, sticky="ew", padx=(self.Constants.MOD_ENTRY_INNER_PADDING, self.Constants.MOD_ENTRY_OUTER_PADDING), pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
+    # endregion
 
 
+    # region functions
+    # def _download_mod(self, name: str, id: str) -> None:
+    #     Thread(name=f"mod-download-thread_{id}", target=self._actually_download_mod, args=(name, id), daemon=True).start()
+
+
+    # The popup window freezes if I don't do it from within a thread
     def _download_mod(self, name: str, id: str) -> None:
         try:
             target_path: Path = Directory.MODS / name
@@ -174,18 +186,17 @@ class MarketplaceSection:
 
             Logger.info(f"Downloading mod: {id}")
             textvariable: ctk.StringVar = self.mod_download_window.show(name)
-            input("test")
             with TemporaryDirectory() as tmp:
                 temporary_directory: Path = Path(tmp)
                 download(Api.GitHub.mod_download(id), temporary_directory / f"{id}.zip")
-                textvariable.set("Extracting files...")
+                self.root.after(0, textvariable.set, "Extracting files...")
                 extract(temporary_directory / f"{id}.zip", temporary_directory / id)
-                textvariable.set("Checking for updates...")
+                self.root.after(0, textvariable.set, "Checking for updates...")
 
                 deployment: Deployment = Deployment("Player")
                 check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(temporary_directory, [id], deployment.version)
                 if check:
-                    textvariable.set("Updating mod...")
+                    self.root.after(0, textvariable.set, f"Updating {name}...")
                     update_mods(check, deployment.version, temporary_directory / "updated")
 
                 if target_path.exists():
@@ -196,7 +207,7 @@ class MarketplaceSection:
                     elif target_path.is_file():
                         target_path.unlink()
                 
-                textvariable.set("Copying files...")
+                self.root.after(0, textvariable.set, "Copying files...")
                 if check:
                     (temporary_directory / "updated" / id).rename(target_path)
                     # shutil.copytree(temporary_directory / "updated" / id, target_path, dirs_exist_ok=True)
@@ -209,3 +220,4 @@ class MarketplaceSection:
             messagebox.showerror(ProjectData.NAME, f"Something went wrong!\n{type(e).__name__}: {e}")
         
         self.mod_download_window.hide()
+    # endregion
