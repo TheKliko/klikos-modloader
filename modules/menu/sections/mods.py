@@ -19,7 +19,8 @@ class ModsSection:
         SECTION_TITLE: str = "Mods"
         SECTION_DESCRIPTION: str = "Manage your mods"
         MOD_ENTRY_INNER_PADDING: int = 4
-        MOD_ENTRY_OUTER_PADDING: int = 8
+        MOD_ENTRY_OUTER_PADDING: int = 12
+        MOD_ENTRY_GAP: int = 8
     
     class Fonts:
         title: ctk.CTkFont
@@ -96,8 +97,6 @@ class ModsSection:
 
         if not Directory.MODS.is_dir():
             Directory.MODS.mkdir(parents=True, exist_ok=True)
-            ctk.CTkLabel(container, text="No mods found!", anchor="w", font=self.Fonts.large_bold).grid(column=0, row=0, sticky="nsew")
-            return
 
         all_mods: list[dict] = [
             mod for mod in configured_mods
@@ -114,7 +113,16 @@ class ModsSection:
         ]
 
         if not all_mods:
-            ctk.CTkLabel(container, text="No mods found!", anchor="w", font=self.Fonts.large_bold).grid(column=0, row=0, sticky="nsew")
+            not_found_icon: Path = (Directory.RESOURCES / "menu" / "large" / "file-not-found").with_suffix(".png")
+            if not not_found_icon.is_file():
+                restore_from_meipass(not_found_icon)
+            not_found_image = load_image(not_found_icon, size=(96,96))
+            
+            error_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+            error_frame.place(anchor="c", relx=.5, rely=.5)
+            ctk.CTkLabel(error_frame, image=not_found_image, text="").grid(column=0, row=0)
+            ctk.CTkLabel(error_frame, text="No mods found!", font=self.Fonts.title).grid(column=1, row=0, sticky="w", padx=(8,0))
+            
             return
 
         bin_icon: Path = (Directory.RESOURCES / "menu" / "common" / "bin").with_suffix(".png")
@@ -140,19 +148,18 @@ class ModsSection:
             
             frame: ctk.CTkFrame = ctk.CTkFrame(container)
             frame.grid_columnconfigure(1, weight=1)
-            frame.grid(column=0, row=i, sticky="nsew", pady=0 if i == 0 else (8,0))
+            frame.grid(column=0, row=i, sticky="nsew", pady=0 if i == 0 else (self.Constants.MOD_ENTRY_GAP,0))
 
             # Delete button
             ctk.CTkButton(
-                frame, image=bin_image, height=40, text="",
-                command=lambda mod_info=mod_info: self._remove_mod(mod_info),
-                width=1, anchor="w", compound=ctk.LEFT
-            ).grid(column=0, row=0, sticky="w", padx=(8,4), pady=8)
+                frame, image=bin_image, width=1, height=40, text="", anchor="w", compound=ctk.LEFT,
+                command=lambda mod_info=mod_info: self._remove_mod(mod_info)
+            ).grid(column=0, row=0, sticky="w", padx=(self.Constants.MOD_ENTRY_OUTER_PADDING, self.Constants.MOD_ENTRY_INNER_PADDING), pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
 
             # Name label
             name_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
             name_frame.grid_columnconfigure(0, weight=1)
-            name_frame.grid(column=1, row=0, sticky="ew", padx=4, pady=8)
+            name_frame.grid(column=1, row=0, sticky="ew", padx=self.Constants.MOD_ENTRY_INNER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
             
             entry: ctk.CTkEntry = ctk.CTkEntry(
                 name_frame, width=256, height=40, validate="key",
@@ -174,7 +181,7 @@ class ModsSection:
 
             # Mod priority
             priority_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-            priority_frame.grid(column=2, row=0, sticky="ew", padx=4, pady=8)
+            priority_frame.grid(column=2, row=0, sticky="ew", padx=self.Constants.MOD_ENTRY_INNER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
             ctk.CTkLabel(priority_frame, text="Load order: ", anchor="e").grid(column=0, row=0, sticky="ew")
             entry = ctk.CTkEntry(
                 priority_frame, width=40, height=40, validate="key",
@@ -188,17 +195,17 @@ class ModsSection:
 
             # Mod status
             status_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-            status_frame.grid(column=3, row=0, sticky="ew", padx=8, pady=8)
+            status_frame.grid(column=3, row=0, sticky="ew", padx=2*self.Constants.MOD_ENTRY_INNER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
 
             player_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled)
             player_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
-            player_switch_frame.grid(column=0, row=0, sticky="e", padx=(0, 4))
+            player_switch_frame.grid(column=0, row=0, sticky="e", padx=(0, self.Constants.MOD_ENTRY_INNER_PADDING))
 
             ctk.CTkLabel(player_switch_frame, text="Roblox Player", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 player_switch_frame, text="", width=48, variable=player_var, onvalue=True, offvalue=False,
                 command=lambda mod_info=mod_info, var=player_var: self._set_mod_status(var.get(), mod_info)
-            ).grid(column=1, row=0, sticky="e", padx=(4,0))
+            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.MOD_ENTRY_INNER_PADDING,0))
 
             studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled)
             studio_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
@@ -208,7 +215,7 @@ class ModsSection:
             ctk.CTkSwitch(
                 studio_switch_frame, text="", width=48, variable=studio_var, onvalue=True, offvalue=False,
                 command=lambda mod_info=mod_info, var=studio_var: self._set_mod_status_studio(var.get(), mod_info)
-            ).grid(column=1, row=0, sticky="e", padx=(4,0))
+            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.MOD_ENTRY_INNER_PADDING,0))
     # endregion
 
 

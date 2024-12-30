@@ -48,16 +48,16 @@ class FastFlagsSection:
         buttons: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
         buttons.grid(column=0, row=2, sticky="nsw", pady=(8,0))
 
-        package_icon: Path = (Directory.RESOURCES / "menu" / "common" / "package").with_suffix(".png")
-        folder_icon: Path = (Directory.RESOURCES / "menu" / "common" / "folder").with_suffix(".png")
+        create_icon: Path = (Directory.RESOURCES / "menu" / "common" / "create").with_suffix(".png")
+        if not create_icon.is_file():
+            restore_from_meipass(create_icon)
+        create_image = load_image(create_icon)
 
-        if not package_icon.is_file():
-            restore_from_meipass(package_icon)
-        if not folder_icon.is_file():
-            restore_from_meipass(folder_icon)
+        cloud_icon: Path = (Directory.RESOURCES / "menu" / "common" / "cloud").with_suffix(".png")
+        if not cloud_icon.is_file():
+            restore_from_meipass(cloud_icon)
+        cloud_image = load_image(cloud_icon)
         
-        package_image = load_image(package_icon)
-        folder_image = load_image(folder_icon)
 
-        ctk.CTkButton(buttons, text="New profile", image=package_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
-        ctk.CTkButton(buttons, text="Presets", image=folder_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))
+        ctk.CTkButton(buttons, text="New profile", image=create_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+        ctk.CTkButton(buttons, text="Presets", image=cloud_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))

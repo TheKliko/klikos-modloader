@@ -17,6 +17,7 @@ from .sections.settings import SettingsSection
 from .sections.about import AboutSection
 
 from .popup_windows.font_import_window import FontImportWindow
+from .popup_windows.mod_download_window import ModDownloadWindow
 
 import customtkinter as ctk
 
@@ -42,6 +43,7 @@ class MainWindow(ctk.CTk):
 
     class PopupWindows:
         font_import_window: FontImportWindow
+        mod_download_window: FontImportWindow
 
 
     background_color: str | tuple[str, str] = "transparent"
@@ -75,9 +77,10 @@ class MainWindow(ctk.CTk):
         container.grid(column=1, row=0, sticky="nsew", padx=(8,0), pady=4)
 
         self.PopupWindows.font_import_window = FontImportWindow(self)
+        self.PopupWindows.mod_download_window = ModDownloadWindow(self)
 
         self.Sections.mods = ModsSection(self, container, self.PopupWindows.font_import_window)
-        self.Sections.marketplace = MarketplaceSection(container)
+        self.Sections.marketplace = MarketplaceSection(container, self.PopupWindows.mod_download_window)
         self.Sections.mod_generator = ModGeneratorSection(container)
         self.Sections.fastflags = FastFlagsSection(container)
         self.Sections.launch_apps = LaunchAppsSection(container)

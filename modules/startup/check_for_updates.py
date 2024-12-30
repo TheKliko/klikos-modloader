@@ -33,7 +33,7 @@ def check_for_updates() -> None:
 
 
 def get_latest_version() -> str:
-    response: Response = request.get(Api.GitHub.LATEST_VERSION, attempts=1, timeout=(2,15))
+    response: Response = request.get(Api.GitHub.LATEST_VERSION, attempts=1, timeout=(2,4))
     data: dict = response.json()
     version: str = data["latest"]
     return version

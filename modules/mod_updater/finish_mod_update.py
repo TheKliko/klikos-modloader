@@ -13,7 +13,13 @@ def finish_mod_update(mod: str, temporary_directory: Path, output_directory: Pat
         raise ModUpdaterError(f"No such file or directory: %TEMP%/{temporary_directory.name}/{mod}")
     
     destination.mkdir(parents=True, exist_ok=True)
-    if not os.access(destination, os.W_OK):
-        raise ModUpdaterError(f"Write permission denied for {destination}")
+    if destination.exists():
+        if not os.access(destination, os.W_OK):
+            raise ModUpdaterError(f"Write permission denied for {destination}")
+        if destination.is_dir():
+            shutil.rmtree(destination)
+        elif destination.is_file():
+            destination.unlink()
 
-    shutil.copytree(source, destination, dirs_exist_ok=True)
+    source.rename(destination)
+    # shutil.copytree(source, destination, dirs_exist_ok=True)

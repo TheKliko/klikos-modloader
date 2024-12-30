@@ -17,9 +17,15 @@ class Api:
     class GitHub:
         LATEST_VERSION: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/main/GitHub%20Files/version.json"
         RELEASE_INFO: str = r"https://api.github.com/repos/thekliko/klikos-modloader/releases/latest"
-        MARKETPLACE: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/index.json"
-        FASTFLAG_PRESETS: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/fastflag_presets.json"
         FILEMAP: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/filemap.json"
+        FASTFLAG_PRESETS: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/fastflag_presets.json"
+        MARKETPLACE: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/index.json"
+        @staticmethod
+        def mod_thumbnail(id: str) -> str:
+            return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/thumbnails/{id}.png"
+        @staticmethod
+        def mod_download(id: str) -> str:
+            return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/mods/{id}.zip"
     
     class Roblox:
         FASTFLAGS: str = r"https://clientsettingscdn.roblox.com/v2/settings/application/PCDesktopClient"
