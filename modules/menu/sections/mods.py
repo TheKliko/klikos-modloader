@@ -25,7 +25,6 @@ class ModsSection:
     class Fonts:
         title: ctk.CTkFont
         large: ctk.CTkFont
-        large_bold: ctk.CTkFont
 
 
     root: ctk.CTk
@@ -40,7 +39,6 @@ class ModsSection:
         self.font_import_window = font_import_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
-        self.Fonts.large_bold = ctk.CTkFont(size=16, weight="bold")
 
 
     def show(self) -> None:
@@ -207,7 +205,7 @@ class ModsSection:
                 command=lambda mod_info=mod_info, var=player_var: self._set_mod_status(var.get(), mod_info)
             ).grid(column=1, row=0, sticky="e", padx=(self.Constants.MOD_ENTRY_INNER_PADDING,0))
 
-            studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled)
+            studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled_studio)
             studio_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             studio_switch_frame.grid(column=1, row=0, sticky="e")
             
@@ -260,7 +258,7 @@ class ModsSection:
     
     def _set_mod_priority(self, event, mod_info: dict) -> None:
         mod: str = mod_info["name"]
-        old: int = mod_info["priority"]
+        old: int = mod_info.get("priority", 0)
         try:
             new: int = int(event.widget.get())
         except ValueError:
@@ -282,7 +280,7 @@ class ModsSection:
     
     def _set_mod_status(self, new: bool, mod_info: dict) -> None:
         mod: str = mod_info["name"]
-        old: bool = mod_info["enabled"]
+        old: bool = mod_info.get("enabled", False)
 
         if old == new:
             return
@@ -293,7 +291,7 @@ class ModsSection:
     
     def _set_mod_status_studio(self, new: bool, mod_info: dict) -> None:
         mod: str = mod_info["name"]
-        old: bool = mod_info["enabled_studio"]
+        old: bool = mod_info.get("enabled_studio", False)
 
         if old == new:
             return

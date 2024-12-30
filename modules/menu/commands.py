@@ -9,7 +9,7 @@ from modules import Logger
 from modules.info import ProjectData
 from modules.filesystem import Directory
 from modules import filesystem
-from modules.config import mods
+from modules.config import mods, fastflags
 
 
 IS_FROZEN: bool = getattr(sys, "frozen", False)
