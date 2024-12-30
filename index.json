@@ -1,56 +1,63 @@
 [
     {
         "name": "Kliko's mod",
+        "id": "klikos-mod",
         "author": "TheKliko",
         "description": "Gradient mod: #990000 -> #ff006e",
-        "id": "klikos-mod"
+        "has_thumbnail": true
     },
     {
         "name": "Bloxstrap theme",
+        "id": "bloxstrap-theme",
         "author": "TheKliko",
         "description": "Gradient mod: #a011fe -> #5460f9",
-        "id": "bloxstrap-theme"
+        "has_thumbnail": true
     },
     {
         "name": "24K Gradient Gold Theme",
+        "id": "24k-gradient-gold-theme",
         "author": "thefrenchguy4",
         "description": "The golden theme for the elite",
-        "id": "24k-gradient-gold-theme"
+        "has_thumbnail": true
     },
     {
         "name": "Blue Star Theme",
+        "id": "blue-star-theme",
         "author": "thefrenchguy4",
-        "id": "blue-star-theme"
+        "has_thumbnail": true
     },
     {
         "name": "Discord UI [WIP]",
+        "id": "discord-ui",
         "author": "TheKliko",
         "description": "Changes the icons to look like those found in Discord",
-        "id": "discord-ui"
+        "has_thumbnail": true
     },
     {
         "name": "Translucency",
+        "id": "translucency",
         "author": "dooM",
         "description": "Make UI elements transparent.",
-        "id": "translucency",
         "has_thumbnail": false
     },
     {
         "name": "Bloxstrap theme [Premium]",
+        "id": "bloxstrap-theme-premium",
         "author": "TheKliko",
         "description": "Gradient mod: #feaa17 -> #f95455",
-        "id": "bloxstrap-theme-premium"
+        "has_thumbnail": true
     },
     {
         "name": "UBFF Theme",
+        "id": "ubff-theme",
         "author": "TheKliko",
         "description": "Gradient mod: #648bd9 -> #fa94d7",
-        "id": "ubff-theme"
+        "has_thumbnail": true
     },
     {
         "name": "Old Death Sound",
-        "description": "death sound: 'oof'",
         "id": "old-death-sound",
+        "description": "death sound: 'oof'",
         "has_thumbnail": false
     }
 ]
