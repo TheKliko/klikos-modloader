@@ -19,6 +19,7 @@ from .sections.about import AboutSection
 
 from .popup_windows.font_import_window import FontImportWindow
 from .popup_windows.mod_download_window import ModDownloadWindow
+from .popup_windows.fastflag_preset_window import FastFlagPresetWindow
 
 import customtkinter as ctk
 
@@ -46,6 +47,7 @@ class MainWindow(ctk.CTk):
     class PopupWindows:
         font_import_window: FontImportWindow
         mod_download_window: FontImportWindow
+        fastflag_preset_window: FastFlagPresetWindow
 
 
     background_color: str | tuple[str, str] = "transparent"
@@ -80,18 +82,21 @@ class MainWindow(ctk.CTk):
 
         self.PopupWindows.font_import_window = FontImportWindow(self)
         self.PopupWindows.mod_download_window = ModDownloadWindow(self)
+        self.PopupWindows.fastflag_preset_window = FastFlagPresetWindow(self)
 
         self.Sections.mods = ModsSection(self, container, self.PopupWindows.font_import_window)
         self.Sections.marketplace = MarketplaceSection(self, container, self.PopupWindows.mod_download_window)
         self.Sections.mod_generator = ModGeneratorSection(container)
         self.Sections.fastflag_configuration = FastFlagConfigurationSection(self, container)
-        self.Sections.fastflags = FastFlagsSection(self, container, self.Sections.fastflag_configuration)
+        self.Sections.fastflags = FastFlagsSection(self, container, self.Sections.fastflag_configuration, self.PopupWindows.fastflag_preset_window)
         self.Sections.launch_apps = LaunchAppsSection(container)
         self.Sections.integrations = IntegrationsSection(container)
         self.Sections.settings = SettingsSection(container)
         self.Sections.about = AboutSection(container)
         
+        self.PopupWindows.font_import_window.set_refresh_function(self.Sections.mods.show)
         self.Sections.fastflag_configuration.set_return_command(self.Sections.fastflags.show)
+        self.PopupWindows.fastflag_preset_window.set_refresh_function(self.Sections.fastflags.show)
 
         self.navigation: NavigationFrame = NavigationFrame(self)
         self.navigation.grid(column=0, row=0, sticky="nsew")

@@ -109,32 +109,6 @@ class FastFlagConfigurationSection:
 
 
     # region content
-    # def _load_content(self) -> None:
-    #     container: ctk.CTkFrame = ctk.CTkFrame(self.container)
-    #     container.grid_columnconfigure(0, weight=1)
-    #     container.grid(column=0, row=3, sticky="nsew")
-
-    #     title: ctk.CTkFrame = ctk.CTkFrame(container, corner_radius=0)
-    #     title.grid_columnconfigure(0, weight=1)
-    #     title.grid_columnconfigure(1, weight=1)
-    #     title.grid(column=0, row=0, sticky="ew")
-    #     ctk.CTkLabel(title, text="Flag", anchor="w").grid(column=0, row=0, sticky="w", padx=(8, 0))
-    #     ctk.CTkLabel(title, text="Value", anchor="w").grid(column=1, row=0, sticky="w", padx=(8, 0))
-
-    #     content: ctk.CTkFrame = ctk.CTkFrame(container, corner_radius=0)
-    #     content.grid_columnconfigure(0, weight=1)
-    #     content.grid_columnconfigure(1, weight=1)
-    #     content.grid(column=0, row=1, sticky="ew")
-
-    #     for i, (flag, value) in enumerate(self.profile_info["data"].items()):
-    #         flag_variable: ctk.StringVar = ctk.StringVar(value=str(flag))
-    #         value_variable: ctk.StringVar = ctk.StringVar(value=str(value))
-    #         ctk.CTkEntry(content, textvariable=flag_variable).grid(column=0, row=i, sticky="ew", padx=8, pady=8)
-    #         ctk.CTkEntry(content, textvariable=value_variable).grid(column=1, row=i, sticky="ew", padx=8, pady=8)
-    # endregion
-
-
-    # region content
     def _load_content(self) -> None:
         container: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         container.grid_columnconfigure(0, weight=1)
@@ -242,7 +216,7 @@ class FastFlagConfigurationSection:
 
     def _update_profile_data(self, event) -> None:
         try:
-            new_data_string: str = event.widget.get()
+            new_data_string: str = event.widget.get("0.0", "end")
             new_data: dict = json.loads(new_data_string)
             fastflags.set_data(self.profile_info["name"], new_data)
             self.profile_info["data"] = new_data
@@ -250,4 +224,6 @@ class FastFlagConfigurationSection:
         except Exception as e:
             Logger.error(f"Failed to save FastFlag profile! {type(e).__name__}: {e}")
             messagebox.showerror(ProjectData.NAME, f"Failed to save profile!\n{type(e).__name__}: {e}")
+            if messagebox.askyesno(ProjectData.NAME, "Do you wish to revert data to the last saved version?"):
+                self.show(self.profile_info)
     # endregion

@@ -4,7 +4,7 @@ import customtkinter as ctk
 class ModGeneratorSection:
     class Constants:
         SECTION_TITLE: str = "Mod Generator [BETA]"
-        SECTION_DESCRIPTION: str = "Generate mods"
+        SECTION_DESCRIPTION: str = "This feature is still in development. Expect things to break"
     
     class Fonts:
         title: ctk.CTkFont

@@ -8,6 +8,7 @@ from modules.functions.interface.image import load as load_image
 from modules.config import fastflags
 
 from ..sections.fastflag_configuration import FastFlagConfigurationSection
+from ..popup_windows.fastflag_preset_window import FastFlagPresetWindow
 
 import customtkinter as ctk
 
@@ -28,12 +29,15 @@ class FastFlagsSection:
 
     root: ctk.CTk
     container: ctk.CTkScrollableFrame
+    fastflag_configuration_section: FastFlagConfigurationSection
+    fastflag_preset_window: FastFlagPresetWindow
 
 
-    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, fastflag_configuration_section: FastFlagConfigurationSection) -> None:
+    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, fastflag_configuration_section: FastFlagConfigurationSection, fastflag_preset_window: FastFlagPresetWindow) -> None:
         self.root = root
         self.container = container
         self.fastflag_configuration_section = fastflag_configuration_section
+        self.fastflag_preset_window = fastflag_preset_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
 
@@ -72,7 +76,7 @@ class FastFlagsSection:
         cloud_image = load_image(cloud_icon)
         
         ctk.CTkButton(buttons, text="New profile", image=create_image, command=self._new_profile, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
-        ctk.CTkButton(buttons, text="Presets", image=cloud_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))
+        ctk.CTkButton(buttons, text="Presets", image=cloud_image, command=self._load_preset, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))
     # endregion
 
 
@@ -194,7 +198,18 @@ class FastFlagsSection:
             return
 
         fastflags.add_item(response)
-        self.show()
+        # self.show()
+
+        # Don't refresh the section, go straight to configuring the new profile
+        item: dict = fastflags.get_item(response)
+        profile_info: dict = {
+            "name": item["name"],
+            "description": item.get("description"),
+            "enabled": item.get("enabled", False),
+            "enabled_studio": item.get("enabled_studio", False),
+            "data": item.get("data", {})
+        }
+        self.fastflag_configuration_section.show(profile_info)
 
 
     def _remove_profile(self, profile_info: dict) -> None:
@@ -245,4 +260,8 @@ class FastFlagsSection:
 
         fastflags.set_enabled_studio(mod, new)
         profile_info["enabled_studio"] = new
+    
+
+    def _load_preset(self) -> None:
+        self.fastflag_preset_window.show()
     # endregion

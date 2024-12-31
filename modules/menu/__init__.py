@@ -4,7 +4,7 @@ from .main_window import MainWindow
 
 
 def run() -> None:
-    Logger.debug("Running menu...")
+    Logger.debug("Running modloader menu...")
 
     window: MainWindow = MainWindow()
     window.mainloop()

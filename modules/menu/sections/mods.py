@@ -35,7 +35,6 @@ class ModsSection:
     def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, font_import_window: FontImportWindow) -> None:
         self.root = root
         self.container = container
-        font_import_window.set_refresh_function(self.show)
         self.font_import_window = font_import_window
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)

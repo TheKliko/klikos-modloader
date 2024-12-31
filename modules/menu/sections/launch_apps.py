@@ -53,4 +53,4 @@ class LaunchAppsSection:
             restore_from_meipass(create_icon)
         create_image = load_image(create_icon)
 
-        ctk.CTkButton(buttons, text="Add new", image=create_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+        ctk.CTkButton(buttons, text="New", image=create_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")

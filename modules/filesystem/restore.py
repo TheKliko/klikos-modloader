@@ -37,6 +37,8 @@ def restore_from_meipass(file: str | Path) -> None:
 
     try:
         shutil.copy2(backup, temp)
+        if target.is_file():
+            target.unlink()
         os.replace(temp, target)
     except Exception as e:
         if temp.is_file():

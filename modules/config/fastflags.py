@@ -33,10 +33,12 @@ def get_item(key: str) -> dict:
     raise KeyError(f"Profile not found: {key}")
 
 
-def add_item(key: str) -> None:
+def add_item(key: str, description: str | None = None, profile_data: dict = TEMPLATE["data"]) -> None:
     data: list[dict] = read_file()
     new_item: dict = deepcopy(TEMPLATE)
     new_item["name"] = key
+    new_item["description"] = description
+    new_item["data"] = profile_data
 
     data.insert(0, new_item)
     
