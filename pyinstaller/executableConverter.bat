@@ -2,7 +2,7 @@
 echo running %~nx0...
 
 set "project_name=Kliko's modloader"
-set "dependencies=requests pypresence py7zr pyperclip customtkinter pillow psutil"
+set "dependencies=requests pypresence py7zr pyperclip customtkinter pillow psutil fonttools"
 
 set "temp=%~dp0temp"
 set "bin=%~dp0bin"

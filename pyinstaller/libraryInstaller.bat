@@ -1,7 +1,7 @@
 @echo off
 echo running %~nx0...
 
-set "dependencies=requests pypresence py7zr pyperclip customtkinter pillow psutil"
+set "dependencies=requests pypresence py7zr pyperclip customtkinter pillow psutil fonttools"
 set "libraries=%~dp0..\libraries"
 
 
