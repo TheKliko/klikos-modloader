@@ -11,6 +11,7 @@ from .sections.mods import ModsSection
 from .sections.marketplace import MarketplaceSection
 from .sections.mod_generator import ModGeneratorSection
 from .sections.fastflags import FastFlagsSection
+from .sections.fastflag_configuration import FastFlagConfigurationSection
 from .sections.launch_apps import LaunchAppsSection
 from .sections.integrations import IntegrationsSection
 from .sections.settings import SettingsSection
@@ -35,6 +36,7 @@ class MainWindow(ctk.CTk):
         marketplace: MarketplaceSection
         mod_generator: ModGeneratorSection
         fastflags: FastFlagsSection
+        fastflag_configuration: FastFlagConfigurationSection
         launch_apps: LaunchAppsSection
         integrations: IntegrationsSection
         settings: SettingsSection
@@ -82,11 +84,14 @@ class MainWindow(ctk.CTk):
         self.Sections.mods = ModsSection(self, container, self.PopupWindows.font_import_window)
         self.Sections.marketplace = MarketplaceSection(self, container, self.PopupWindows.mod_download_window)
         self.Sections.mod_generator = ModGeneratorSection(container)
-        self.Sections.fastflags = FastFlagsSection(self, container)
+        self.Sections.fastflag_configuration = FastFlagConfigurationSection(self, container)
+        self.Sections.fastflags = FastFlagsSection(self, container, self.Sections.fastflag_configuration)
         self.Sections.launch_apps = LaunchAppsSection(container)
         self.Sections.integrations = IntegrationsSection(container)
         self.Sections.settings = SettingsSection(container)
         self.Sections.about = AboutSection(container)
+        
+        self.Sections.fastflag_configuration.set_return_command(self.Sections.fastflags.show)
 
         self.navigation: NavigationFrame = NavigationFrame(self)
         self.navigation.grid(column=0, row=0, sticky="nsew")

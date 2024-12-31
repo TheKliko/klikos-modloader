@@ -7,6 +7,8 @@ from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
 from modules.config import fastflags
 
+from ..sections.fastflag_configuration import FastFlagConfigurationSection
+
 import customtkinter as ctk
 
 
@@ -28,9 +30,10 @@ class FastFlagsSection:
     container: ctk.CTkScrollableFrame
 
 
-    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame) -> None:
+    def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame, fastflag_configuration_section: FastFlagConfigurationSection) -> None:
         self.root = root
         self.container = container
+        self.fastflag_configuration_section = fastflag_configuration_section
         self.Fonts.title = ctk.CTkFont(size=20, weight="bold")
         self.Fonts.large = ctk.CTkFont(size=16)
 
@@ -113,6 +116,14 @@ class FastFlagsSection:
             enabled: bool = profile.get("enabled", False)
             enabled_studio: bool = profile.get("enabled_studio", False)
             description: Optional[str] = profile.get("description")
+
+            profile_info: dict = {
+                "name": name,
+                "description": description,
+                "enabled": enabled,
+                "enabled_studio": enabled_studio,
+                "data": data
+            }
             
             frame: ctk.CTkFrame = ctk.CTkFrame(container)
             frame.grid_columnconfigure(1, weight=1)
@@ -121,7 +132,7 @@ class FastFlagsSection:
             # Delete button
             ctk.CTkButton(
                 frame, image=bin_image, width=1, height=40, text="", anchor="w", compound=ctk.LEFT,
-                command=lambda profile_info=profile: self._remove_profile(profile_info)
+                command=lambda profile_info=profile_info: self._remove_profile(profile_info)
             ).grid(column=0, row=0, sticky="w", padx=(self.Constants.PROFILE_ENTRY_OUTER_PADDING, self.Constants.PROFILE_ENTRY_INNER_PADDING), pady=self.Constants.PROFILE_ENTRY_OUTER_PADDING)
 
             # Name label
@@ -135,13 +146,13 @@ class FastFlagsSection:
             entry.insert("end", name)
             entry.bind("<Return>", lambda _: self.root.focus())
             entry.bind("<Control-s>", lambda _: self.root.focus())
-            entry.bind("<FocusOut>", lambda event, profile_info=profile: self._rename_profile(event, profile_info))
+            entry.bind("<FocusOut>", lambda event, profile_info=profile_info: self._rename_profile(event, profile_info))
             entry.grid(column=0, row=0, sticky="ew")
 
             # Configure button
             ctk.CTkButton(
                 frame, image=configure_image, text="Configure", width=1, height=40, anchor="w", compound=ctk.LEFT,
-                command=None
+                command=lambda profile_info=profile_info: self.fastflag_configuration_section.show(profile_info)
             ).grid(column=2, row=0, sticky="w", padx=self.Constants.PROFILE_ENTRY_INNER_PADDING, pady=self.Constants.PROFILE_ENTRY_OUTER_PADDING)
 
             # Mod status
@@ -155,17 +166,17 @@ class FastFlagsSection:
             ctk.CTkLabel(player_switch_frame, text="Roblox Player", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 player_switch_frame, text="", width=48, variable=player_var, onvalue=True, offvalue=False,
-                command=lambda profile_info=profile, var=player_var: self._set_profile_status(var.get(), profile_info)
+                command=lambda profile_info=profile_info, var=player_var: self._set_profile_status(var.get(), profile_info)
             ).grid(column=1, row=0, sticky="e", padx=(self.Constants.PROFILE_ENTRY_INNER_PADDING,0))
 
             studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled_studio)
             studio_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             studio_switch_frame.grid(column=1, row=0, sticky="e")
-            
+
             ctk.CTkLabel(studio_switch_frame, text="Roblox Studio", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 studio_switch_frame, text="", width=48, variable=studio_var, onvalue=True, offvalue=False,
-                command=lambda profile_info=profile, var=studio_var: self._set_profile_status_studio(var.get(), profile_info)
+                command=lambda profile_info=profile_info, var=studio_var: self._set_profile_status_studio(var.get(), profile_info)
             ).grid(column=1, row=0, sticky="e", padx=(self.Constants.PROFILE_ENTRY_INNER_PADDING,0))
     # endregion
 

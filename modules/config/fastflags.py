@@ -71,6 +71,21 @@ def set_name(key: str, value: str) -> None:
         json.dump(data, file, indent=4)
 
 
+def set_description(key: str, value: str | None) -> None:
+    data: list[dict] = read_file()
+    
+    for i, item in enumerate(data):
+        if item.get("name") == key:
+            data[i]["description"] = value
+            break
+
+    else:
+        raise KeyError(f"FastFlag proflie not found in config file: {key}")
+
+    with open(FILEPATH, "w") as file:
+        json.dump(data, file, indent=4)
+
+
 def set_enabled(key: str, value: bool) -> None:
     data: list[dict] = read_file()
     
