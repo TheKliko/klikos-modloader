@@ -13,7 +13,7 @@
     },
     "disable_all_fastflags": {
         "name": "Disable FastFlags",
-        "description": "Prevents any FastFlags from being applied",
+        "description": "Prevents any FastFlags from being applied (may break Discord RPC)",
         "value": false,
         "default": false
     },

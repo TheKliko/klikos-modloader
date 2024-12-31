@@ -16,7 +16,7 @@ def main() -> None:
                 import pyi_splash
                 if pyi_splash.is_alive():
                     pyi_splash.close()
-            except ModuleNotFoundError:
+            except (ModuleNotFoundError, ImportError):
                 pass
         else:
             sys.path.insert(0, str(LIBRARIES_PATH))
