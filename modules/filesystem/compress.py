@@ -1,39 +1,34 @@
 import os
-import zipfile
+from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
 
-from modules.logger import logger
+from modules import Logger
 
-from .verify import verify
-from .exceptions import FileSystemError
-from . import logged_path
+from .exceptions import FileCompressError
 
 
-def compress(source: str, destination: str) -> None:
-    logger.info(f"Compressing \"{os.path.basename(source)}\" to \"{os.path.basename(destination)}\"...")
-    pass
+def compress(source: str | Path, destination: str | Path) -> None:
+    source = Path(source)
+    destination = Path(destination)
 
-    try:
-        verify(source)
-        os.makedirs(os.path.dirname(destination), exist_ok=True)
+    Logger.info(f"Compressing file: {source.name}...")
+
+    if destination.suffix != ".zip":
+        raise FileCompressError(f"Target must be a .zip file: {destination.name}")
+
+    if not os.access(destination.parent, os.W_OK):
+        raise FileCompressError(f"Write permissions denied for {destination.parent}")
+
+    os.makedirs(destination.parent, exist_ok=True)
+
+    with ZipFile(destination, "w", ZIP_DEFLATED) as archive:
+        if source.is_file():
+            archive.write(source, source.name)
         
-        if os.path.isfile(source) and (source.endswith(".zip") or source.endswith(".7z") or source.endswith(".rar")):
-            logger.error("File is already compressed!")
-            raise FileSystemError(f"Cannot compress already compressed file: \"{os.path.basename(source)}\"")
-
-        with zipfile.ZipFile(destination, "w", zipfile.ZIP_DEFLATED) as zip:
-            if os.path.isfile(source):
-                zip.write(source, os.path.basename(source))
-
-            else:  # os.path.isdir(source)
-                for dirpath, dirnames, filenames in os.walk(source):
-                    for file in filenames:
-                        file_path = os.path.join(dirpath, file)
-                        arcname = os.path.relpath(file_path, start=source)
-                        zip.write(file_path, arcname)
-    
-    except FileSystemError:
-        raise
-    
-    except Exception as e:
-        logger.error(f"Failed to extract \"{os.path.basename(source)}\", reason: {type(e).__name__}! {e}")
-        raise
+        elif source.is_dir():
+            for dirpath, dirnames, filenames in os.walk(source):
+                dirpath = Path(dirpath)
+                for filename in filenames:
+                    filepath: Path = dirpath / filename
+                    arcname: Path = filepath.relative_to(source)
+                    archive.write(filepath, arcname)

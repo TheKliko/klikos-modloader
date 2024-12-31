@@ -7,11 +7,12 @@ class ProcessCheckError(Exception):
 
 
 def process_exists(process: str) -> bool:
-    for _ in range(5):
+    for p in psutil.process_iter():
         try:
-            return any(p.name() == process for p in psutil.process_iter())
+            if p.name() == process:
+                return True
 
         except NoSuchProcess:
             continue
-    
-    raise ProcessCheckError(f"Ran out of attempts when checking for \"{process}\"")
+
+    return False

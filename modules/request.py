@@ -1,135 +1,96 @@
+from typing import Optional
 import time
-from typing import Literal, Optional
 
-from modules.logger import logger
+from modules import Logger
 
 import requests
-from requests import Response
+from requests import Response, ConnectionError
 
 
-COOLDOWN: int = 2
+COOLDOWN: float = 2
+TIMEOUT: tuple[int,int] = (5,15)
 _cache: dict = {}
 
 
-class RequestError(Exception):
-    pass
+# region APIs
+class Api:
+    class GitHub:
+        LATEST_VERSION: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/main/GitHub%20Files/version.json"
+        RELEASE_INFO: str = r"https://api.github.com/repos/thekliko/klikos-modloader/releases/latest"
+        FILEMAP: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/filemap.json"
+        FASTFLAG_PRESETS: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/fastflag_presets.json"
+        MARKETPLACE: str = r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/index.json"
+        @staticmethod
+        def mod_thumbnail(id: str) -> str:
+            return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/thumbnails/{id}.png"
+        @staticmethod
+        def mod_download(id: str) -> str:
+            return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/mods/{id}.zip"
+    
+    class Roblox:
+        FASTFLAGS: str = r"https://clientsettingscdn.roblox.com/v2/settings/application/PCDesktopClient"
 
+        class Deployment:
+            HISTORY: str = r"https://setup.rbxcdn.com/DeployHistory.txt"
+            @staticmethod
+            def channel(binaryType: str) -> str:
+                return rf"https://clientsettings.roblox.com/v2/user-channel?binaryType={binaryType}"
+            @staticmethod
+            def latest(binaryType: str, channel: Optional[str] = None) -> str:
+                if channel is None:
+                    rf"https://clientsettingscdn.roblox.com/v2/client-version/{binaryType}"
+                return rf"https://clientsettingscdn.roblox.com/v2/client-version/{binaryType}/channel/{channel}"
+            @staticmethod
+            def manifest(version: str) -> str:
+                return rf"https://setup.rbxcdn.com/{version}-rbxPkgManifest.txt"
+            @staticmethod
+            def download(version: str, file: str) -> str:
+                return rf"https://setup.rbxcdn.com/{version}-{file}"
 
-# region GitHubApi
-class GitHubApi:
-    @staticmethod
-    def latest_version() -> str:
-        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/main/GitHub%20Files/version.json"
-
-    @staticmethod
-    def latest_release_data() -> str:
-        return r"https://api.github.com/repos/thekliko/klikos-modloader/releases/latest"
-    
-    @staticmethod
-    def marketplace() -> str:
-        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/index.json"
-    
-    @staticmethod
-    def mod_thumbnail(mod_id: str) -> str:
-        return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/thumbnails/{mod_id}.png"
-    
-    @staticmethod
-    def mod_download(mod_id: str) -> str:
-        return rf"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/remote-mod-downloads/mods/{mod_id}.zip"
-    
-    @staticmethod
-    def fastflag_presets() -> str:
-        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/fastflag_presets.json"
-    
-    @staticmethod
-    def filemap() -> str:
-        return r"https://raw.githubusercontent.com/TheKliko/klikos-modloader/refs/heads/config/filemap.json"
-
-
-# region RobloxApi
-class RobloxApi:
-    @staticmethod
-    def user_channel(binary_type: Literal["WindowsPlayer", "WindowsStudio"]) -> str:
-        return rf"https://clientsettings.roblox.com/v2/user-channel?binaryType={binary_type}"
-    
-    @staticmethod
-    def latest_version(binary_type: Literal["WindowsPlayer", "WindowsStudio"], user_channel: Optional[str] = None) -> str:
-        if not user_channel:
-            return rf"https://clientsettingscdn.roblox.com/v2/client-version/{binary_type}"
-        return rf"https://clientsettingscdn.roblox.com/v2/client-version/{binary_type}/channel/{user_channel}"
-
-    @staticmethod
-    def deploy_history() -> str:
-        return r"https://setup.rbxcdn.com/DeployHistory.txt"
-    
-    @staticmethod
-    def download(version: str, file: str) -> str:
-        return rf"https://setup.rbxcdn.com/{version}-{file}"
-    
-    @staticmethod
-    def fastflags() -> str:
-        return r"https://clientsettingscdn.roblox.com/v2/settings/application/PCDesktopClient"
-
-
-# region RobloxActivityApi
-class RobloxActivityApi:
-    @staticmethod
-    def game_universe_id(place_id: str) -> str:
-        return rf"https://apis.roblox.com/universes/v1/places/{place_id}/universe"
-    
-    @staticmethod
-    def game_info(universe_id: str) -> str:
-        return rf"https://games.roblox.com/v1/games?universeIds={universe_id}"
-    
-    @staticmethod
-    def game_thumbnail(universe_id: str, size: str = "512x512", circular: bool = False) -> str:
-        return rf"https://thumbnails.roblox.com/v1/games/icons?universeIds={universe_id}&returnPolicy=PlaceHolder&size={size}&format=Png&isCircular={str(circular).lower()}"
-    
-    @staticmethod
-    def game_page(root_place_id: str) -> str:
-        return rf"https://www.roblox.com/games/{root_place_id}"
-    
-    @staticmethod
-    def game_join(root_place_id: str, job_id: str) -> str:
-        return rf"roblox://experiences/start?placeId={root_place_id}&gameInstanceId={job_id}"
-    
-    @staticmethod
-    def game_asset(asset_id: str) -> str:
-        return rf"https://assetdelivery.roblox.com/v1/asset/?id={asset_id}"
-    
-    @staticmethod
-    def user_info(user_id: str) -> str:
-        return rf"https://users.roblox.com/v1/users/{user_id}"
-    
-    @staticmethod
-    def user_thumbnail(user_id: str, size: tuple[int,int] = (48,48), format: str = "png", circular: bool = False) -> str:
-        return rf"https://thumbnails.roblox.com/v1/users/avatar-bust?userIds={user_id}&size={size[0]}x{size[1]}&format={format}&isCircular={circular}"
+        class Activity:
+            @staticmethod
+            def universe_id(placeId: str) -> str:
+                return rf"https://apis.roblox.com/universes/v1/places/{placeId}/universe"
+            @staticmethod
+            def game(universeId: str) -> str:
+                return rf"https://games.roblox.com/v1/games?universeIds={universeId}"
+            @staticmethod
+            def thumbnail(universeId: str, size: str = "512x512", isCircular: bool = False) -> str:
+                return rf"https://thumbnails.roblox.com/v1/games/icons?universeIds={universeId}&returnPolicy=PlaceHolder&size={size}&format=Png&isCircular={str(isCircular).lower()}"
+            @staticmethod
+            def asset(assetId: str) -> str:
+                return rf"https://assetdelivery.roblox.com/v1/asset/?id={assetId}"
+            @staticmethod
+            def page(rootPlaceId: str) -> str:
+                return rf"https://www.roblox.com/games/{rootPlaceId}"
+            @staticmethod
+            def deeplink(placeId: str, gameInstanceId: str) -> str:
+                return rf"roblox://experiences/start?placeId={placeId}&gameInstanceId={gameInstanceId}"
+            @staticmethod
+            def user(userId: str) -> str:
+                return rf"https://users.roblox.com/v1/users/{userId}"
 
 
 # region get()
-def get(url, attempts: int = 3, cache: bool = False) -> Response:
-    if cache:
-        if url in _cache:
-            logger.debug(f"Cached GET request: {url}")
-            return _cache[url]
+def get(url: str, attempts: int = 3, cached: bool = False, timeout: Optional[tuple[int, int]] = None) -> Response:
+    if cached and url in _cache:
+        Logger.info(f"Cached GET request: {url}")
+        return _cache[url]
+    
+    exception: Exception | None = None
 
-    attempts -= 1
+    for _ in range(attempts):
+        try:
+            Logger.info(f"GET request: {url}")
+            response: Response = requests.get(url, timeout=timeout or TIMEOUT)
+            response.raise_for_status()
+            _cache[url] = response
+            return response
 
-    try:
-        logger.info(f"Attempting GET request: {url}")
-        response: Response = requests.get(url, timeout=(5,15))
-        response.raise_for_status()
-        _cache[url] = response
-        return response
-
-    except Exception as e:
-        logger.error(f"GET request failed: {url}, reason: {type(e).__name__}: {e}")
-
-        if attempts <= 0:
-            logger.error(f"GET request failed: {url}, reason: Too many attempts!")
-            raise
-        
-        logger.warning(f"Remaining attempts: {attempts}")
-        logger.info(f"Retrying in {COOLDOWN} seconds...")
-        time.sleep(COOLDOWN)
-        return get(url=url, attempts=attempts, cache=cache)
+        except Exception as e:
+            Logger.error(f"GET request failed! {type(e).__name__}: {e}")
+            exception = e
+            time.sleep(COOLDOWN)
+    
+    if exception is not None:
+        raise exception

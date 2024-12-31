@@ -1,41 +1,42 @@
 import os
-import zipfile
+from zipfile import ZipFile
+from pathlib import Path
 
-import py7zr
-# import rarfile
+from modules import Logger
 
-from modules.logger import logger
+from .exceptions import FileExtractError
 
-from .verify import verify
-from .exceptions import FileSystemError
+from py7zr import SevenZipFile
 
 
-def extract(source: str, destination: str) -> None:
-    logger.info(f"Extracting file \"{os.path.basename(source)}\"...")
-    try:
-        verify(source)
-        verify(destination, create_missing_directories=True)
-        
-        if source.endswith(".zip"):
-            with zipfile.ZipFile(source, "r") as zip:
-                zip.extractall(destination)
-                zip.close()
-        
-        elif source.endswith(".7z"):
-            with py7zr.SevenZipFile(source, mode='r') as archive:
-                archive.extractall(path=destination)
-        
-        # elif source.endswith(".rar"):
-        #     with rarfile.RarFile(source) as archive:
-        #         archive.extractall(path=destination)
-            
-        else:
-            logger.error(f"Failed to extract \"{os.path.basename(source)}\", reason: unsupported file format!")
-            raise FileSystemError(f"Failed to extract \"{os.path.basename(source)}\", reason: unsupported file format!")
-    
-    except FileSystemError:
-        raise
-    
-    except Exception as e:
-        logger.error(f"Failed to extract \"{os.path.basename(source)}\", reason: {type(e).__name__}! {e}")
-        raise
+def extract(source: str | Path, destination: str | Path, ignore_filetype: bool = False) -> None:
+    source = Path(source)
+    destination = Path(destination)
+
+    Logger.info(f"Extracting file: {source.name}...")
+
+    if destination.is_file():
+        raise FileExtractError(f"Destination must be a directory! (destination: {destination.name})")
+    if not source.is_file():
+        raise FileExtractError(f"Source does not exist! (source: {source.name})")
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    if not os.access(destination.parent, os.W_OK):
+        raise FileExtractError(f"Write permissions denied for {destination.parent}")
+
+    if ignore_filetype:
+        with ZipFile(source, "r") as archive:
+            archive.extractall(destination)
+        return
+
+    match source.suffix:
+        case ".zip":
+            with ZipFile(source, "r") as archive:
+                archive.extractall(destination)
+
+        case ".7z":
+            with SevenZipFile(source, "r") as archive:
+                archive.extractall(destination)
+
+        case _:
+            raise FileExtractError(f"Unsupported file format: {source.name}")

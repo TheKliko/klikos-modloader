@@ -1,30 +1,42 @@
-import os
-import urllib
+from pathlib import Path
 import urllib.request
+import os
 import time
 
-from modules.logger import logger
+from modules import Logger
+
+from .exceptions import FileDownloadError
 
 
-COOLDOWN: int = 2
+COOLDOWN: float = 2
 
 
-def download(url: str, destination: str, attempts: int = 3) -> None:
-    try:
-        logger.info(f"Attempting file download: {url}")
-        os.makedirs(os.path.dirname(destination), exist_ok=True)
-        urllib.request.urlretrieve(url, destination)
-        logger.info(f"File downloaded successfully: {url}")
+def download(source: str, destination: str | Path, attempts: int = 3) -> None:
+    destination = Path(destination)
+    temp: Path = destination.with_suffix(".tmp")
+    exception: Exception | None = None
+
+    for _ in range(attempts):
+        try:
+            Logger.info(f"Downloading file: {source}")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            
+            if not os.access(destination.parent, os.W_OK):
+                raise FileDownloadError(f"Write permissions denied for {destination.parent}")
+
+            try:
+                urllib.request.urlretrieve(source, temp)
+                os.replace(temp, destination)
+                return
+            except Exception as e:
+                if temp.is_file():
+                    temp.unlink()
+                raise
+
+        except Exception as e:
+            Logger.error(f"File download failed! {type(e).__name__}: {e}")
+            exception = e
+            time.sleep(COOLDOWN)
     
-    except Exception as e:
-        logger.warning(f"File download failed: {url}, reason: {type(e).__name__}! {e}")
-
-        if attempts <= 0:
-            logger.error(f"File download failed: {url}, reason: Too many attempts!")
-            raise
-
-        logger.warning(f"Remaining attempts: {attempts}")
-        logger.info(f"Retrying in {COOLDOWN} seconds...")
-        time.sleep(COOLDOWN)
-        return download(url=url, destination=destination, attempts=attempts-1)
-        
+    if exception is not None:
+        raise exception

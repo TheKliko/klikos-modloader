@@ -1,10 +1,11 @@
-import os
+from pathlib import Path
 import subprocess
 
 
-def open(path: str) -> None:
-    if os.path.isfile(path):
-        path = os.path.dirname(path)
+def open(path: str | Path) -> None:
+    path = Path(path)
+
+    if path.is_file():
+        path = path.parent
     
-    if os.path.isdir(path):
-        subprocess.Popen(f"explorer \"{path}\"")
+    subprocess.Popen(f"explorer \"{path}\"")
