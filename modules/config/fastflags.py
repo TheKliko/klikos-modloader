@@ -116,6 +116,21 @@ def set_enabled_studio(key: str, value: bool) -> None:
         json.dump(data, file, indent=4)
 
 
+def set_data(key: str, value: dict) -> None:
+    data: list[dict] = read_file()
+    
+    for i, item in enumerate(data):
+        if item.get("name") == key:
+            data[i]["data"] = value
+            break
+
+    else:
+        raise KeyError(f"FastFlag proflie not found in config file: {key}")
+
+    with open(FILEPATH, "w") as file:
+        json.dump(data, file, indent=4)
+
+
 def read_file() -> list[dict]:
     if not FILEPATH.is_file():
         return []
