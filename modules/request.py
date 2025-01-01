@@ -69,9 +69,6 @@ class Api:
             @staticmethod
             def user(userId: str) -> str:
                 return rf"https://users.roblox.com/v1/users/{userId}"
-    
-    class Discord:
-        WIDGET: str = r"https://discord.com/api/guilds/1205938827437412422/widget.json"
 
 
 # region get()
