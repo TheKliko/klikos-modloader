@@ -115,6 +115,9 @@ class AboutSection:
             for widget in license_frame.winfo_children():
                 widget.configure(cursor="hand2")
                 widget.bind("<Button-1>", lambda event, url=license["url"]: webbrowser.open_new_tab(url))
+            for widget in name_frame.winfo_children():
+                widget.configure(cursor="hand2")
+                widget.bind("<Button-1>", lambda event, url=license["url"]: webbrowser.open_new_tab(url))
         # endregion
 
         

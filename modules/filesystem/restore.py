@@ -30,6 +30,8 @@ def restore_from_meipass(file: str | Path) -> None:
 
     if not backup.is_file():
         raise FileRestoreError(f"Backup file not found: {relative_path}")
+    if not target.parent.is_dir():
+        target.parent.mkdir(parents=True, exist_ok=True)
     if not os.access(target.parent, os.W_OK):
         raise FileRestoreError(f"Write permissions denied for {relative_path.parent}")
     

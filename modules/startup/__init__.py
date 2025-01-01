@@ -3,6 +3,7 @@ from tkinter import messagebox
 from platform import system
 
 from modules.info import ProjectData
+from modules.functions.set_registry_keys import set_registry_keys
 
 from .requirements.libraries import check_required_libraries
 from .check_for_updates import check_for_updates
@@ -22,3 +23,5 @@ def run() -> None:
     check_required_files()
 
     check_for_updates()
+
+    set_registry_keys()

@@ -151,6 +151,12 @@ class NavigationFrame(ctk.CTkFrame):
             dark_icon: Path = section["icon"]["dark"]
             command: Callable = None
 
+            if not light_icon.is_file():
+                restore_from_meipass(light_icon)
+            if not dark_icon.is_file():
+                restore_from_meipass(dark_icon)
+            image = load_image(light_icon, dark_icon, size=icon_size)
+
             # idk ¯\_(ツ)_/¯
             match name.lower():
                 case "mods":
@@ -170,11 +176,8 @@ class NavigationFrame(ctk.CTkFrame):
                 case "about":
                     command = root.Sections.about.show
 
-            button: ctk.CTkButton = self._create_button(master=frame, text=name, command=command, image=load_image(light=light_icon, dark=dark_icon, size=icon_size))
-            pady: int | tuple[int, int] = (4,0)
-            if i == 0:
-                pady = 0
-            button.grid(column=0, row=i, pady=pady)
+            button: ctk.CTkButton = self._create_button(master=frame, text=name, command=command, image=image)
+            button.grid(column=0, row=i, pady=0 if i == 0 else (4,0))
 
         return frame
 
