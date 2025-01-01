@@ -18,7 +18,6 @@ from .finish_mod_update import finish_mod_update
 
 
 def update_mods(check: dict[str, list[Path]], latest_version: str, output_directory: str | Path) -> None:
-    # raise NotImplementedError("Function not implemented!")
     Logger.info("Updating mods...")
     output_directory = Path(output_directory)
 
@@ -75,7 +74,7 @@ def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: 
             mod_imageset_path: Path = locate_imagesets(temporary_directory / mod_version)
             latest_imageset_path: Path = locate_imagesets(temporary_directory / deploy_history.LatestVersion.studio)
             
-            Logger.info("Locating ImageSets...")
+            Logger.info("Locating ImageSetData...")
             mod_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / mod_version)
             latest_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / deploy_history.LatestVersion.studio)
 
