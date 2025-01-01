@@ -30,6 +30,7 @@ class ModGeneratorSection:
             widget.destroy()
 
 
+    # region title
     def _load_title(self) -> None:
         frame: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         frame.grid_columnconfigure(0, weight=1)
@@ -37,3 +38,4 @@ class ModGeneratorSection:
 
         ctk.CTkLabel(frame, text=self.Constants.SECTION_TITLE, anchor="w", font=self.Fonts.title).grid(column=0, row=0, sticky="nsew")
         ctk.CTkLabel(frame, text=self.Constants.SECTION_DESCRIPTION, anchor="w", font=self.Fonts.large).grid(column=0, row=1, sticky="nsew")
+    # endregion

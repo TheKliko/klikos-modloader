@@ -1,19 +1,14 @@
+import webbrowser
 from pathlib import Path
 
-from modules.info import ProjectData, Help
+from modules.info import ProjectData, Help, LICENSES
 from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
-
-from ..commands import add_mods, open_mods_folder
 
 import customtkinter as ctk
 
 
 class AboutSection:
-    class Constants:
-        SECTION_TITLE: str = f"{ProjectData.NAME} (v{ProjectData.VERSION})"
-        SECTION_DESCRIPTION: str = ProjectData.DESCRIPTION
-    
     class Fonts:
         title: ctk.CTkFont
         large: ctk.CTkFont
@@ -31,6 +26,7 @@ class AboutSection:
     def show(self) -> None:
         self._destroy()
         self._load_title()
+        self._load_content()
 
 
     def _destroy(self) -> None:
@@ -38,27 +34,65 @@ class AboutSection:
             widget.destroy()
 
 
+    # region title
     def _load_title(self) -> None:
         frame: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         frame.grid_columnconfigure(0, weight=1)
-        frame.grid(column=0, row=0, sticky="nsew", pady=(0,16))
+        frame.grid(column=0, row=0, sticky="nsew", pady=(0,24))
 
-        ctk.CTkLabel(frame, text=self.Constants.SECTION_TITLE, anchor="w", font=self.Fonts.title).grid(column=0, row=0, sticky="nsew")
-        ctk.CTkLabel(frame, text=self.Constants.SECTION_DESCRIPTION, anchor="w", font=self.Fonts.large).grid(column=0, row=1, sticky="nsew")
+        # Banner
+        banner_file: Path = (Directory.RESOURCES / "menu" / "about" / "banner").with_suffix(".png")
+        if not banner_file.is_file():
+            restore_from_meipass(banner_file)
+        banner_image = load_image(banner_file, size=(548, 165))
 
+        ctk.CTkLabel(frame, text="", image=banner_image).grid(column=0, row=0, sticky="new")
+
+        # Buttons
         buttons: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-        buttons.grid(column=0, row=2, sticky="nsw", pady=(8,0))
+        buttons.grid(column=0, row=2, sticky="nsew")
+        buttons.grid_columnconfigure(0, weight=1)
+        buttons.grid_columnconfigure(4, weight=1)
 
-        package_icon: Path = (Directory.RESOURCES / "menu" / "common" / "package").with_suffix(".png")
-        folder_icon: Path = (Directory.RESOURCES / "menu" / "common" / "folder").with_suffix(".png")
+        github_icon: Path = (Directory.RESOURCES / "menu" / "about" / "github").with_suffix(".png")
+        if not github_icon.is_file():
+            restore_from_meipass(github_icon)
+        github_image = load_image(github_icon)
 
-        if not package_icon.is_file():
-            restore_from_meipass(package_icon)
-        if not folder_icon.is_file():
-            restore_from_meipass(folder_icon)
-        
-        package_image = load_image(package_icon)
-        folder_image = load_image(folder_icon)
+        chat_icon: Path = (Directory.RESOURCES / "menu" / "about" / "chat").with_suffix(".png")
+        if not chat_icon.is_file():
+            restore_from_meipass(chat_icon)
+        chat_image = load_image(chat_icon)
 
-        ctk.CTkButton(buttons, text="Add mods", image=package_image, command=add_mods, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
-        ctk.CTkButton(buttons, text="Open mods folder", image=folder_image, command=open_mods_folder, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsw", padx=(8,0))
+        ctk.CTkButton(buttons, text="View on GitHub", image=github_image, command=lambda: webbrowser.open_new_tab(Help.GITHUB), width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="nsew")
+        ctk.CTkButton(buttons, text="Changelog", image=github_image, command=lambda: webbrowser.open_new_tab(Help.RELEASES), width=1, anchor="w", compound=ctk.LEFT).grid(column=2, row=0, sticky="nsew", padx=(8,0))
+        ctk.CTkButton(buttons, text="Join our Discord", image=chat_image, command=lambda: webbrowser.open_new_tab(Help.DISCORD), width=1, anchor="w", compound=ctk.LEFT).grid(column=3, row=0, sticky="nsew", padx=(8,0))
+    # endregion
+
+    
+    # region content
+    def _load_content(self) -> None:
+        container: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
+        container.grid_columnconfigure(0, weight=1)
+        container.grid(column=0, row=1, sticky="nsew", padx=(0,4))
+
+        # 268 8 269 8 268
+        # Licenses
+        licenses_container: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        licenses_container.grid(column=0, row=0, sticky="nsew", pady=(0, 24))
+        ctk.CTkLabel(licenses_container, text="Licenses", font=self.Fonts.title, anchor="w").grid(column=0, row=0, columnspan=3, sticky="ew")
+
+        for i, license in enumerate(LICENSES):
+            license_frame: ctk.CTkFrame = ctk.CTkFrame(licenses_container)
+            license_frame.grid(column=self._get_license_column(), row=self._get_license_row(), sticky="nsew")
+    # endregion
+
+
+    # region functions
+    def _get_license_column() -> int:
+        return
+    
+    
+    def _get_license_row() -> int:
+        return
+    # endregion
