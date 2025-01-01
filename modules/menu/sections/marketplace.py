@@ -54,11 +54,14 @@ class MarketplaceSection:
         Thread(target=self._preload_data, args=(True,), daemon=True, name="marketplace-preload-thread").start()
 
 
-    def _preload_data(self, ignore_errors: bool = False) -> None:
+    def _preload_data(self, ignore_errors: bool = False, ignore_thumbnails: bool = False) -> None:
         try:
             response: Response = request.get(Api.GitHub.MARKETPLACE, attempts=1, cached=True, timeout=(2, 4))
             data: list[dict] = response.json()
             self.data = data
+
+            if ignore_thumbnails:
+                return
 
             if not settings.get_value("preload_marketplace_thumbnails"):
                 return
@@ -105,7 +108,7 @@ class MarketplaceSection:
 
         if not self.data:
             try:
-                self._preload_data()
+                self._preload_data(ignore_thumbnails=True)
 
             except ConnectionError:
                 disconnected_icon: Path = (Directory.RESOURCES / "menu" / "large" / "disconnected").with_suffix(".png")

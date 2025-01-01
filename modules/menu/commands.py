@@ -9,7 +9,7 @@ from modules import Logger
 from modules.info import ProjectData
 from modules.filesystem import Directory
 from modules import filesystem
-from modules.config import mods, fastflags
+from modules.config import mods
 
 
 IS_FROZEN: bool = getattr(sys, "frozen", False)
@@ -18,14 +18,14 @@ IS_FROZEN: bool = getattr(sys, "frozen", False)
 # region launch roblox
 def launch_roblox_player() -> None:
     if not IS_FROZEN:
-        messagebox.showerror(ProjectData.NAME, "Command unavailable!\nEnvironment not frozen")
+        messagebox.showerror(ProjectData.NAME, "Command not available!\nEnvironment not frozen")
         return
     subprocess.Popen([sys.executable, "-l"])
 
 
 def launch_roblox_studio() -> None:
     if not IS_FROZEN:
-        messagebox.showerror(ProjectData.NAME, "Command unavailable!\nEnvironment not frozen")
+        messagebox.showerror(ProjectData.NAME, "Command not available!\nEnvironment not frozen")
         return
     subprocess.Popen([sys.executable, "-s"])
 # endregion

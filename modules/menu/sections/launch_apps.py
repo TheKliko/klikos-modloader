@@ -3,8 +3,6 @@ from pathlib import Path
 from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
 
-from ..commands import add_mods, open_mods_folder
-
 import customtkinter as ctk
 
 
@@ -37,6 +35,7 @@ class LaunchAppsSection:
             widget.destroy()
 
 
+    # region title
     def _load_title(self) -> None:
         frame: ctk.CTkFrame = ctk.CTkFrame(self.container, fg_color="transparent")
         frame.grid_columnconfigure(0, weight=1)
@@ -54,3 +53,4 @@ class LaunchAppsSection:
         create_image = load_image(create_icon)
 
         ctk.CTkButton(buttons, text="New", image=create_image, command=None, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+    # endregion

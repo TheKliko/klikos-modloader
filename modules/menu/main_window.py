@@ -86,7 +86,7 @@ class MainWindow(ctk.CTk):
 
         self.Sections.mods = ModsSection(self, container, self.PopupWindows.font_import_window)
         self.Sections.marketplace = MarketplaceSection(self, container, self.PopupWindows.mod_download_window)
-        self.Sections.mod_generator = ModGeneratorSection(container)
+        self.Sections.mod_generator = ModGeneratorSection(self, container)
         self.Sections.fastflag_configuration = FastFlagConfigurationSection(self, container)
         self.Sections.fastflags = FastFlagsSection(self, container, self.Sections.fastflag_configuration, self.PopupWindows.fastflag_preset_window)
         self.Sections.launch_apps = LaunchAppsSection(container)
