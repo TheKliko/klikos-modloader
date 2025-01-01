@@ -61,7 +61,7 @@ class IntegrationsSection:
             restore_from_meipass(restore_icon)
         restore_image = load_image(restore_icon)
 
-        ctk.CTkButton(buttons, text="Reset", image=restore_image, command=integrations.reset_all, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
+        ctk.CTkButton(buttons, text="Reset to default", image=restore_image, command=integrations.reset_all, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="nsw")
     # endregion
     
 

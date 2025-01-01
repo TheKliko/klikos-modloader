@@ -5,15 +5,9 @@
         "value": true,
         "default": true
     },
-    "disable_all_mods": {
-        "name": "Disable mods",
-        "description": "Prevents any mods from being applied",
-        "value": false,
-        "default": false
-    },
-    "disable_all_fastflags": {
-        "name": "Disable FastFlags",
-        "description": "Prevents any FastFlags from being applied (may break Discord RPC)",
+    "preload_marketplace_thumbnails": {
+        "name": "Preload community mod thumbnails",
+        "description": "Prevents a short lagspike when opening the community mods section for the first time",
         "value": false,
         "default": false
     },
@@ -32,6 +26,18 @@
     "show_deployment_info_on_launch": {
         "name": "Show deployment info",
         "description": "Show information about the latest Roblox version when running the launcher",
+        "value": false,
+        "default": false
+    },
+    "disable_all_mods": {
+        "name": "Disable mods",
+        "description": "Prevents any mods from being applied",
+        "value": false,
+        "default": false
+    },
+    "disable_all_fastflags": {
+        "name": "Disable FastFlags",
+        "description": "Prevents any FastFlags from being applied (may break Discord RPC)",
         "value": false,
         "default": false
     }

@@ -14,6 +14,7 @@ from modules.request import Api, Response, ConnectionError
 from modules.functions.interface.image import load as load_image, load_from_url as load_image_from_url
 from modules.mod_updater import check_for_mod_updates, update_mods
 from modules.launcher.deployment_info import Deployment
+from modules.config import settings
 
 from ..popup_windows.mod_download_window import ModDownloadWindow
 
@@ -58,6 +59,16 @@ class MarketplaceSection:
             response: Response = request.get(Api.GitHub.MARKETPLACE, attempts=1, cached=True, timeout=(2, 4))
             data: list[dict] = response.json()
             self.data = data
+
+            if not settings.get_value("preload_marketplace_thumbnails"):
+                return
+            
+            for mod in self.data:
+                name: str | None = mod.get("name")
+                id: str | None = mod.get("id")
+                if not name or not id:
+                    continue
+                load_image_from_url(Api.GitHub.mod_thumbnail(id), size=self.Constants.MOD_THUMBNAIL_SIZE)
 
         except Exception:
             if not ignore_errors:
