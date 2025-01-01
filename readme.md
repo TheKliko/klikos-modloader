@@ -15,7 +15,7 @@
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher.
 
-<img src="GitHub Files/Images/preview.gif" alt="preview"/>
+<img src="GitHub Files/Images/preview-about.png" alt="preview"/>
 
 
 
