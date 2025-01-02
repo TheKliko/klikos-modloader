@@ -1,0 +1,2 @@
+class RobloxNotLaunched(Exception):
+    pass

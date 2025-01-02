@@ -3,7 +3,9 @@ import time
 
 from modules import Logger
 from modules.config import integrations
+from modules.functions.process_exists import process_exists
 
+from .exceptions import RobloxNotLaunched
 from .log_reader import LogReader
 
 from pypresence import Presence, DiscordNotFound, PipeClosed
@@ -19,10 +21,11 @@ class RichPresenceClient:
             PLAYER: str = "roblox"
             STUDIO: str = "studio"
         COOLDOWN: float = 0.2
+        ROBLOX_LAUNCH_WAIT_TIME: float = 1 * 60
     
     mode: Literal["Player", "Studio"]
     client: Presence
-    timestamp: int = 1
+    timestamp: float = 1
     connected: bool = False
     launched: bool = False
     log_reader: LogReader
@@ -66,10 +69,21 @@ class RichPresenceClient:
                 Logger.warning("Discord RPC turned off!")
                 break
 
-            new_status: dict | Literal["DEFAULT"] = self.log_reader.get_status()
+            if not process_exists(f"Roblox{self.mode}Beta.exe") or (not process_exists("eurotrucks2.exe") if self.mode == "Player" else False):
+                break
+
+            new_status: dict | None | Literal["DEFAULT"] = self.log_reader.get_status()
+            if new_status is None:
+                break
+
+            elif new_status == "DEFAULT":
+                self._set_default_status()
+            
+            elif self.last_status != new_status:
+                self.client.update(**new_status)
+                self.last_status = new_status
 
             time.sleep(self.Constants.COOLDOWN)
-            break
 
 
     def _set_default_status(self) -> None:
@@ -84,3 +98,13 @@ class RichPresenceClient:
             small_text=None,
             buttons=None
         )
+    
+
+    def _confirm_roblox_launch(self) -> None:
+        timestamp: float = time.time()
+        while True:
+            if self.log_reader.get_status() is not None:
+                return
+            if time.time() - timestamp > self.Constants.ROBLOX_LAUNCH_WAIT_TIME:
+                raise RobloxNotLaunched(f"Could not confirm Roblox launch after {int(self.Constants.ROBLOX_LAUNCH_WAIT_TIME)} seconds")
+            time.sleep(1)

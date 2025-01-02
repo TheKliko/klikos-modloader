@@ -10,6 +10,7 @@ from modules.config import integrations
 from modules.functions.process_exists import process_exists
 
 from .rpc import RichPresenceClient, DiscordNotFound
+from .exceptions import RobloxNotLaunched
 
 
 def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
@@ -50,6 +51,9 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
             return
         client.mainloop()
     
+    except RobloxNotLaunched as e:
+        Logger.error(str(e))
+    
     except Exception as e:
         formatted_traceback: str = "".join(traceback.format_exception(e))
         Logger.critical(f"RPC Error!\n\n{formatted_traceback}\n")
@@ -59,6 +63,8 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
 def get_rpc_mode(attempts: int = 5) -> Literal["Player", "Studio"] | None:
     for i in range(attempts):
         if process_exists("RobloxPlayerBeta.exe"):
+            return "Player"
+        elif process_exists("eurotrucks2.exe"):
             return "Player"
         elif process_exists("RobloxStudioBeta.exe"):
             return "Studio"

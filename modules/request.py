@@ -69,12 +69,16 @@ class Api:
             @staticmethod
             def user(userId: str) -> str:
                 return rf"https://users.roblox.com/v1/users/{userId}"
+            @staticmethod
+            def user_thumbnail(userId: str, size: tuple[int,int] = (48,48), format: str = "png", circular: bool = False) -> str:
+                return rf"https://thumbnails.roblox.com/v1/users/avatar-bust?userIds={userId}&size={size[0]}x{size[1]}&format={format}&isCircular={circular}"
 
 
 # region get()
-def get(url: str, attempts: int = 3, cached: bool = False, timeout: Optional[tuple[int, int]] = None) -> Response:
+def get(url: str, attempts: int = 3, cached: bool = False, timeout: Optional[tuple[int, int]] = None, dont_log_cached_request: bool = False) -> Response:
     if cached and url in _cache:
-        Logger.info(f"Cached GET request: {url}")
+        if not dont_log_cached_request:
+            Logger.info(f"Cached GET request: {url}")
         return _cache[url]
     
     exception: Exception | None = None
