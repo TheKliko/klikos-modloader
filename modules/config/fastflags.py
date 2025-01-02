@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Optional, Literal
 from copy import deepcopy
 
 from modules.filesystem import File
@@ -9,16 +10,26 @@ FILEPATH: Path = File.FASTFLAGS
 TEMPLATE: dict = {"description": None, "enabled": False, "enabled_studio": False, "data": {"ExampleFlag": "ExampleValue"}}
 
 
-def get_active() -> dict:
+def get_active(mode: Optional[Literal["Player", "Studio"]] = None) -> dict:
     data: list[dict] = read_file()
 
     if not data:
         return {}
     
+    active_profiles: list[dict] = [
+        item.get("data")
+        for item in data
+        if isinstance(item.get("data"), dict) and item.get("data", {})
+        and (
+            item.get("enabled", False) if mode == "Player"
+            else item.get("enabled_studio", False) if mode == "Studio"
+            else (item.get("enabled", False) or item.get("enabled_studio", False))
+        )
+    ]
+    
     active_fastflags: dict = {}
-    for profile in data:
-        if profile["enabled"] is True:
-            active_fastflags.update(profile["data"])
+    for profile in active_profiles:
+        active_fastflags.update(profile)
 
     return active_fastflags
 

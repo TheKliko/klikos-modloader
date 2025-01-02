@@ -124,6 +124,9 @@ class AboutSection:
         # region contributors
         # no contributors yet so I'll add this later
         # endregion
+
+
+        # idk what else to add
     # endregion
 
 

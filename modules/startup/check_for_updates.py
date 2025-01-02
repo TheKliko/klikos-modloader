@@ -1,5 +1,4 @@
 import sys
-import json
 from tkinter import messagebox
 import webbrowser
 
