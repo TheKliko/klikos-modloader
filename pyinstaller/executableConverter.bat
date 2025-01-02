@@ -2,7 +2,7 @@
 echo running %~nx0...
 
 set "project_name=Kliko's modloader"
-set "dependencies=requests pypresence py7zr pyperclip customtkinter pillow psutil fonttools"
+set "dependencies=requests pypresence pyperclip customtkinter pillow psutil fonttools"
 
 set "temp=%~dp0temp"
 set "bin=%~dp0bin"
@@ -15,6 +15,43 @@ set "libraries=%root%\libraries"
 set "modules=%root%\modules"
 set "config=%root%\config"
 set "resources=%root%\resources"
+
+
+
+
+
+@REM ChatGPT
+REM Find the correct Python installation directory
+for /f "delims=" %%i in ('python -c "import sys; print(sys.base_prefix)"') do set "python_path=%%i"
+
+REM Handle missing Python installation
+if "%python_path%"=="" (
+    echo ERROR: Python is not installed or not in PATH!
+    pause
+    exit /b 1
+)
+
+REM Locate Tcl/Tk dynamically
+set "tcl_path=%python_path%\tcl\tcl8.6"
+set "tk_path=%python_path%\tcl\tk8.6"
+
+REM Check if Tcl/Tk directories exist
+if not exist "%tcl_path%" (
+    echo ERROR: Tcl directory not found at "%tcl_path%".
+    echo Make sure Tcl is installed with Python.
+    pause
+    exit /b 1
+)
+
+if not exist "%tk_path%" (
+    echo ERROR: Tk directory not found at "%tk_path%".
+    echo Make sure Tk is installed with Python.
+    pause
+    exit /b 1
+)
+
+
+
 
 
 @REM check if PIP is installed before attempting to use it
@@ -78,10 +115,12 @@ pyinstaller ..\main.py ^
 --icon="%icon%" ^
 --splash="%splash%" ^
 --clean --onefile --noconsole ^
---paths="%root%" ^
 --paths="%libraries%" ^
 --add-data="%resources%;resources" ^
---add-data="%config%;config"
+--add-data="%config%;config" ^
+--hidden-import=tkinter ^
+--add-data="%tcl_path%;lib/tcl8.6" ^
+--add-data="%tk_path%;lib/tk8.6"
 
 
 if exist "%bin%\executable.exe" (
