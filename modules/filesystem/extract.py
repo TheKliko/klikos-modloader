@@ -6,7 +6,7 @@ from modules import Logger
 
 from .exceptions import FileExtractError
 
-from py7zr import SevenZipFile
+# from py7zr import SevenZipFile
 
 
 def extract(source: str | Path, destination: str | Path, ignore_filetype: bool = False) -> None:
@@ -34,9 +34,9 @@ def extract(source: str | Path, destination: str | Path, ignore_filetype: bool =
             with ZipFile(source, "r") as archive:
                 archive.extractall(destination)
 
-        case ".7z":
-            with SevenZipFile(source, "r") as archive:
-                archive.extractall(destination)
+        # case ".7z":
+        #     with SevenZipFile(source, "r") as archive:
+        #         archive.extractall(destination)
 
         case _:
             raise FileExtractError(f"Unsupported file format: {source.name}")

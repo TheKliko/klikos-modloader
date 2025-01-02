@@ -11,3 +11,6 @@ class Directory:
     RESOURCES: Path = ROOT / "resources"
     VERSIONS: Path = ROOT / "Versions"
     MODS: Path = ROOT / "Mods"
+
+    LOCALAPPDATA: Path = Path.home() / "AppData" / "Local"
+    ROBLOX_LOGS: Path = LOCALAPPDATA / "Roblox" / "logs"

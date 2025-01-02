@@ -70,7 +70,7 @@ class FontImportWindow(ctk.CTkToplevel):
     
 
     def _select_file(self) -> None:
-        initial_dir: Path = Path().home()
+        initial_dir: Path = Path.home()
         if (initial_dir / "Downloads").is_dir():
             initial_dir = initial_dir / "Downloads"
 

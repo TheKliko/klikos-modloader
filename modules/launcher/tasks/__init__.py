@@ -63,7 +63,7 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         if not disable_all_mods:
             apply_mods(deployment.base_directory, mode)
         if not disable_all_fastflags:
-            apply_fastflags(deployment.base_directory)
+            apply_fastflags(deployment.base_directory, mode)
 
         Logger.info(f"Launching Roblox {mode}...")
         textvariable.set(f"Launching Roblox {mode}...")

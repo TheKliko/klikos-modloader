@@ -39,7 +39,7 @@ def add_mods() -> bool:
 
     files: tuple[str, ...] | Literal[''] = filedialog.askopenfilenames(
         title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
-        filetypes=[("Supported files", "*.zip;*.7z"), ("ZIP Archives", "*.zip"), ("7z Archives", "*.7z")]
+        filetypes=[("ZIP Archives", "*.zip")]
     )
 
     if files == '':

@@ -7,7 +7,6 @@ import os
 REQUIRED_LIBRARIES: list[str] = [
     "requests",
     "pypresence",
-    "py7zr",
     "pyperclip",
     "customtkinter",
     "PIL",
