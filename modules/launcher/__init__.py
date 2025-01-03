@@ -28,13 +28,14 @@ def run(mode: Literal["Player", "Studio"]) -> None:
         daemon=True
     ).start()
 
+    interface.bring_to_top()
     interface.mainloop()
+
+    if interface.canceled:
+        return
 
     if not exception_queue.empty():
         raise exception_queue.get()
 
     if integrations.get_value("discord_rpc"):
-        if IS_FROZEN:
-            subprocess.Popen([sys.executable, "-rpc", mode], cwd=os.getcwd(), env=os.environ.copy())
-        else:
-            activity_watcher.run(mode)
+        activity_watcher.run(mode)

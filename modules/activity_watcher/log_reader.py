@@ -185,6 +185,8 @@ class LogReader:
                         pass
 
                     elif is_game_join_loadtime:
+                        from modules import Logger
+                        Logger.info("game_join_loadtime")
                         data: dict = dict(
                             item.removesuffix(",").split(":", 1)
                             for item in entry.message.removeprefix("Report game_join_loadtime: ").split()
@@ -194,6 +196,7 @@ class LogReader:
                         self.Status.universe_id = data["universeid"]
 
                     elif is_game_join:
+                        Logger.info("game_join")
                         self.Status.timestamp = entry.timestamp
                         pattern = r"game '([a-f0-9\-]+)' place (\d+)"
                         match = re.search(pattern, entry.message)

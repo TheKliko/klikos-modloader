@@ -20,6 +20,8 @@ class MainWindow(ctk.CTk):
     class WindowMovement:
         start_x: int
         start_y: int
+    
+    canceled: bool = False
 
 
     def __init__(self, mode: Literal["Player", "Studio"]) -> None:
@@ -88,4 +90,10 @@ class MainWindow(ctk.CTk):
     
 
     def _on_close(self, *args, **kwargs) -> None:
+        self.canceled = True
         self.after(1, self.destroy)
+    
+
+    def bring_to_top(self) -> None:
+        self.attributes("-topmost", True)
+        self.attributes("-topmost", False)
