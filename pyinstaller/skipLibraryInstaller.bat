@@ -17,31 +17,6 @@ set "config=%root%\config"
 set "resources=%root%\resources"
 
 
-@REM check if PIP is installed before attempting to use it
-where pip >nul 2>&1
-if errorlevel 1 (
-    goto pipNotInstalled
-) else (
-    goto pipInstalled
-)
-
-
-:pipNotInstalled
-echo ERROR: pip not found!
-echo Please make sure Python and pip are installed before trying again
-pause
-exit /b 1
-
-
-:pipInstalled
-if exist "%libraries%" (
-    rmdir /s /q "%libraries%"
-)
-mkdir "%libraries%"
-echo Installing libraries...
-pip install --upgrade --target="%libraries%" %dependencies%
-
-
 @REM check if pyinstaller is installed before attempting to use it
 where pip >nul 2>&1
 if errorlevel 1 (
