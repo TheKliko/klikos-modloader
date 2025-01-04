@@ -15,7 +15,7 @@
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher.
 
-<img src="GitHub Files/Images/preview.gif" alt="preview"/>
+<img src="GitHub Files/Images/preview-about.png" alt="preview"/>
 
 
 
@@ -47,6 +47,9 @@ I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my m
 
 <h3>Community mods</h3>
 Download mods with the press of a button. Of course you can also add mods manually.
+
+<h3>Mod generator [BETA]</h3>
+Don't know how to make mods yourself? Try out our mod generator!
 
 <h3>Discord RPC & BloxstrapSDK support</h3>
 Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapSDK</a> allows games to set custom RPC data.
