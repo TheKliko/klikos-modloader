@@ -13,7 +13,7 @@
     },
     "force_roblox_reinstallation": {
         "name": "Force Roblox reinstallation",
-        "description": "Force Roblox to reinstall, useful after disabling a mod to make sure all modded files get restored",
+        "description": "Force Roblox to be reinstalled on next launch",
         "value": false,
         "default": false
     },

@@ -39,8 +39,9 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             download_missing_files(deployment, mode, missing_file_hashes)
 
         if process_exists(deployment.executable_name):
-            if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
-                return
+            if settings.get_value("confirm_launch_if_roblox_running"):
+                if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+                    return
             kill_process(deployment.executable_name)
         
         Logger.info("Restoring default files...")
