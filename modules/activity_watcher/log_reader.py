@@ -1,5 +1,6 @@
 import os
 import re
+import json
 from typing import Literal
 from pathlib import Path
 
@@ -15,18 +16,18 @@ from .log_data import LogData
 class LogReader:
     class Status:
         default: bool = False
-        playing: bool = False
+        timestamp: float | None = None
         user_id: str | None = None
         place_id: str | None = None
         root_place_id: str | None = None
         universe_id: str | None = None
         job_id: str | None = None
-        timestamp: float | None = None
         name: str = "???"
         creator: str = "???"
         private_server: bool = False
         reserved_server: bool = False
         bloxstrap_rpc: bool = False
+        bloxstrap_rpc_content: dict | None = None
 
     class AssetKeys:
         DEFAULT: str = "modloader"
@@ -50,7 +51,7 @@ class LogReader:
         
         self._update_status(log)
 
-        if not self.Status.playing or self.Status.default:
+        if self.Status.default:
             return "DEFAULT"
 
         small_image: str | None = self.AssetKeys.STUDIO if self.mode == "Studio" else self.AssetKeys.PLAYER
@@ -93,8 +94,8 @@ class LogReader:
                     "url": Api.Roblox.Activity.page(self.Status.root_place_id)
             })
 
-        show_user_profile: bool = integrations.get_value("show_user_profile_in_rpc")
-        activity_joining: bool = integrations.get_value("activity_joining")
+        show_user_profile: bool = False if self.mode == "Studio" else integrations.get_value("show_user_profile_in_rpc")
+        activity_joining: bool = False if self.mode == "Studio" else integrations.get_value("activity_joining")
 
         if activity_joining and self.Status.job_id is not None and self.Status.root_place_id is not None and not self.Status.reserved_server:
             self.data["buttons"].insert(0, {
@@ -116,11 +117,68 @@ class LogReader:
             display_name: str = str(data['displayName'])
             self.data["small_text"] = display_name if user_name == display_name else f"{display_name} ({user_name})"
 
-        if self.Status.bloxstrap_rpc:
-            # TODO: BloxstrapRPC
-            pass
+        if self.Status.bloxstrap_rpc and self.Status.bloxstrap_rpc_content is not None:
+            command: dict | None = self.Status.bloxstrap_rpc_content.get("command")
+            bloxstrap_rpc_data: dict | None = self.Status.bloxstrap_rpc_content.get("data")
 
-        return None
+            if command == "SetRichPresence" and bloxstrap_rpc_data is not None:
+                state: str | None = bloxstrap_rpc_data.get("state")
+                details: str | None = bloxstrap_rpc_data.get("details")
+                start: int | None = bloxstrap_rpc_data.get("timeStart")
+                end: int | None = bloxstrap_rpc_data.get("timeEnd")
+                large_image_data: dict | None = bloxstrap_rpc_data.get("largeImage")
+                small_image_data: dict | None = bloxstrap_rpc_data.get("smallImage")
+
+                if details is not None and details != "<reset>":
+                    self.data["details"] = details
+                if state is not None and state != "<reset>":
+                    self.data["state"] = state
+                if start is not None and start != 0:
+                    self.data["start"] = start
+                if end is not None and end != 0:
+                    self.data["end"] = end
+
+                if large_image_data is not None:
+                    asset_id: int | None = large_image_data.get("assetId")
+                    hover_text: str | None = large_image_data.get("hoverText")
+                    clear: bool = large_image_data.get("clear", False)
+                    reset: bool = large_image_data.get("reset", False)
+
+                    if clear:
+                        self.data["large_image"] = None
+                        self.data["large_text"] = None
+
+                    elif reset:
+                        pass
+
+                    else:
+                        if hover_text is not None and self.data["large_image"] is not None:
+                            self.data["large_text"] = hover_text
+
+                        if asset_id is not None:
+                            self.data["large_image"] = Api.Roblox.Activity.asset(str(asset_id))
+
+                if small_image_data is not None:
+                    asset_id = small_image_data.get("assetId")
+                    hover_text = small_image_data.get("hoverText")
+                    clear = small_image_data.get("clear", False)
+                    reset = small_image_data.get("reset", False)
+
+                    if clear:
+                        self.data["small_image"] = None
+                        self.data["small_text"] = None
+
+                    elif reset:
+                        pass
+
+                    else:
+                        if hover_text is not None and self.data["small_image"] is not None:
+                            self.data["small_text"] = hover_text
+
+                        if asset_id is not None:
+                            self.data["small_image"] = Api.Roblox.Activity.asset(str(asset_id))
+
+        return self.data
 
 
     def _read_latest_log(self) -> list[Entry]:
@@ -133,7 +191,7 @@ class LogReader:
         filepath: Path = max(log_files, key=os.path.getmtime)
 
         log_entry_pattern = r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z.*?)(?=\d{4}-\d{2}-\d{2}T|$)'
-        with open(filepath, "r", encoding="utf-8") as file:
+        with open(filepath, "r", encoding="utf-8", errors="replace") as file:
             content: str = file.read()
         
         entries = re.findall(log_entry_pattern, content, re.DOTALL)
@@ -166,13 +224,10 @@ class LogReader:
                     is_game_join_loadtime: bool = entry.prefixes[0] == LogData.Player.GameJoinLoadTime.prefix and LogData.Player.GameJoinLoadTime.keyword in entry.message
                     is_game_private_server: bool = entry.prefixes[0] == LogData.Player.GamePrivateServer.prefix and LogData.Player.GamePrivateServer.keyword in entry.message
                     is_game_reserved_server: bool = entry.prefixes[0] == LogData.Player.GameReservedServer.prefix and LogData.Player.GameReservedServer.keyword in entry.message
-                    is_bloxstrap_rpc: bool = entry.prefixes[0] == LogData.Player.BloxstrapRPC.prefix and LogData.Player.BloxstrapRPC.keyword in entry.message
-
+                    is_bloxstrap_rpc: bool = entry.prefixes[0] == LogData.Player.BloxstrapRPC.prefix and LogData.Player.BloxstrapRPC.bloxstrap_rpc_prefix in entry.prefixes
 
                     if is_game_leave:
-                        self.Status.private_server = False
-                        self.Status.reserved_server = False
-                        self.Status.playing = False
+                        self.Status.default = True
                         return
                     
                     elif is_game_private_server:
@@ -182,11 +237,14 @@ class LogReader:
                         self.Status.reserved_server = True
 
                     elif is_bloxstrap_rpc:
-                        pass
+                        try:
+                            self.Status.bloxstrap_rpc_content = json.loads(entry.message)
+                            self.Status.bloxstrap_rpc = True
+                        except Exception as e:
+                            from modules import Logger
+                            Logger.error(f"{type(e).__name__}: {e}")
 
                     elif is_game_join_loadtime:
-                        from modules import Logger
-                        Logger.info("game_join_loadtime")
                         data: dict = dict(
                             item.removesuffix(",").split(":", 1)
                             for item in entry.message.removeprefix("Report game_join_loadtime: ").split()
@@ -196,7 +254,6 @@ class LogReader:
                         self.Status.universe_id = data["universeid"]
 
                     elif is_game_join:
-                        Logger.info("game_join")
                         self.Status.timestamp = entry.timestamp
                         pattern = r"game '([a-f0-9\-]+)' place (\d+)"
                         match = re.search(pattern, entry.message)
@@ -216,8 +273,27 @@ class LogReader:
             case "Studio":
                 # TODO: Studio RPC
                 for entry in log:
-                    is_game_leave: bool = entry.prefixes[0] == LogData.Studio.GameLeave.prefix and LogData.Studio.GameLeave.keyword in entry.message
-                    is_game_join: bool = entry.prefixes[0] == LogData.Studio.GameJoin.prefix and LogData.Studio.GameJoin.keyword in entry.message
-                    pass
-        
+                    is_game_leave = entry.prefixes[0] == LogData.Studio.GameLeave.prefix and LogData.Studio.GameLeave.keyword in entry.message
+                    is_game_join = entry.prefixes[0] == LogData.Studio.GameJoin.prefix and LogData.Studio.GameJoin.keyword in entry.message
+                    is_bloxstrap_rpc = entry.prefixes[0] == LogData.Player.BloxstrapRPC.prefix and LogData.Player.BloxstrapRPC.bloxstrap_rpc_prefix in entry.prefixes
+
+                    if is_game_leave:
+                        self.Status.default = True
+                        return
+
+                    elif is_bloxstrap_rpc:
+                        try:
+                            self.Status.bloxstrap_rpc_content = json.loads(entry.message)
+                            self.Status.bloxstrap_rpc = True
+                        except Exception:
+                            continue
+                    
+                    elif is_game_join:
+                        self.Status.timestamp = entry.timestamp
+                        self.Status.place_id = entry.message.removeprefix("open place (identifier = ").removesuffix(") [start]")
+                        
+                        response = request.get(Api.Roblox.Activity.universe_id(self.Status.place_id), cached=True, dont_log_cached_request=True)
+                        data = response.json()
+                        self.Status.universe_id = str(data["universeId"])
+                        return
         self.Status.default = True

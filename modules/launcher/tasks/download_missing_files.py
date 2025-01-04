@@ -8,6 +8,7 @@ from modules.filesystem import download, Directory
 from ..deployment_info import Deployment
 
 
+# Donload one file at a time
 def download_missing_files(deployment: Deployment, mode: Literal["Player", "Studio"], missing_file_hashes: list[str]) -> None:
     for item in deployment.package_manifest:
         if item["hash"] not in missing_file_hashes:
@@ -29,14 +30,9 @@ def download_missing_files(deployment: Deployment, mode: Literal["Player", "Stud
 
 
 
+# # Downloading each file simulatneously
 
 
-
-
-
-
-
-# Downloading each file simulatneously
 # from pathlib import Path
 # from typing import Literal
 # from queue import Queue

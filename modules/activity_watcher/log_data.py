@@ -26,7 +26,7 @@ class LogData:
 
         class BloxstrapRPC:
             prefix: str = "[FLog::Output]"
-            keyword: str = "[BloxstrapRPC]"
+            bloxstrap_rpc_prefix: str = "[BloxstrapRPC]"
 
 
     class Studio:
@@ -35,7 +35,7 @@ class LogData:
             keyword: str = "About to exit the application, doing cleanup."
             
         class GameLeave:
-            prefix: str = "[FLog::Output]"
+            prefix: str = "[FLog::StudioKeyEvents]"
             keyword: str = "close IDE doc"
 
         class GameJoin:

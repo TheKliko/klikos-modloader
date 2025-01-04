@@ -37,5 +37,9 @@ def run(mode: Literal["Player", "Studio"]) -> None:
     if not exception_queue.empty():
         raise exception_queue.get()
 
-    if integrations.get_value("discord_rpc"):
-        activity_watcher.run(mode)
+    if not integrations.get_value("discord_rpc"):
+        Logger.info("Discord RPC is disabled!")
+        return
+    
+    Logger.info("Starting Discord RPC")
+    activity_watcher.run(mode)

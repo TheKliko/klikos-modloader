@@ -10,7 +10,10 @@ class Entry:
 
 
     def __init__(self, data: str):
-        self.original = data
+        self.prefixes = []
+
+        self.original = data.strip()
+        
         self.timestamp = datetime.strptime(data.split(",")[0], "%Y-%m-%dT%H:%M:%S.%fZ").replace(tzinfo=timezone.utc).timestamp()
 
         split_data: list[str] = data.split()[1:]
@@ -20,7 +23,10 @@ class Entry:
             else:
                 break
 
-        self.message = " ".join(data.split()[1+len(self.prefixes):])
+        self.message = " ".join(data.split(" ")[1:])
+        for prefix in self.prefixes:
+            self.message = self.message.replace(prefix, "", 1)
+        self.message = self.message.strip()
         
         level = item.split()[0].split(",")[-1]
         try:

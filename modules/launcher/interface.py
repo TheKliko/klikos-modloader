@@ -66,7 +66,7 @@ class MainWindow(ctk.CTk):
         progress_bar.place(x=(self.Constants.WIDTH // 2) - (460 // 2), y=245)
         progress_bar.start()
 
-        close_button = ctk.CTkButton(self, text="Cancel", width=130, height=34, corner_radius=2, command=self._on_close)
+        close_button = ctk.CTkButton(self, text="Cancel", width=130, height=34, corner_radius=2, command=self._on_cancel)
         close_button.place(x=(self.Constants.WIDTH // 2) - (130 // 2), y=273)
         
         self.geometry(self._get_geometry())
@@ -90,8 +90,12 @@ class MainWindow(ctk.CTk):
     
 
     def _on_close(self, *args, **kwargs) -> None:
-        self.canceled = True
         self.after(1, self.destroy)
+    
+
+    def _on_cancel(self) -> None:
+        self.canceled = True
+        self._on_close()
     
 
     def bring_to_top(self) -> None:
