@@ -1,7 +1,9 @@
 import sys
 from pathlib import Path
+import json
 
-from modules.filesystem import File, restore_from_meipass
+from modules import Logger
+from modules.filesystem import File, restore_from_meipass, Directory
 
 
 IS_FROZEN: bool = getattr(sys, "frozen", False)
@@ -10,7 +12,7 @@ IS_FROZEN: bool = getattr(sys, "frozen", False)
 def check_required_files() -> None:
     missing_files: list[Path] = []
 
-    for file in File.REQUIRES_FILES:
+    for file in File.REQUIRED_FILES:
         file_exists: bool = file.is_file()
 
         if file_exists and not IS_FROZEN:
@@ -23,27 +25,37 @@ def check_required_files() -> None:
             restore_from_meipass(file)
 
         elif file_exists and IS_FROZEN:
-            pass
+            check_file_content(file)
 
 
-        # match file.is_file(), IS_FROZEN:
-        #     case True, True:
-        #         pass
+def check_file_content(file: Path) -> None:
+    root: Path = Directory.ROOT
+    relative_path: Path = file.relative_to(root)
 
-        #     case True, False:
-        #         pass
+    MEIPASS: Path = Path(sys._MEIPASS)
+    backup: Path = MEIPASS / relative_path
 
-        #     case False, True:
-        #         pass
+    if not file.is_file():
+        restore_from_meipass(file)
+        return
+    
+    try:
+        with open(file, "r") as current_file:
+            current_data: dict = json.load(current_file)
+        
+        with open(backup, "r") as backup_file:
+            backup_data: dict = json.load(backup_file)
 
-        #     case False, False:
-        #         pass
+        filtered_data: dict = backup_data.copy()
+        for key in filtered_data:
+            if key in current_data:
+                if isinstance(current_data[key], dict):
+                    if "value" in current_data[key].keys():
+                        filtered_data[key]["value"] = current_data[key]["value"]
 
+        if current_data != filtered_data:
+            with open(file, "w") as current_file:
+                json.dump(filtered_data, current_file, indent=4)
 
-        # file_exists: bool = file.is_file()
-        # if file_exists and IS_FROZEN:
-        #     pass
-        # elif file_exists and not IS_FROZEN:
-        #     pass
-        # else:
-        #     pass
+    except Exception as e:
+        Logger.warning(f"Failed to verify content of {file.name}! {type(e).__name__}: {e}")
