@@ -96,6 +96,7 @@ class LogReader:
 
         show_user_profile: bool = False if self.mode == "Studio" else integrations.get_value("show_user_profile_in_rpc")
         activity_joining: bool = False if self.mode == "Studio" else integrations.get_value("activity_joining")
+        do_bloxstrap_rpc: bool = integrations.get_value("bloxstrap_rpc")
 
         if activity_joining and self.Status.job_id is not None and self.Status.root_place_id is not None and not self.Status.reserved_server:
             self.data["buttons"].insert(0, {
@@ -117,7 +118,7 @@ class LogReader:
             display_name: str = str(data['displayName'])
             self.data["small_text"] = display_name if user_name == display_name else f"{display_name} ({user_name})"
 
-        if self.Status.bloxstrap_rpc and self.Status.bloxstrap_rpc_content is not None:
+        if do_bloxstrap_rpc and self.Status.bloxstrap_rpc and self.Status.bloxstrap_rpc_content is not None:
             command: dict | None = self.Status.bloxstrap_rpc_content.get("command")
             bloxstrap_rpc_data: dict | None = self.Status.bloxstrap_rpc_content.get("data")
 
