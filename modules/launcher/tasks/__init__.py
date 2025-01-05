@@ -48,8 +48,8 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         textvariable.set(f"Installing Roblox {mode}...")
         restore_default_files(deployment, mode)
 
-        active_mods: list[str] = mods.get_active()
         if integrations.get_value("mod_updater"):
+            active_mods: list[str] = mods.get_active(mode)
             check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(Directory.MODS, active_mods, deployment.version)
             if check:
                 Logger.info("Updating mods...")
