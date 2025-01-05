@@ -1,6 +1,7 @@
 import winreg
 import sys
 
+from modules.config import settings
 from modules import Logger
 
 
@@ -8,6 +9,10 @@ IS_FROZEN = getattr(sys, "frozen", False)
 
 
 def set_registry_keys() -> None:
+    if not settings.get_value("set_registry_keys"):
+        Logger.warning("Setting registry keys is disabled!")
+        return
+    
     if not IS_FROZEN:
         Logger.warning("Cannot set registry keys! Environment not frozen.")
         return
@@ -33,7 +38,6 @@ def set_registry_keys() -> None:
     ]
     
     try:
-
         for item in registry_keys:
             key_name: str = item["key_name"]
             path: str = item["path"]

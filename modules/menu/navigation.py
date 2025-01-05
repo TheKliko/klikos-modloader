@@ -56,13 +56,13 @@ class NavigationFrame(ctk.CTkFrame):
                     "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "fastflags.png"
                 }
             },
-            # {
-            #     "name": "Launch Apps",
-            #     "icon": {
-            #         "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "launch-integrations.png",
-            #         "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "launch-integrations.png"
-            #     }
-            # },
+            {
+                "name": "Launch Apps",
+                "icon": {
+                    "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "launch-integrations.png",
+                    "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "launch-integrations.png"
+                }
+            },
             {
                 "name": "Integrations",
                 "icon": {
