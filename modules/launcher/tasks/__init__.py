@@ -19,6 +19,7 @@ from .restore_default_files import restore_default_files
 from .apply_fastflags import apply_fastflags
 from .apply_mods import apply_mods
 from .launch_roblox import launch_roblox
+from .start_launch_apps import start_launch_apps
 
 from customtkinter import StringVar
 
@@ -69,6 +70,11 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         Logger.info(f"Launching Roblox {mode}...")
         textvariable.set(f"Launching Roblox {mode}...")
         launch_roblox(str(deployment.executable_path.resolve()))
+
+        Logger.info("Starting launch apps...")
+        start_launch_apps(mode)
+
+        # It usually takes a second or two for Roblox to appear
         time.sleep(2)
     
     except Exception as e:
