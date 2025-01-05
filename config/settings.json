@@ -5,21 +5,27 @@
         "value": true,
         "default": true
     },
+    "set_registry_keys": {
+        "name": "Set registry keys",
+        "description": "Set registry keys when launching this program, used to launch Roblox from the website",
+        "value": true,
+        "default": true
+    },
     "preload_marketplace_thumbnails": {
         "name": "Preload community mod thumbnails",
         "description": "Prevents a short lagspike when opening the community mods section for the first time",
         "value": false,
         "default": false
     },
-    "force_roblox_reinstallation": {
-        "name": "Force Roblox reinstallation",
-        "description": "Force Roblox to be reinstalled on next launch",
-        "value": false,
-        "default": false
-    },
     "confirm_launch_if_roblox_running": {
         "name": "Confirm launch when Roblox is running",
         "description": "Ask for confirmation to kill existing Roblox instances before launching Roblox",
+        "value": false,
+        "default": false
+    },
+    "force_roblox_reinstallation": {
+        "name": "Force Roblox reinstallation",
+        "description": "Force Roblox to be reinstalled on next launch",
         "value": false,
         "default": false
     },
