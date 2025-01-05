@@ -18,7 +18,7 @@ def start_launch_apps(mode: Literal["Player", "Studio"]) -> None:
             filepath: str = item["filepath"]
         except KeyError:
             continue
-        launch_args: str = item.get("launch_args", "")
+        launch_args: str = item.get("launch_args") or ""
 
         try:
             filepath_as_path: Path = Path(filepath)
