@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from tkinter import colorchooser, messagebox
+from tkinter import messagebox
 from threading import Thread
 
 from modules.info import ProjectData
@@ -9,6 +9,7 @@ from modules.functions.interface.image import load as load_image
 from modules import mod_generator
 
 import customtkinter as ctk
+from PIL import ImageColor
 
 
 class ModGeneratorSection:
@@ -25,7 +26,7 @@ class ModGeneratorSection:
     root: ctk.CTk
     container: ctk.CTkScrollableFrame
     mod_name_entry: ctk.CTkEntry
-    color_variable: ctk.StringVar
+    color1_variable: ctk.StringVar
     progress_variable: ctk.StringVar
     is_running: bool = False
 
@@ -37,12 +38,11 @@ class ModGeneratorSection:
         self.Fonts.large = ctk.CTkFont(size=16)
         self.Fonts.bold = ctk.CTkFont(weight="bold")
         
-        self.color_variable = ctk.StringVar(value="None")
+        self.color1_variable = ctk.StringVar(value="None")
         self.progress_variable = ctk.StringVar()
 
 
     def show(self) -> None:
-        self.color_variable.set("None")
         self._destroy()
         self._load_title()
         self._load_content()
@@ -73,30 +73,39 @@ class ModGeneratorSection:
         # name input
         name_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
         name_frame.grid(column=0, row=0, sticky="nsew")
-        ctk.CTkLabel(name_frame, text="Name:", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
+        ctk.CTkLabel(name_frame, text="Mod name", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
         self.mod_name_entry = ctk.CTkEntry(
             name_frame, width=256, height=40, validate="key",
             validatecommand=(self.root.register(lambda value: not re.search(r'[\\/:*?"<>|]', value)), "%P")
         )
         self.mod_name_entry.grid(column=0, row=1, sticky="nw")
         
-        # color input
+        # color/angle inputs
         color_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
         color_frame.grid(column=0, row=1, sticky="nsew", pady=(16, 32))
-        ctk.CTkLabel(color_frame, text="Color:", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
 
-        color_preview_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
-        color_preview_frame.grid(column=0, row=1, sticky="nsew")
-        self.color_visualizer = ctk.CTkFrame(color_preview_frame, width=40, height=40)
-        self.color_visualizer.grid(column=0, row=0, sticky="nw")
-        
-        ctk.CTkLabel(color_preview_frame, textvariable=self.color_variable, anchor="w").grid(column=1, row=0, sticky="w", padx=(4, 0))
-        
-        color_select_icon: Path = (Directory.RESOURCES / "menu" / "common" / "color-select").with_suffix(".png")
-        if not color_select_icon.is_file():
-            restore_from_meipass(color_select_icon)
-        color_select_image = load_image(color_select_icon)
-        ctk.CTkButton(color_frame, text="Select color", image=color_select_image, command=self._select_color, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=2, sticky="nw", pady=(8, 0))
+        color1_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
+        color1_frame.grid(column=0, row=1)
+        ctk.CTkLabel(color1_frame, text="Color 1 (required)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
+        self.color1_entry = ctk.CTkEntry(color1_frame, width=150, height=40)
+        self.color1_entry.insert("0", "#CC0037")
+        self.color1_entry.grid(column=0, row=1, sticky="w")
+
+        color2_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
+        color2_frame.grid(column=1, row=1, padx=12)
+        ctk.CTkLabel(color2_frame, text="Color 2 (optional)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
+        self.color2_entry = ctk.CTkEntry(color2_frame, width=150, height=40)
+        self.color2_entry.grid(column=0, row=1, sticky="w")
+
+        angle_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
+        angle_frame.grid(column=2, row=1)
+        ctk.CTkLabel(angle_frame, text="Angle (optional)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
+        self.angle_entry = ctk.CTkEntry(
+            angle_frame, width=120, height=40, validate="key",
+            validatecommand=(self.root.register(lambda value: value.isdigit() or value == ""), "%P")
+        )
+        self.angle_entry.insert("0", "0")
+        self.angle_entry.grid(column=0, row=1, sticky="w")
 
         # Run button
         run_icon: Path = (Directory.RESOURCES / "menu" / "common" / "run").with_suffix(".png")
@@ -105,30 +114,20 @@ class ModGeneratorSection:
         run_image = load_image(run_icon)
         ctk.CTkButton(container, text="Generate mod", image=run_image, command=self._run, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=2, sticky="nsw")
         
-        ctk.CTkLabel(container, textvariable=self.progress_variable, anchor="w").grid(column=0, row=3, sticky="w", pady=(4, 0))
+        ctk.CTkLabel(container, textvariable=self.progress_variable, anchor="w", font=self.Fonts.bold).grid(column=0, row=3, sticky="w", pady=(4, 0))
     # endregion
 
 
     # region functions
-    def _select_color(self) -> None:
-        try:
-            color = colorchooser.askcolor()[1]
-            if not color:
-                return
-            self.color_variable.set(color.upper())
-            self.color_visualizer.configure(fg_color=color)
-        
-        except Exception:
-            return
-    
-
     def _run(self) -> None:
         Thread(name="mod-generator-thread", target=self._actually_run, daemon=True).start()
 
 
     def _actually_run(self) -> None:
         name: str = self.mod_name_entry.get()
-        color: str = self.color_variable.get()
+        color1: str = self.color1_entry.get()
+        color2: str = self.color2_entry.get()
+        angle: str | int = self.angle_entry.get()
 
         if self.is_running:
             return
@@ -137,18 +136,43 @@ class ModGeneratorSection:
             messagebox.showwarning(ProjectData.NAME, "Enter a name first!")
             return
 
-        if not color or color == "None":
-            messagebox.showwarning(ProjectData.NAME, "Choose a color!")
-            return
-
         if name in [mod.name for mod in Directory.MODS.iterdir()]:
             messagebox.showerror(ProjectData.NAME, "Anther mod with the same name already exists!")
             return
 
-        self.is_running = True
-        self.root.after(0, self.progress_variable.set, "Generating, please wait")
+        if not color1 or color1 == "None":
+            messagebox.showwarning(ProjectData.NAME, "Choose a color!")
+            return
+        
+        else:
+            try:
+                rgba_color1 = ImageColor.getcolor(color1, "RGBA")
+            except Exception as e:
+                messagebox.showwarning(ProjectData.NAME, f"Bad color 1 input!\n{type(e).__name__}: {e}")
+                return
+        
+        if color2:
+            try:
+                rgba_color2 = ImageColor.getcolor(color2, "RGBA")
+            except Exception as e:
+                messagebox.showwarning(ProjectData.NAME, f"Bad color 2 input!\n{type(e).__name__}: {e}")
+                return
+        else:
+            rgba_color2 = None
+        
+        if not angle or angle == "None":
+            angle = 0
+        
         try:
-            mod_generator.run(name, color, output_dir=Directory.MODS)
+            angle = int(angle)
+        except Exception as e:
+            messagebox.showerror(ProjectData.NAME, f"Bad angle input!\n{type(e).__name__}: {e}")
+            return
+
+        self.is_running = True
+        self.root.after(0, self.progress_variable.set, "Generating... please wait")
+        try:
+            mod_generator.run(name, rgba_color1, rgba_color2, angle, output_dir=Directory.MODS)
             messagebox.showinfo(ProjectData.NAME, "Mod generated successfully!")
         except Exception as e:
             messagebox.showerror(ProjectData.NAME, message=f"Error while generating mod! {type(e).__name__}: {e}")
