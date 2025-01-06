@@ -11,7 +11,8 @@ REQUIRED_LIBRARIES: list[str] = [
     "customtkinter",
     "PIL",
     "psutil",
-    "fontTools"
+    "fontTools",
+    "numpy"
 ]
 
 
