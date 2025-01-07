@@ -26,7 +26,9 @@ class ModGeneratorSection:
     root: ctk.CTk
     container: ctk.CTkScrollableFrame
     mod_name_entry: ctk.CTkEntry
-    color1_variable: ctk.StringVar
+    color1_entry: ctk.CTkEntry
+    color2_entry: ctk.CTkEntry
+    angle_entry: ctk.CTkEntry
     progress_variable: ctk.StringVar
     is_running: bool = False
 
@@ -38,7 +40,6 @@ class ModGeneratorSection:
         self.Fonts.large = ctk.CTkFont(size=16)
         self.Fonts.bold = ctk.CTkFont(weight="bold")
         
-        self.color1_variable = ctk.StringVar(value="None")
         self.progress_variable = ctk.StringVar()
 
 
@@ -88,7 +89,6 @@ class ModGeneratorSection:
         color1_frame.grid(column=0, row=1)
         ctk.CTkLabel(color1_frame, text="Color 1 (required)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
         self.color1_entry = ctk.CTkEntry(color1_frame, width=150, height=40)
-        self.color1_entry.insert("0", "#CC0037")
         self.color1_entry.grid(column=0, row=1, sticky="w")
 
         color2_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
