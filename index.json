@@ -7,11 +7,18 @@
         "has_thumbnail": true
     },
     {
-        "name": "Bloxstrap theme",
-        "id": "bloxstrap-theme",
+        "name": "Discord UI [WIP]",
+        "id": "discord-ui",
         "author": "TheKliko",
-        "description": "Gradient mod: #a011fe -> #5460f9",
+        "description": "Changes the icons to look like those found in Discord",
         "has_thumbnail": true
+    },
+    {
+        "name": "Translucency",
+        "id": "translucency",
+        "author": "dooM",
+        "description": "Make UI elements transparent.",
+        "has_thumbnail": false
     },
     {
         "name": "24K Gradient Gold Theme",
@@ -27,31 +34,24 @@
         "has_thumbnail": true
     },
     {
-        "name": "Discord UI [WIP]",
-        "id": "discord-ui",
+        "name": "UBFF Theme",
+        "id": "ubff-theme",
         "author": "TheKliko",
-        "description": "Changes the icons to look like those found in Discord",
+        "description": "Gradient mod: #648bd9 -> #fa94d7",
         "has_thumbnail": true
     },
     {
-        "name": "Translucency",
-        "id": "translucency",
-        "author": "dooM",
-        "description": "Make UI elements transparent.",
-        "has_thumbnail": false
+        "name": "Bloxstrap theme",
+        "id": "bloxstrap-theme",
+        "author": "TheKliko",
+        "description": "Gradient mod: #a011fe -> #5460f9",
+        "has_thumbnail": true
     },
     {
         "name": "Bloxstrap theme [Premium]",
         "id": "bloxstrap-theme-premium",
         "author": "TheKliko",
         "description": "Gradient mod: #feaa17 -> #f95455",
-        "has_thumbnail": true
-    },
-    {
-        "name": "UBFF Theme",
-        "id": "ubff-theme",
-        "author": "TheKliko",
-        "description": "Gradient mod: #648bd9 -> #fa94d7",
         "has_thumbnail": true
     },
     {
