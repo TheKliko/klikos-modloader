@@ -1,8 +1,8 @@
 from pathlib import Path
-import json
 
 from modules import Logger
-from modules.filesystem import File
+from modules import request
+from modules.request import Response, Api
 
 from .create_gradient_image import create_gradient_image
 
@@ -59,14 +59,10 @@ def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[
 
 
 def get_blacklist() -> list[str]:
-    if not File.MOD_GENERATOR_BLACKLIST.is_file():
-        Logger.warning("Icon blacklist not found!")
-        return []
-
     try:
-        with open(File.MOD_GENERATOR_BLACKLIST, "r") as file:
-            data: list[str] = json.load(file)
-            return data
+        response: Response = request.get(Api.GitHub.MOD_GENERATOR_BLACKLIST, attempts=1, cached=True, timeout=(2, 4))
+        blacklist: list[str] = response.json()
+        return blacklist
 
     except Exception as e:
         Logger.error(f"Failed to get icon blacklist! {type(e).__name__}: {e}")
