@@ -6,6 +6,8 @@ from modules import Logger
 from modules.filesystem import Directory
 from modules.config import mods
 
+from .apply_custom_font import apply_custom_font
+
 
 def apply_mods(version_folder_root: str | Path, mode: Literal["Player", "Studio"]) -> None:
     version_folder_root = Path(version_folder_root)
@@ -25,3 +27,7 @@ def apply_mods(version_folder_root: str | Path, mode: Literal["Player", "Studio"
         
         except Exception as e:
             Logger.error(f"Failed to apply mod: {mod}! {type(e).__name__}: {e}")
+        
+    custom_font_path: Path = version_folder_root / "content" / "fonts" / "CustomFont.ttf"
+    if custom_font_path.is_file():
+        apply_custom_font(version_folder_root)
