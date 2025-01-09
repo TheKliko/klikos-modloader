@@ -164,7 +164,7 @@ class FontImportWindow(ctk.CTkToplevel):
                 new_rbxasset: str = "rbxasset://fonts//CustomFont.ttf"
                 json_files: list[Path] = [
                     font_families_path / file for file in font_families_path.iterdir()
-                    if file.is_file() and file.suffix == "json"
+                    if file.is_file() and file.suffix == ".json"
                 ]
                 for json_file in json_files:
                     with open(json_file, "r") as read_file:
