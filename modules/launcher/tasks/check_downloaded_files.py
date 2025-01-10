@@ -1,10 +1,8 @@
 from typing import Literal
 from pathlib import Path
 import os
-import shutil
 
 from modules.filesystem import Directory
-from modules.config import settings
 
 from ..deployment_info import Deployment
 
@@ -12,10 +10,6 @@ from ..deployment_info import Deployment
 def check_downloaded_files(deployment: Deployment, mode: Literal["Player", "Studio"]) -> list[str]:
     directory: Path = Directory.DOWNLOADS / mode
     directory.mkdir(parents=True, exist_ok=True)
-
-    if settings.get_value("force_roblox_reinstallation"):
-        settings.set_value("force_roblox_reinstallation", False)
-        shutil.rmtree(directory, ignore_errors=True)
 
     required_file_hashes: list[str] = [
         item["hash"]
@@ -27,9 +21,8 @@ def check_downloaded_files(deployment: Deployment, mode: Literal["Player", "Stud
     ]
 
     # Remove files for older versions
-    for file in os.listdir(directory):
-        file_as_path = directory / file
-        if file_as_path.is_file() and file_as_path.name not in required_file_hashes:
-            file_as_path.unlink()
+    for filepath in directory.iterdir():
+        if filepath.is_file() and filepath.name not in required_file_hashes:
+            filepath.unlink()
 
     return missing_file_hashes
