@@ -4,10 +4,10 @@ from platform import system
 
 from modules import Logger
 from modules.info import ProjectData
-from modules.functions.set_registry_keys import set_registry_keys
 
 from .requirements.libraries import check_required_libraries
 from .check_for_updates import check_for_updates
+from .set_registry_keys import set_registry_keys
 
 
 def run() -> None:
