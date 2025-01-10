@@ -21,9 +21,8 @@ def check_downloaded_files(deployment: Deployment, mode: Literal["Player", "Stud
     ]
 
     # Remove files for older versions
-    for file in os.listdir(directory):
-        file_as_path = directory / file
-        if file_as_path.is_file() and file_as_path.name not in required_file_hashes:
-            file_as_path.unlink()
+    for filepath in directory.iterdir():
+        if filepath.is_file() and filepath.name not in required_file_hashes:
+            filepath.unlink()
 
     return missing_file_hashes
