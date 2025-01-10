@@ -114,14 +114,14 @@ class LaunchAppsSection:
             ctk.CTkButton(
                 frame, image=bin_image, width=1, height=40, text="", anchor="w", compound=ctk.LEFT,
                 command=lambda key=filepath: self._remove_app(key)
-            ).grid(column=0, row=1, sticky="w", padx=(self.Constants.ENTRY_OUTER_PADDING, self.Constants.ENTRY_INNER_PADDING), pady=(0, self.Constants.ENTRY_OUTER_PADDING))
+            ).grid(column=0, row=1, sticky="w", padx=self.Constants.ENTRY_OUTER_PADDING, pady=(0, self.Constants.ENTRY_OUTER_PADDING))
 
             # Launch args
             args_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
             args_frame.grid_columnconfigure(1, weight=1)
             args_frame.grid(column=1, row=1, sticky="ew", padx=self.Constants.ENTRY_INNER_PADDING, pady=(0, self.Constants.ENTRY_OUTER_PADDING))
 
-            ctk.CTkLabel(args_frame, text="args", anchor="e").grid(column=0, row=0, padx=(0, 4))
+            ctk.CTkLabel(args_frame, text="arguments:", anchor="e").grid(column=0, row=0, padx=(0, 8))
 
             entry: ctk.CTkEntry = ctk.CTkEntry(args_frame, height=40)
             entry.insert("end", launch_args or "")
@@ -132,27 +132,27 @@ class LaunchAppsSection:
 
             # Status
             status_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-            status_frame.grid(column=2, row=1, sticky="ew", padx=2*self.Constants.ENTRY_INNER_PADDING, pady=(0, self.Constants.ENTRY_OUTER_PADDING))
+            status_frame.grid(column=2, row=1, sticky="ew", padx=self.Constants.ENTRY_OUTER_PADDING, pady=(0, self.Constants.ENTRY_OUTER_PADDING))
 
             player_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled)
             player_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             player_switch_frame.grid(column=0, row=0, sticky="e", padx=(0, self.Constants.ENTRY_INNER_PADDING))
 
-            ctk.CTkLabel(player_switch_frame, text="Roblox Player", anchor="e").grid(column=0, row=0, sticky="e")
+            ctk.CTkLabel(player_switch_frame, text="Player", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 player_switch_frame, text="", width=48, variable=player_var, onvalue=True, offvalue=False,
                 command=lambda key=filepath, var=player_var: self._set_status(var.get(), key)
-            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.ENTRY_INNER_PADDING,0))
+            ).grid(column=1, row=0, sticky="e", padx=(8, 0))
 
             studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled_studio)
             studio_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             studio_switch_frame.grid(column=1, row=0, sticky="e")
             
-            ctk.CTkLabel(studio_switch_frame, text="Roblox Studio", anchor="e").grid(column=0, row=0, sticky="e")
+            ctk.CTkLabel(studio_switch_frame, text="Studio", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 studio_switch_frame, text="", width=48, variable=studio_var, onvalue=True, offvalue=False,
                 command=lambda key=filepath, var=studio_var: self._set_status_studio(var.get(), key)
-            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.ENTRY_INNER_PADDING,0))
+            ).grid(column=1, row=0, sticky="e", padx=(8, 0))
     # endregion
 
 

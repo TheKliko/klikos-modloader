@@ -178,7 +178,7 @@ class ModsSection:
 
             # Mod priority
             priority_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-            priority_frame.grid(column=2, row=0, sticky="ew", padx=self.Constants.MOD_ENTRY_INNER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
+            priority_frame.grid(column=2, row=0, sticky="ew", padx=self.Constants.MOD_ENTRY_OUTER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
             ctk.CTkLabel(priority_frame, text="Load order: ", anchor="e").grid(column=0, row=0, sticky="ew")
             entry = ctk.CTkEntry(
                 priority_frame, width=40, height=40, validate="key",
@@ -192,27 +192,27 @@ class ModsSection:
 
             # Mod status
             status_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
-            status_frame.grid(column=3, row=0, sticky="ew", padx=2*self.Constants.MOD_ENTRY_INNER_PADDING, pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
+            status_frame.grid(column=3, row=0, sticky="ew", padx=(self.Constants.MOD_ENTRY_INNER_PADDING, self.Constants.MOD_ENTRY_OUTER_PADDING), pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
 
             player_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled)
             player_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             player_switch_frame.grid(column=0, row=0, sticky="e", padx=(0, self.Constants.MOD_ENTRY_INNER_PADDING))
 
-            ctk.CTkLabel(player_switch_frame, text="Roblox Player", anchor="e").grid(column=0, row=0, sticky="e")
+            ctk.CTkLabel(player_switch_frame, text="Player", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 player_switch_frame, text="", width=48, variable=player_var, onvalue=True, offvalue=False,
                 command=lambda mod_info=mod_info, var=player_var: self._set_mod_status(var.get(), mod_info)
-            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.MOD_ENTRY_INNER_PADDING,0))
+            ).grid(column=1, row=0, sticky="e", padx=(8, 0))
 
             studio_var: ctk.BooleanVar = ctk.BooleanVar(value=enabled_studio)
             studio_switch_frame: ctk.CTkFrame = ctk.CTkFrame(status_frame, fg_color="transparent")
             studio_switch_frame.grid(column=1, row=0, sticky="e")
             
-            ctk.CTkLabel(studio_switch_frame, text="Roblox Studio", anchor="e").grid(column=0, row=0, sticky="e")
+            ctk.CTkLabel(studio_switch_frame, text="Studio", anchor="e").grid(column=0, row=0, sticky="e")
             ctk.CTkSwitch(
                 studio_switch_frame, text="", width=48, variable=studio_var, onvalue=True, offvalue=False,
                 command=lambda mod_info=mod_info, var=studio_var: self._set_mod_status_studio(var.get(), mod_info)
-            ).grid(column=1, row=0, sticky="e", padx=(self.Constants.MOD_ENTRY_INNER_PADDING,0))
+            ).grid(column=1, row=0, sticky="e", padx=(8, 0))
     # endregion
 
 

@@ -136,51 +136,26 @@ class FontImportWindow(ctk.CTkToplevel):
                 if not messagebox.askokcancel(ProjectData.NAME, "Another mod with the same name already exists!\nDo you wish to replace it?"):
                     return
                 shutil.rmtree(target_path)
+
             
             with TemporaryDirectory() as tmp:
                 temporary_directory: Path = Path(tmp)
                 fonts_basepath: Path = temporary_directory / mod_name / "content" / "fonts"
                 font_filepath: Path = fonts_basepath / "CustomFont.ttf"
-                font_families_path: Path = fonts_basepath / "families"
-                font_families_path.mkdir(parents=True, exist_ok=True)
+
+                font_filepath.parent.mkdir(parents=True, exist_ok=True)
 
                 # Move fonts to temporary folder, convert to .ttf if needed
                 match self.chosen_path.suffix:
                     case ".ttf":
-                        pass
+                        shutil.copy2(self.chosen_path, font_filepath)
 
                     case ".otf":
                         TTFont(self.chosen_path).save(font_filepath)
 
                     case _:
                         raise Exception("Unsupported filetype!")
-            
-                deployment: Deployment = Deployment("Player")
-                download(Api.Roblox.Deployment.download(deployment.version, "content-fonts.zip"), temporary_directory / "content-fonts.zip")
-                extract(temporary_directory / "content-fonts.zip", temporary_directory / "content-fonts-extracted")
-                shutil.copytree(temporary_directory / "content-fonts-extracted" / "families", font_families_path, dirs_exist_ok=True)
-                
-                # Overwrite each font's json file to direct to our custom font
-                new_rbxasset: str = "rbxasset://fonts//CustomFont.ttf"
-                json_files: list[Path] = [
-                    font_families_path / file for file in font_families_path.iterdir()
-                    if file.is_file() and file.suffix == "json"
-                ]
-                for json_file in json_files:
-                    with open(json_file, "r") as read_file:
-                        data: dict = json.load(read_file)
 
-                    faces: Optional[list[dict]] = data.get("faces")
-                    if faces is None:
-                        continue
-
-                    for i, _ in enumerate(faces):
-                        faces[i]["assetId"] = new_rbxasset
-                    data["faces"] = faces
-
-                    with open(json_file, "w") as write_file:
-                        json.dump(data, write_file, indent=4)
-                
                 shutil.copytree(temporary_directory / mod_name, target_path, dirs_exist_ok=True)
             self._hide()
             if self.on_success is not None:

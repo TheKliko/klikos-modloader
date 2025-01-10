@@ -1,13 +1,15 @@
 from pathlib import Path
-import json
 
 from modules import Logger
-from modules.filesystem import File
+from modules import request
+from modules.request import Response, Api
 
-from PIL import Image, ImageColor
+from .create_gradient_image import create_gradient_image
+
+from PIL import Image
 
 
-def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[str, str | int]]], color: str) -> None:
+def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[str, str | int]]], color1, color2, angle: int) -> None:
     icon_cache: dict[str, Image.Image] = {}
     modded_imagesets: list[str] = []
     blacklist: list[str] = get_blacklist()
@@ -35,7 +37,6 @@ def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[
             
             formatted_icon_map[image_set]["icons"].append((x, y, x+w, y+h))
     
-    rgba_color = ImageColor.getcolor(color, "RGBA")
     for image_set, image_set_data in formatted_icon_map.items():
         path: Path = image_set_data["path"]
         with Image.open(path, formats=("PNG",)) as image:
@@ -44,7 +45,7 @@ def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[
                     icon: Image.Image = image.crop(box)
 
                     r, g, b, a = icon.split()
-                    modded_icon = get_mask(color, rgba_color, icon.size, icon_cache)
+                    modded_icon = get_mask(color1, color2, angle, icon.size, icon_cache)
                     modded_icon.putalpha(a)
 
                     image.paste(modded_icon, box)
@@ -58,26 +59,27 @@ def generate_imagesets(base_directory: Path, icon_map: dict[str, dict[str, dict[
 
 
 def get_blacklist() -> list[str]:
-    if not File.MOD_GENERATOR_BLACKLIST.is_file():
-        Logger.warning("Icon blacklist not found!")
-        return []
-
     try:
-        with open(File.MOD_GENERATOR_BLACKLIST, "r") as file:
-            data: list[str] = json.load(file)
-            return data
+        response: Response = request.get(Api.GitHub.MOD_GENERATOR_BLACKLIST, attempts=1, cached=True, timeout=(2, 4))
+        blacklist: list[str] = response.json()
+        return blacklist
 
     except Exception as e:
         Logger.error(f"Failed to get icon blacklist! {type(e).__name__}: {e}")
         return []
 
 
-def get_mask(color: str, rgba_color, size: tuple[int, int], cache: dict[str, Image.Image]) -> Image.Image:
-    key: str = f"{color}-{size}"
+def get_mask(color1, color2, angle: int, size: tuple[int, int], cache: dict[str, Image.Image]) -> Image.Image:
+    key: str = f"{size[0]}-{size[1]}"
     if key in cache:
         return cache[key]
     
-    mask: Image.Image = Image.new("RGBA", size, rgba_color)
+    if color2 is None:
+        mask: Image.Image = Image.new("RGBA", size, color1)
+    
+    else:
+        mask = create_gradient_image(size, color1, color2, angle)
+    
     cache[key] = mask
 
     return mask
