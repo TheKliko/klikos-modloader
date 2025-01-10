@@ -4,8 +4,6 @@ from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
 from modules.config import settings
 
-from ..commands import add_mods, open_mods_folder
-
 import customtkinter as ctk
 
 
@@ -13,8 +11,8 @@ class SettingsSection:
     class Constants:
         SECTION_TITLE: str = "Settings"
         SECTION_DESCRIPTION: str = "Manage your settings"
-        ENTRY_INNER_PADDING: int = 4
-        ENTRY_OUTER_PADDING: int = 12
+        ENTRY_INNER_PADDING: int = 0
+        ENTRY_OUTER_PADDING: int = 8
         ENTRY_GAP: int = 8
     
     class Fonts:
