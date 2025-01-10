@@ -3,7 +3,7 @@ class ProjectData:
     DESCRIPTION: str = "Roblox mods made easy"
     AUTHOR: str = "TheKliko"
     REPOSITORY: str = r"https://github.com/TheKliko/klikos-modloader"
-    VERSION: str = "1.7.3"
+    VERSION: str = "1.7.4"
 
 class Help:
     DISCORD: str = r"https://discord.gg/nEjUwdSP9P"
