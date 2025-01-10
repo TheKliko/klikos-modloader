@@ -1,4 +1,16 @@
 {
+    "eurotrucks": {
+        "name": "NVIDIA game filter",
+        "description": "Renames RobloxPlayerBeta.exe to eurotrucks2.exe (Supported graphics card required)",
+        "value": false,
+        "default": false
+    },
+    "mod_updater": {
+        "name": "Kliko's mod updater",
+        "description": "Enables automatic mod updates",
+        "value": true,
+        "default": true
+    },
     "discord_rpc": {
         "name": "Discord RPC",
         "description": "Replace the default Discord RPC to show more details",
@@ -20,12 +32,6 @@
     "bloxstrap_rpc": {
         "name": "Bloxstrap RPC",
         "description": "Allow games to set a custom RPC status using the BloxstrapRPC SDK",
-        "value": true,
-        "default": true
-    },
-    "mod_updater": {
-        "name": "Kliko's mod updater",
-        "description": "Enables automatic mod updates",
         "value": true,
         "default": true
     }
