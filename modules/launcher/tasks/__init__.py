@@ -58,6 +58,12 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
                 if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
                     return
             kill_process(deployment.executable_name)
+
+        elif process_exists("eurotrucks2.exe"):
+            if settings.get_value("confirm_launch_if_roblox_running"):
+                if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+                    return
+            kill_process("eurotrucks2.exe")
         
         # Restore default files, if needed
         if settings.get_value("restore_default_files") or missing_file_hashes:
@@ -85,10 +91,18 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         if not disable_all_fastflags:
             apply_fastflags(deployment.base_directory, mode)
 
+        # NVIDIA game filter support
+        eurotruckstoggle: bool = integrations.get_value("eurotrucks")
+        euro_trucks_path: Path = deployment.executable_path.with_name("eurotrucks2.exe")
+        if eurotruckstoggle and deployment.executable_path.is_file():
+            deployment.executable_path.rename(euro_trucks_path)
+        elif euro_trucks_path.is_file():
+            euro_trucks_path.rename(deployment.executable_path)
+
         # Launch Roblox
         Logger.info(f"Launching Roblox {mode}...")
         textvariable.set(f"Launching Roblox {mode}...")
-        launch_roblox(str(deployment.executable_path.resolve()))
+        launch_roblox(str(deployment.executable_path.resolve()) if not (eurotruckstoggle and mode == "Player") else str(euro_trucks_path.resolve()))
 
         # Start launch apps
         Logger.info("Starting launch apps...")

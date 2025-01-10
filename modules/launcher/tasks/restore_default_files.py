@@ -1,6 +1,5 @@
 from typing import Literal
 from pathlib import Path
-import os
 import shutil
 
 from modules import Logger
@@ -12,16 +11,20 @@ from ..deployment_info import Deployment
 def restore_default_files(deployment: Deployment, mode: Literal["Player","Studio"]) -> None:
     # Remove older and current version(s)
     if Directory.VERSIONS.is_dir():
-        for directory in os.listdir(Directory.VERSIONS):
-            directory_as_path: Path = Directory.VERSIONS / directory
+        for directory in Directory.VERSIONS.iterdir():
 
-            if not directory_as_path.is_dir():
+            if not directory.is_dir():
                 continue
 
-            executable_path: Path = directory_as_path / deployment.executable_name
+            executable_path: Path = directory / deployment.executable_name
+            eurotrucks_path: Path = directory / "eurotrucks2.exe"
             if executable_path.is_file():
-                Logger.info(f"Removing directory: {Directory.VERSIONS.name}/{directory}...")
-                shutil.rmtree(directory_as_path, ignore_errors=True)
+                Logger.info(f"Removing directory: {directory}...")
+                shutil.rmtree(directory, ignore_errors=True)
+            
+            if mode == "Player" and eurotrucks_path.is_file():
+                Logger.info(f"Removing directory: {directory}...")
+                shutil.rmtree(directory, ignore_errors=True)
 
     # Restore files for current version
     for item in deployment.package_manifest:
