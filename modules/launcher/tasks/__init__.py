@@ -96,7 +96,7 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         euro_trucks_path: Path = deployment.executable_path.with_name("eurotrucks2.exe")
         if eurotruckstoggle and deployment.executable_path.is_file():
             deployment.executable_path.rename(euro_trucks_path)
-        elif euro_trucks_path.is_file():
+        elif not eurotruckstoggle and euro_trucks_path.is_file():
             euro_trucks_path.rename(deployment.executable_path)
 
         # Launch Roblox
