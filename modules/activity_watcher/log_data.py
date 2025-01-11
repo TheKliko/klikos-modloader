@@ -6,7 +6,7 @@ class LogData:
 
         class GameLeave:
             prefix: str = "[FLog::SingleSurfaceApp]"
-            keyword: str = "handleGameWillClose"
+            keyword: str = "leaveUGCGameInternal"
 
         class GameJoin:
             prefix: str = "[FLog::Output]"
