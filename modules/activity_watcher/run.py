@@ -19,7 +19,6 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
         Logger.warning("Discord RPC is disabled!")
         return
     
-    print(Directory.LOCALAPPDATA)
     if not Directory.LOCALAPPDATA.is_dir():
         Logger.error("Failed to start RPC module! %LOCALAPPDATA% not found")
         return
