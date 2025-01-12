@@ -66,3 +66,24 @@ def load_from_url(url: str, size: tuple[int, int]) -> CTkImage | Literal[""]:
     except Exception as e:
         Logger.error(f"Failed to load image from URL: {url}! {type(e).__name__}: {str(e)}")
         return ""
+
+
+def load_from_image(pil_image: Image.Image, identifier: str, size: tuple[int, int]) -> CTkImage | Literal[""]:
+    key: str = f"{identifier}-{size}"
+    cached_image = _image_cache.get(key)
+    if cached_image is not None:
+        print("cache")
+        return cached_image
+    
+    try:
+        image: CTkImage = CTkImage(
+            light_image=pil_image,
+            dark_image=pil_image,
+            size=size
+        )
+        _image_cache[key] = image
+        return image
+
+    except Exception as e:
+        Logger.error(f"Failed to load image from PIL.Image object! {type(e).__name__}: {str(e)}")
+        return ""
