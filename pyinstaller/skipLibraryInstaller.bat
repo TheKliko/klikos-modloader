@@ -2,7 +2,6 @@
 echo running %~nx0...
 
 set "project_name=Kliko's modloader"
-set "dependencies=requests pypresence pyperclip customtkinter pillow psutil fonttools"
 
 set "temp=%~dp0temp"
 set "bin=%~dp0bin"
@@ -55,7 +54,8 @@ pyinstaller ..\main.py ^
 --clean --onefile --noconsole ^
 --paths="%libraries%" ^
 --add-data="%resources%;resources" ^
---add-data="%config%;config"
+--add-data="%config%;config" ^
+--add-data="%modules%\mod_generator\additional_files;mod_generator_files"
 
 
 if exist "%bin%\executable.exe" (
