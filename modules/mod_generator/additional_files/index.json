@@ -1,0 +1,5 @@
+{
+    "EscapeIcon.png": ["content", "textures", "ui", "Settings", "Help", "EscapeIcon.png"],
+    "LeaveIcon.png": ["content", "textures", "ui", "Settings", "Help", "LeaveIcon.png"],
+    "ResetIcon.png": ["content", "textures", "ui", "Settings", "Help", "ResetIcon.png"]
+}
