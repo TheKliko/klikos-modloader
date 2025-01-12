@@ -65,8 +65,10 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
                     return
             kill_process("eurotrucks2.exe")
         
+        disable_all_mods: bool = settings.get_value("disable_all_mods")
+        
         # Restore default files, if needed
-        if settings.get_value("restore_default_files") or missing_file_hashes:
+        if settings.get_value("restore_default_files") or missing_file_hashes or disable_all_mods:
             Logger.info("Restoring default files...")
             textvariable.set(f"Installing Roblox {mode}...")
             restore_default_files(deployment, mode)
@@ -81,7 +83,6 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
                 update_mods(check, deployment.version, Directory.MODS)
 
         # Apply modifications
-        disable_all_mods: bool = settings.get_value("disable_all_mods")
         disable_all_fastflags: bool = settings.get_value("disable_all_fastflags")
         if not disable_all_mods or not disable_all_fastflags:
             Logger.info("Applying modifications...")
