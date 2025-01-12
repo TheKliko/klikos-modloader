@@ -80,7 +80,8 @@ pyinstaller ..\main.py ^
 --clean --onefile --noconsole ^
 --paths="%libraries%" ^
 --add-data="%resources%;resources" ^
---add-data="%config%;config"
+--add-data="%config%;config" ^
+--add-data="%modules%\mod_generator\additional_files;mod_generator_files"
 
 
 if exist "%bin%\executable.exe" (

@@ -4,6 +4,7 @@ from platform import system
 
 from modules import Logger
 from modules.info import ProjectData
+from modules.config import settings
 
 from .requirements.libraries import check_required_libraries
 from .check_for_updates import check_for_updates
@@ -25,7 +26,8 @@ def run() -> None:
     from .requirements.files import check_required_files
     check_required_files()
 
-    Logger.info("Checking for updates...")
-    check_for_updates()
+    if settings.get_value("check_for_updates"):
+        Logger.info("Checking for updates...")
+        check_for_updates()
 
     set_registry_keys()

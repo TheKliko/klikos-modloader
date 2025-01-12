@@ -63,15 +63,15 @@ class MarketplaceSection:
             if ignore_thumbnails:
                 return
 
-            if not settings.get_value("preload_marketplace_thumbnails"):
-                return
+            # if not settings.get_value("preload_marketplace_thumbnails"):
+            #     return
             
-            for mod in self.data:
-                name: str | None = mod.get("name")
-                id: str | None = mod.get("id")
-                if not name or not id:
-                    continue
-                load_image_from_url(Api.GitHub.mod_thumbnail(id), size=self.Constants.MOD_THUMBNAIL_SIZE)
+            # for mod in self.data:
+            #     name: str | None = mod.get("name")
+            #     id: str | None = mod.get("id")
+            #     if not name or not id:
+            #         continue
+            #     load_image_from_url(Api.GitHub.mod_thumbnail(id), size=self.Constants.MOD_THUMBNAIL_SIZE)
 
         except Exception:
             if not ignore_errors:
@@ -182,6 +182,8 @@ class MarketplaceSection:
                 frame, image=download_image, width=1, height=40, text="Download", anchor="w", compound=ctk.LEFT,
                 command=lambda name=name, id=id: Thread(name=f"mod-download-thread_{id}", target=self._download_mod, args=(name, id), daemon=True).start()
             ).grid(column=2, row=0, sticky="ew", padx=(self.Constants.MOD_ENTRY_INNER_PADDING, self.Constants.MOD_ENTRY_OUTER_PADDING), pady=self.Constants.MOD_ENTRY_OUTER_PADDING)
+
+            self.root.update_idletasks()
     # endregion
 
 

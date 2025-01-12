@@ -46,11 +46,5 @@
         "description": "Always restores Roblox's default files before applying mods",
         "value": true,
         "default": true
-    },
-    "preload_marketplace_thumbnails": {
-        "name": "Preload community mod thumbnails",
-        "description": "Prevents a short lagspike when opening the community mods section for the first time",
-        "value": false,
-        "default": false
     }
 }

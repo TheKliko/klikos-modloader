@@ -61,7 +61,7 @@ class MainWindow(ctk.CTk):
         try:
             with open(self.Constants.THEME) as file:
                 data: dict = json.load(file)
-            self.fg_color = data["CTkFrame"]["top_fg_color"]
+            self.fg_color = data["CTk"]["fg_color"]
             self.border_color = data["CTkFrame"]["border_color"]
 
         except Exception:
@@ -78,11 +78,11 @@ class MainWindow(ctk.CTk):
         self.border: ctk.CTkFrame = ctk.CTkFrame(self, fg_color=self.border_color, corner_radius=0)
         self.border.pack(fill="both", expand=True)
         
-        content: ctk.CTkFrame = ctk.CTkFrame(self.border, corner_radius=0)
+        content: ctk.CTkFrame = ctk.CTkFrame(self.border, fg_color=self.fg_color, corner_radius=0)
         content.pack(fill="both", expand=True, padx=1, pady=1)
 
         self.versioninfovariable: ctk.StringVar = ctk.StringVar(value="")
-        info_label: ctk.CTkLabel = ctk.CTkLabel(content, fg_color=self.fg_color, textvariable=self.versioninfovariable, justify="left", font=ctk.CTkFont(size=13))
+        info_label: ctk.CTkLabel = ctk.CTkLabel(content, textvariable=self.versioninfovariable, justify="left", font=ctk.CTkFont(size=13))
         info_label.place(x=20, y=10)
 
         logo: ctk.CTkLabel
