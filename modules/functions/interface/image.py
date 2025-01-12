@@ -72,7 +72,6 @@ def load_from_image(pil_image: Image.Image, identifier: str, size: tuple[int, in
     key: str = f"{identifier}-{size}"
     cached_image = _image_cache.get(key)
     if cached_image is not None:
-        print("cache")
         return cached_image
     
     try:
