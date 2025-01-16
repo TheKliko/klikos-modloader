@@ -52,8 +52,8 @@ Download mods with the press of a button. Of course you can also add mods manual
 <h3>Mod generator [BETA]</h3>
 Don't know how to make mods yourself? Try out our mod generator!
 
-<h3>Discord RPC & BloxstrapSDK support</h3>
-Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapSDK</a> allows games to set custom RPC data.
+<h3>Discord RPC and BloxstrapRPC SDK</h3>
+Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapRPC</a> allows games to set custom RPC data.
 
 <h3>Studio Support</h3>
 Kliko's modloader is available for both the Roblox Player and Roblox Studio.
