@@ -1,6 +1,6 @@
 <div align="center">
-    
-![banner](https://github.com/user-attachments/assets/374665b8-9341-482d-bf63-509eea3bd983)
+
+<img src="GitHub Files/Images/banner.png" alt="banner"/>
 
 [<img alt="GitHub License" src="https://img.shields.io/github/license/thekliko/klikos-modloader?style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/TheKliko/klikos-modloader/blob/main/LICENSE)
 [<img alt="GitHub Release" src="https://img.shields.io/github/v/release/thekliko/klikos-modloader?filter=!v*.*.*-beta&style=for-the-badge&labelColor=cc0037&color=353639">](https://github.com/thekliko/klikos-modloader/releases/latest)
@@ -16,7 +16,7 @@
 
 Kliko's modloader is an open-source modloader for <a href="https://www.roblox.com">Roblox</a>, it serves as a replacement for Roblox's default launcher.
 
-<img src="GitHub Files/Images/preview-about.png" alt="preview"/>
+<img src="GitHub Files/Images/preview-marketplace.png" alt="preview"/>
 
 
 
