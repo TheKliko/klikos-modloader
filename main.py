@@ -15,7 +15,7 @@ def main() -> None:
             except (ModuleNotFoundError, ImportError):
                 pass
         else:  # Add libraries to PATH if running the source code directly
-            sys.path.insert(0, Path(__file__).parent / "libraries")
+            sys.path.insert(0, str((Path(__file__).parent / "libraries").resolve()))
 
         from modules import startup
         startup.run()
