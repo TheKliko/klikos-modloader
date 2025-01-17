@@ -13,7 +13,7 @@ def extract(source: str | Path, destination: str | Path, ignore_filetype: bool =
     source = Path(source)
     destination = Path(destination)
 
-    Logger.info(f"Extracting file: {source.name}...")
+    Logger.info(f"Extracting file: {source.name}...", prefix="filesystem.extract()")
 
     if destination.is_file():
         raise FileExtractError(f"Destination must be a directory! (destination: {destination.name})")

@@ -16,7 +16,7 @@ ROOT: Path = Directory.ROOT
 def restore_from_meipass(file: str | Path) -> None:
     relative_path: Path = Path(file).relative_to(ROOT)
 
-    Logger.info(f"Restoring file from _MEIPASS: {relative_path}")
+    Logger.info(f"Restoring file from _MEIPASS: {relative_path}", prefix="filesystem.restore()")
 
     if not IS_FROZEN:
         raise FileRestoreError(f"Environment not frozen; cannot restore file: {relative_path}...")
