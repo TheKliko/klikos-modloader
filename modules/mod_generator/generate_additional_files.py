@@ -18,7 +18,7 @@ def generate_additional_files(base_directory: Path, color1, color2, angle: int) 
     index_filepath: Path = mod_generator_files / "index.json"
 
     if not index_filepath.is_file():
-        Logger.warning("Cannot generate additional files! index.json does not exist!")
+        Logger.warning("Cannot generate additional files! index.json does not exist!", prefix="mod_generator.generate_additional_files()")
         return
     
     with open(index_filepath, "r") as file:
@@ -31,7 +31,7 @@ def generate_additional_files(base_directory: Path, color1, color2, angle: int) 
         target: list[str] | None = data.get(filepath.name)
         print(target)
         if not target or not isinstance(target, list):
-            Logger.warning(f"Cannot generate additional file: {filepath.name}! Unknown target path!")
+            Logger.warning(f"Cannot generate additional file: {filepath.name}! Unknown target path!", prefix="mod_generator.generate_additional_files()")
             continue
 
         target_path: Path = Path(base_directory, *target)
