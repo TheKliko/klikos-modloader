@@ -18,7 +18,7 @@ from .finish_mod_update import finish_mod_update
 
 
 def update_mods(check: dict[str, list[Path]], latest_version: str, output_directory: str | Path) -> None:
-    Logger.info("Updating mods...")
+    Logger.info("Updating mods...", prefix="mod_updater.update_mods()")
     output_directory = Path(output_directory)
 
     deploy_history: DeployHistory = get_deploy_history(latest_version)
@@ -41,7 +41,7 @@ def update_mods(check: dict[str, list[Path]], latest_version: str, output_direct
     
     if not exception_queue.empty():
         e: Exception = exception_queue.get()
-        Logger.error(f"{type(e).__name__}: {e}")
+        Logger.error(f"{type(e).__name__}: {e}", prefix="mod_updater.update_mods()")
         raise e
 
 
@@ -54,11 +54,11 @@ def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: 
     try:
         with TemporaryDirectory(prefix=f"mod_updater_{hash}_") as tmp:
             temporary_directory: Path = Path(tmp)
-            Logger.info("Copying mods to temporary directory...")
+            Logger.info("Copying mods to temporary directory...", prefix=f"mod_updater.worker_thread({hash})")
             for mod in mods:
                 shutil.copytree(mod, temporary_directory / mod.name, dirs_exist_ok=True)
 
-            Logger.info("Updating info.json...")
+            Logger.info("Updating info.json...", prefix=f"mod_updater.worker_thread({hash})")
             for mod in mods:
                 with open(temporary_directory / mod.name / "info.json", "r") as file:
                     data: dict = json.load(file)
@@ -66,37 +66,37 @@ def hash_specific_worker_thread(deploy_history: DeployHistory, exception_queue: 
                 with open(temporary_directory / mod.name / "info.json", "w") as file:
                     json.dump(data, file, indent=4)
 
-            Logger.info(f"Downloading LuaPackages for {hash}")
+            Logger.info(f"Downloading LuaPackages for {hash}", prefix=f"mod_updater.worker_thread({hash})")
             download_luapackages(deploy_history.LatestVersion.studio, temporary_directory)
             download_luapackages(mod_version, temporary_directory)
 
-            Logger.info("Locating ImageSets...")
+            Logger.info("Locating ImageSets...", prefix=f"mod_updater.worker_thread({hash})")
             mod_imageset_path: Path = locate_imagesets(temporary_directory / mod_version)
             latest_imageset_path: Path = locate_imagesets(temporary_directory / deploy_history.LatestVersion.studio)
             
-            Logger.info("Locating ImageSetData...")
+            Logger.info("Locating ImageSetData...", prefix=f"mod_updater.worker_thread({hash})")
             mod_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / mod_version)
             latest_imagesetdata_path: Path = locate_imagesetdata_file(temporary_directory / deploy_history.LatestVersion.studio)
 
-            Logger.info("Getting icon map...")
+            Logger.info("Getting icon map...", prefix=f"mod_updater.worker_thread({hash})")
             mod_icon_map: dict[str, dict[str, dict[str, str | int]]] = get_icon_map(temporary_directory / mod_version / mod_imagesetdata_path)
             latest_icon_map: dict[str, dict[str, dict[str, str | int]]] = get_icon_map(temporary_directory / deploy_history.LatestVersion.studio / latest_imagesetdata_path)
             
             for mod in mods:
                 try:
-                    Logger.info("Detecting modded icons...")
+                    Logger.info("Detecting modded icons...", prefix=f"mod_updater.worker_thread({hash})")
                     modded_icons: dict[str, list[str]] = detect_modded_icons((temporary_directory / mod.name / mod_imageset_path), (temporary_directory / mod_version / mod_imageset_path), mod_icon_map)
                     
                     if modded_icons:
-                        Logger.info("Generating ImageSets...")
+                        Logger.info("Generating ImageSets...", prefix=f"mod_updater.worker_thread({hash})")
                         generate_new_imagesets(modded_icons, mod_icon_map, latest_icon_map, mod_imageset_path, latest_imageset_path, deploy_history.LatestVersion.studio, mod.name, temporary_directory)
                     
-                    Logger.info(f"Finishing mod update: {mod.name}")
+                    Logger.info(f"Finishing mod update: {mod.name}", prefix=f"mod_updater.worker_thread({hash})")
                     finish_mod_update(mod.name, temporary_directory, output_directory)
 
                 except Exception as e:
-                    Logger.error(f"Failed to update mod: {mod.name} | {type(e).__name__}: {e}")
+                    Logger.error(f"Failed to update mod: {mod.name} | {type(e).__name__}: {e}", prefix=f"mod_updater.worker_thread({hash})")
 
     except Exception as e:
-        Logger.error(f"{type(e).__name__}: {e}")
+        Logger.error(f"{type(e).__name__}: {e}", prefix=f"mod_updater.worker_thread({hash})")
         exception_queue.put(e)
