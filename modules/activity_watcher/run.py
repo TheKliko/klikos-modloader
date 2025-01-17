@@ -14,17 +14,17 @@ from .exceptions import RobloxNotLaunched
 
 
 def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
-    Logger.info("Running RPC module...")
+    Logger.info("Running RPC module...", prefix="activity_watcher.run()")
     if not integrations.get_value("discord_rpc"):
-        Logger.warning("Discord RPC is disabled!")
+        Logger.warning("Discord RPC is disabled!", prefix="activity_watcher.run()")
         return
     
     if not Directory.LOCALAPPDATA.is_dir():
-        Logger.error("Failed to start RPC module! %LOCALAPPDATA% not found")
+        Logger.error("Failed to start RPC module! %LOCALAPPDATA% not found", prefix="activity_watcher.run()")
         return
     
     if not Directory.ROBLOX_LOGS.is_dir():
-        Logger.error("Failed to start RPC module! Roblox logs directory not found")
+        Logger.error("Failed to start RPC module! Roblox logs directory not found", prefix="activity_watcher.run()")
         return
     
     # Check launch args for RPC mode
@@ -38,7 +38,7 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
         mode = get_rpc_mode()
 
     if not mode:
-        Logger.warning("No existing Roblox instances! Stopping RPC module...")
+        Logger.warning("No existing Roblox instances! Stopping RPC module...", prefix="activity_watcher.run()")
         return
     
     try:
@@ -46,7 +46,7 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
         try:
             client.connect()
         except DiscordNotFound:
-            Logger.warning(f"Discord not found!")
+            Logger.warning(f"Discord not found!", prefix="activity_watcher.run()")
             return
         client.mainloop()
     
@@ -55,8 +55,8 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
     
     except Exception as e:
         formatted_traceback: str = "".join(traceback.format_exception(e))
-        Logger.critical(f"RPC Error!\n\n{formatted_traceback}\n")
-        Logger.info(f"If you need any help, please join the official support server: {Help.DISCORD}")
+        Logger.critical(f"RPC Error!\n\n{formatted_traceback}\n", prefix="activity_watcher.run()")
+        Logger.info(f"If you need any help, please join the official support server: {Help.DISCORD}", prefix="activity_watcher.run()")
 
 
 def get_rpc_mode(attempts: int = 5) -> Literal["Player", "Studio"] | None:
