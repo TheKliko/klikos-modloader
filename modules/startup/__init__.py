@@ -14,7 +14,7 @@ from .set_registry_keys import set_registry_keys
 def run() -> None:
     # Only check for libraries if the program is running as a Python file instead of an executable
     if not getattr(sys, "frozen", False):
-        Logger.info("Checking required libraries")
+        Logger.info("Checking required libraries", prefix="startup")
         check_required_libraries()
 
     # Only Windows is supported
@@ -22,12 +22,12 @@ def run() -> None:
     if user_platform != "Windows":
         messagebox.showwarning(ProjectData.NAME, f"Unsupported OS: '{user_platform}'\nThis program will not work as expected!")
 
-    Logger.info("Checking required files...")
+    Logger.info("Checking required files...", prefix="startup")
     from .requirements.files import check_required_files
     check_required_files()
 
     if settings.get_value("check_for_updates"):
-        Logger.info("Checking for updates...")
+        Logger.info("Checking for updates...", prefix="startup")
         check_for_updates()
 
     set_registry_keys()
