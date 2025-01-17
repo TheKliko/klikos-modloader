@@ -10,7 +10,7 @@ IS_FROZEN: bool = getattr(sys, "frozen", False)
 
 
 def check_required_files() -> None:
-    missing_files: list[Path] = []
+    missing_files: list[str] = []
 
     for file in File.REQUIRED_FILES:
         file_exists: bool = file.is_file()
@@ -19,13 +19,16 @@ def check_required_files() -> None:
             continue
 
         elif not file_exists and not IS_FROZEN:
-            missing_files.append(file)
+            missing_files.append(file.name)
 
         elif not file_exists and IS_FROZEN:
             restore_from_meipass(file)
 
         elif file_exists and IS_FROZEN:
             check_file_content(file)
+    
+    if missing_files != []:
+        raise Exception(f"The following files are missing: {', '.join(missing_files)}")
 
 
 def check_file_content(file: Path) -> None:
