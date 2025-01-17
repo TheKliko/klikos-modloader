@@ -84,24 +84,24 @@ def get_prefix() -> str:
         return f"{module}.{function}()"
 
 
-def info(message: object) -> None:
-    logging.info(f"[{get_prefix()}] {message}")
+def info(message: object, *_, prefix: str | None = None) -> None:
+    logging.info(f"[{prefix or get_prefix()}] {message}")
 
 
-def warning(message: object) -> None:
-    logging.warning(f"[{get_prefix()}] {message}")
+def warning(message: object, *_, prefix: str | None = None) -> None:
+    logging.warning(f"[{prefix or get_prefix()}] {message}")
 
 
-def error(message: object, exc_info = None) -> None:
-    logging.error(f"[{get_prefix()}] {message}", exc_info=exc_info)
+def error(message: object, *_, prefix: str | None = None, exc_info = None) -> None:
+    logging.error(f"[{prefix or get_prefix()}] {message}", exc_info=exc_info)
 
 
-def debug(message: object) -> None:
-    logging.debug(f"[{get_prefix()}] {message}")
+def debug(message: object, *_, prefix: str | None = None) -> None:
+    logging.debug(f"[{prefix or get_prefix()}] {message}")
 
 
-def critical(message: object, exc_info = None) -> None:
-    logging.critical(f"[{get_prefix()}] {message}", exc_info=exc_info)
+def critical(message: object, *_, prefix: str | None = None, exc_info = None) -> None:
+    logging.critical(f"[{prefix or get_prefix()}] {message}", exc_info=exc_info)
 
 
 initialize()
