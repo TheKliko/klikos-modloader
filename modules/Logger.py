@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 from datetime import datetime, timedelta
-import os
 import sys
 import inspect
 import platform
@@ -17,7 +16,7 @@ else:
     ROOT = Path(__file__).parent.parent
 
 
-TIMESTAMP: str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S_%f")
+TIMESTAMP: str = datetime.now().strftime("%Y-%m-%d@%H-%M-%S.%f")
 LAUNCH_MODE: str = LaunchMode.get()
 FILENAME: str = f"{TIMESTAMP}_{LAUNCH_MODE.upper()}.log"
 LOG_DIRECTORY: Path = Path(ROOT, "Logs")
@@ -27,7 +26,7 @@ MAX_LOG_AGE: int = 7  # DAYS
 
 
 def initialize() -> None:
-    os.makedirs(FILEPATH.parent, exist_ok=True)
+    FILEPATH.parent.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
         filename=FILEPATH,
         level=logging.DEBUG,
@@ -44,6 +43,7 @@ def initialize() -> None:
     debug(f"System Architecture: {platform.architecture()[0]}")
     debug(f"Project version: {ProjectData.VERSION}")
     debug(f"Launch mode: {LAUNCH_MODE}")
+
     launch_arguments: list | None = sys.argv[1:]
     if not launch_arguments:
         launch_arguments = None
@@ -53,16 +53,17 @@ def initialize() -> None:
 
 
 def remove_old_logs() -> None:
-    logs: list[Path] = [Path(LOG_DIRECTORY, file) for file in os.listdir(LOG_DIRECTORY)]
+    for log in LOG_DIRECTORY.iterdir():
+        if not log.is_file():
+            continue
 
-    for log in logs:
-        age: timedelta = datetime.now() - datetime.fromtimestamp(os.path.getmtime(log))
+        age: timedelta = datetime.now() - datetime.fromtimestamp(log.stat().st_mtime)
         if age > timedelta(days=MAX_LOG_AGE):
             try:
-                os.remove(log)
+                log.unlink()
                 debug(f"Removed old log: {log.name}")
             except Exception as e:
-                warning(f"Failed to remove old log: {log.name} | Reason: {type(e).__name__}: {e}")
+                warning(f"Failed to remove old log: {log.name}! {type(e).__name__}: {e}")
 
 
 def get_prefix() -> str:
