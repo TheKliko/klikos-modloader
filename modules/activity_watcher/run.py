@@ -51,7 +51,7 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
         client.mainloop()
     
     except RobloxNotLaunched as e:
-        Logger.error(str(e))
+        Logger.error("Could not confirm Roblox launch!")
     
     except Exception as e:
         formatted_traceback: str = "".join(traceback.format_exception(e))
@@ -60,7 +60,7 @@ def run(mode: Optional[Literal["Player", "Studio"]] = None) -> None:
 
 
 def get_rpc_mode(attempts: int = 5) -> Literal["Player", "Studio"] | None:
-    for i in range(attempts):
+    for _ in range(attempts):
         if process_exists("RobloxPlayerBeta.exe"):
             return "Player"
         elif process_exists("eurotrucks2.exe"):

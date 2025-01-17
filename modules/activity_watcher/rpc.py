@@ -16,6 +16,7 @@ class RichPresenceClient:
         CLIENT_ID: str = "1280969971303841924"
         CONNECTION_ATTEMPTS: int = 3
         RECONNECT_COOLDOWN: float = 5
+        PIPECLOSED_COOLDOWN: float = 15
         class AssetKeys:
             DEFAULT: str = "modloader"
             PLAYER: str = "roblox"
@@ -56,35 +57,48 @@ class RichPresenceClient:
         raise exception
 
 
-    def mainloop(self) -> None:
-        self._confirm_roblox_launch()
-        self.timestamp = time.time()
-        self._set_default_status()
-        while True:
-            if not integrations.get_value("discord_rpc"):
-                Logger.warning("Discord RPC turned off!", prefix="activity_watcher.RichPresenceClient.mainloop()")
-                break
+    def mainloop(self, skip_launch_confirmation: bool = False) -> None:
+        try:
+            if not skip_launch_confirmation:
+                self._confirm_roblox_launch()
+            if self.timestamp == 1:
+                self.timestamp = time.time()
+            self._set_default_status()
+            while True:
+                if not integrations.get_value("discord_rpc"):
+                    Logger.warning("Discord RPC turned off!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
 
-            if not process_exists(f"Roblox{self.mode}Beta.exe") and (not process_exists("eurotrucks2.exe") if self.mode == "Player" else True):
-                Logger.info("Roblox process not found!", prefix="activity_watcher.RichPresenceClient.mainloop()")
-                break
+                if not process_exists(f"Roblox{self.mode}Beta.exe") and (not process_exists("eurotrucks2.exe") if self.mode == "Player" else True):
+                    Logger.info("Roblox process not found!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
 
-            new_status: dict | None | Literal["DEFAULT"] = self.log_reader.get_status()
-            if new_status is None:
-                Logger.info("Log reader returned None!", prefix="activity_watcher.RichPresenceClient.mainloop()")
-                break
-            elif new_status is None:
+                new_status: dict | None | Literal["DEFAULT"] = self.log_reader.get_status()
+                if new_status is None:
+                    Logger.info("Log reader returned None!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
+                elif new_status is None:
+                    time.sleep(self.Constants.COOLDOWN)
+                    continue
+
+                if new_status == "DEFAULT":
+                    self._set_default_status()
+                
+                elif new_status != self.last_status:
+                    self.client.update(**new_status)
+                    self.last_status = new_status
+
                 time.sleep(self.Constants.COOLDOWN)
-                continue
+        
+        except PipeClosed:
+            self._on_pipe_closed()
+    
 
-            if new_status == "DEFAULT":
-                self._set_default_status()
-            
-            elif new_status != self.last_status:
-                self.client.update(**new_status)
-                self.last_status = new_status
-
-            time.sleep(self.Constants.COOLDOWN)
+    def _on_pipe_closed(self) -> None:
+        Logger.warning(f"Discord pipe closed. Retrying in {self.Constants.PIPECLOSED_COOLDOWN} seconds...", prefix="activity_watcher.RichPresenceClient._on_pipe_closed()")
+        time.sleep(self.Constants.PIPECLOSED_COOLDOWN)
+        self.connect()
+        self.mainloop(skip_launch_confirmation=True)
 
 
     def _set_default_status(self) -> None:
