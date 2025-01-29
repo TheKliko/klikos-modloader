@@ -12,6 +12,7 @@ from .sections.marketplace import MarketplaceSection
 from .sections.mod_generator import ModGeneratorSection
 from .sections.fastflags import FastFlagsSection
 from .sections.fastflag_configuration import FastFlagConfigurationSection
+from .sections.global_basic_settings_editor import GlobalBasicSettingsSection
 from .sections.launch_apps import LaunchAppsSection
 from .sections.integrations import IntegrationsSection
 from .sections.settings import SettingsSection
@@ -38,6 +39,7 @@ class MainWindow(ctk.CTk):
         mod_generator: ModGeneratorSection
         fastflags: FastFlagsSection
         fastflag_configuration: FastFlagConfigurationSection
+        global_basic_settings: GlobalBasicSettingsSection
         launch_apps: LaunchAppsSection
         integrations: IntegrationsSection
         settings: SettingsSection
@@ -89,6 +91,7 @@ class MainWindow(ctk.CTk):
         self.Sections.mod_generator = ModGeneratorSection(self, container)
         self.Sections.fastflag_configuration = FastFlagConfigurationSection(self, container)
         self.Sections.fastflags = FastFlagsSection(self, container, self.Sections.fastflag_configuration, self.PopupWindows.fastflag_preset_window)
+        self.Sections.global_basic_settings = GlobalBasicSettingsSection(self, container)
         self.Sections.launch_apps = LaunchAppsSection(self, container)
         self.Sections.integrations = IntegrationsSection(container)
         self.Sections.settings = SettingsSection(container)

@@ -57,6 +57,13 @@ class NavigationFrame(ctk.CTkFrame):
                 }
             },
             {
+                "name": "GlobalBasicSettings",
+                "icon": {
+                    "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "global-basic-settings.png",
+                    "dark": Directory.RESOURCES / "menu" / "navigation" / "dark" / "global-basic-settings.png"
+                }
+            },
+            {
                 "name": "Launch Apps",
                 "icon": {
                     "light": Directory.RESOURCES / "menu" / "navigation" / "light" / "launch-integrations.png",
@@ -167,6 +174,8 @@ class NavigationFrame(ctk.CTkFrame):
                     command = root.Sections.mod_generator.show
                 case "fastflags":
                     command = root.Sections.fastflags.show
+                case "globalbasicsettings":
+                    command = root.Sections.global_basic_settings.show
                 case "launch apps":
                     command = root.Sections.launch_apps.show
                 case "integrations":
