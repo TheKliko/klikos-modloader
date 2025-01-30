@@ -49,7 +49,7 @@ I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my m
 <h3>Community mods</h3>
 Download mods with the press of a button. Of course you can also add mods manually.
 
-<h3>Mod generator [BETA]</h3>
+<h3>Mod generator</h3>
 Don't know how to make mods yourself? Try out our mod generator!
 
 <h3>Discord RPC and BloxstrapRPC SDK</h3>
@@ -90,7 +90,7 @@ Are you having issues during setup? Have you encountered a bug? Do you need help
 
 <h3>Feedback</h3>
 
-We are always open to feedback. If you have a suggestion, found a bug or just want to share your thoughts, please <a href='https://discord.gg/nEjUwdSP9P'>join the server</a> and let us know.
+We are always open to feedback. If you have a suggestion, found a bug or just want to share your thoughts, please join the server and let us know.
 
 <h3>Mod sharing</h3>
 
