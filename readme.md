@@ -107,7 +107,7 @@ My goals for this project are:
         Getting more experience in Python
     </li>
     <li>
-        Introducing more people to Roblox mods
+        Making Roblox mods accessible to everyone
     </li>
     <li>
         Making a website 😎
