@@ -1,6 +1,5 @@
 from typing import Literal
 from pathlib import Path
-import os
 
 from modules.filesystem import Directory
 

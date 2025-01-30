@@ -13,4 +13,5 @@ class Directory:
     MODS: Path = ROOT / "Mods"
 
     LOCALAPPDATA: Path = Path.home() / "AppData" / "Local"
-    ROBLOX_LOGS: Path = LOCALAPPDATA / "Roblox" / "logs"
+    ROBLOX: Path = LOCALAPPDATA / "Roblox"
+    ROBLOX_LOGS: Path = ROBLOX / "logs"

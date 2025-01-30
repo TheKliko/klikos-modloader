@@ -10,7 +10,7 @@ from .exceptions import ImageSetsNotFoundError
 
 
 def check_for_mod_updates(directory: str | Path, mods: list[str], version: str) -> dict[str, list[Path]] | Literal[False]:
-    Logger.info("Checking for mod updates...")
+    Logger.info("Checking for mod updates...", prefix="mod_updater.check_for_mod_updates()")
     directory = Path(directory)
 
     deploy_history: DeployHistory = get_deploy_history(version)
@@ -46,11 +46,11 @@ def check_for_mod_updates(directory: str | Path, mods: list[str], version: str) 
                 result[mod_hash].append(directory / mod)
 
         except Exception as e:
-            Logger.error(f"Failed to check updates for mod: {mod}. {type(e).__name__}: {e}")
+            Logger.error(f"Failed to check updates for mod: {mod}. {type(e).__name__}: {e}", prefix="mod_updater.check_for_mod_updates()")
             continue
 
     if not result:
-        Logger.info("No mod updates found!")
+        Logger.info("No mod updates found!", prefix="mod_updater.check_for_mod_updates()")
         return False
     
     return result

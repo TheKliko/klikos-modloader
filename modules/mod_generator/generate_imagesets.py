@@ -65,5 +65,5 @@ def get_blacklist() -> list[str]:
         return blacklist
 
     except Exception as e:
-        Logger.error(f"Failed to get icon blacklist! {type(e).__name__}: {e}")
+        Logger.error(f"Failed to get icon blacklist! {type(e).__name__}: {e}", prefix="mod_generator.get_blacklist()")
         return []

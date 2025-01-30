@@ -1,7 +1,6 @@
 from pathlib import Path
 import re
 from tkinter import messagebox
-from _tkinter import TclError
 
 from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image

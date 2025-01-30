@@ -18,7 +18,7 @@ def download(source: str, destination: str | Path, attempts: int = 3) -> None:
 
     for _ in range(attempts):
         try:
-            Logger.info(f"Downloading file: {source}")
+            Logger.info(f"Downloading file: {source}", prefix="filesystem.download()")
             destination.parent.mkdir(parents=True, exist_ok=True)
             
             if not os.access(destination.parent, os.W_OK):
@@ -34,7 +34,7 @@ def download(source: str, destination: str | Path, attempts: int = 3) -> None:
                 raise
 
         except Exception as e:
-            Logger.error(f"File download failed! {type(e).__name__}: {e}")
+            Logger.error(f"File download failed! {type(e).__name__}: {e}", prefix="filesystem.download()")
             exception = e
             time.sleep(COOLDOWN)
     

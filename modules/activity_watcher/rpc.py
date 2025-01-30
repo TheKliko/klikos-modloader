@@ -16,6 +16,7 @@ class RichPresenceClient:
         CLIENT_ID: str = "1280969971303841924"
         CONNECTION_ATTEMPTS: int = 3
         RECONNECT_COOLDOWN: float = 5
+        PIPECLOSED_COOLDOWN: float = 15
         class AssetKeys:
             DEFAULT: str = "modloader"
             PLAYER: str = "roblox"
@@ -33,58 +34,71 @@ class RichPresenceClient:
     def __init__(self, mode: Literal["Player", "Studio"]) -> None:
         self.mode = mode
         self.log_reader = LogReader(mode)
-        Logger.info("Log reader is ready!")
+        Logger.info("Log reader is ready!", prefix="activity_watcher.RichPresenceClient.__init__()")
         self.client = Presence(self.Constants.CLIENT_ID)
-        Logger.info("Client is ready!")
+        Logger.info("Client is ready!", prefix="activity_watcher.RichPresenceClient.__init__()")
 
 
     def connect(self) -> None:
-        Logger.info("Connecting client...")
+        Logger.info("Connecting client...", prefix="activity_watcher.RichPresenceClient.connect()")
 
         exception: Exception = None
         for _ in range(self.Constants.CONNECTION_ATTEMPTS):
             try:
                 self.client.connect()
-                Logger.info("Client connected successfully!")
+                Logger.info("Client connected successfully!", prefix="activity_watcher.RichPresenceClient.connect()")
                 return
 
             except Exception as e:
-                Logger.error(f"Client failed to connect! {type(e).__name__}: {e}")
+                Logger.error(f"Client failed to connect! {type(e).__name__}: {e}", prefix="activity_watcher.RichPresenceClient.connect()")
                 exception = e
                 time.sleep(self.Constants.RECONNECT_COOLDOWN)
 
         raise exception
 
 
-    def mainloop(self) -> None:
-        self._confirm_roblox_launch()
-        self.timestamp = time.time()
-        self._set_default_status()
-        while True:
-            if not integrations.get_value("discord_rpc"):
-                Logger.warning("Discord RPC turned off!")
-                break
+    def mainloop(self, skip_launch_confirmation: bool = False) -> None:
+        try:
+            if not skip_launch_confirmation:
+                self._confirm_roblox_launch()
+            if self.timestamp == 1:
+                self.timestamp = time.time()
+            self._set_default_status()
+            while True:
+                if not integrations.get_value("discord_rpc"):
+                    Logger.warning("Discord RPC turned off!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
 
-            if not process_exists(f"Roblox{self.mode}Beta.exe") and (not process_exists("eurotrucks2.exe") if self.mode == "Player" else True):
-                Logger.info("Roblox process not found!")
-                break
+                if not process_exists(f"Roblox{self.mode}Beta.exe") and (not process_exists("eurotrucks2.exe") if self.mode == "Player" else True):
+                    Logger.info("Roblox process not found!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
 
-            new_status: dict | None | Literal["DEFAULT"] = self.log_reader.get_status()
-            if new_status is None:
-                Logger.info("Log reader returned None!")
-                break
-            elif new_status is None:
+                new_status: dict | None | Literal["DEFAULT"] = self.log_reader.get_status()
+                if new_status is None:
+                    Logger.info("Log reader returned None!", prefix="activity_watcher.RichPresenceClient.mainloop()")
+                    break
+                elif new_status is None:
+                    time.sleep(self.Constants.COOLDOWN)
+                    continue
+
+                if new_status == "DEFAULT":
+                    self._set_default_status()
+                
+                elif new_status != self.last_status:
+                    self.client.update(**new_status)
+                    self.last_status = new_status
+
                 time.sleep(self.Constants.COOLDOWN)
-                continue
+        
+        except PipeClosed:
+            self._on_pipe_closed()
+    
 
-            if new_status == "DEFAULT":
-                self._set_default_status()
-            
-            elif new_status != self.last_status:
-                self.client.update(**new_status)
-                self.last_status = new_status
-
-            time.sleep(self.Constants.COOLDOWN)
+    def _on_pipe_closed(self) -> None:
+        Logger.warning(f"Discord pipe closed. Retrying in {self.Constants.PIPECLOSED_COOLDOWN} seconds...", prefix="activity_watcher.RichPresenceClient._on_pipe_closed()")
+        time.sleep(self.Constants.PIPECLOSED_COOLDOWN)
+        self.connect()
+        self.mainloop(skip_launch_confirmation=True)
 
 
     def _set_default_status(self) -> None:
@@ -105,7 +119,7 @@ class RichPresenceClient:
         timestamp: float = time.time()
         while True:
             if self.log_reader.get_status() is not None:
-                Logger.info("Roblox launch confirmed!")
+                Logger.info("Roblox launch confirmed!", prefix="activity_watcher.RichPresenceClient._confirm_roblox_launch()")
                 return
             if time.time() - timestamp > self.Constants.ROBLOX_LAUNCH_WAIT_TIME:
                 raise RobloxNotLaunched(f"Could not confirm Roblox launch after {int(self.Constants.ROBLOX_LAUNCH_WAIT_TIME)} seconds")

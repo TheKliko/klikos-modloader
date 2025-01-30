@@ -11,7 +11,7 @@ def compress(source: str | Path, destination: str | Path) -> None:
     source = Path(source)
     destination = Path(destination)
 
-    Logger.info(f"Compressing file: {source.name}...")
+    Logger.info(f"Compressing file: {source.name}...", prefix="filesystem.compress()")
 
     if destination.suffix != ".zip":
         raise FileCompressError(f"Target must be a .zip file: {destination.name}")

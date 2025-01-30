@@ -112,7 +112,7 @@ class ModGeneratorSection:
         ctk.CTkLabel(angle_frame, text="Angle (optional)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
         self.angle_entry = ctk.CTkEntry(
             angle_frame, width=120, height=40, validate="key",
-            validatecommand=(self.root.register(lambda value: value.removeprefix("-").isdigit() or value == ""), "%P")
+            validatecommand=(self.root.register(lambda value: value.removeprefix("-").isdigit() or value == "" or value == "-"), "%P")
         )
         self.angle_entry.grid(column=0, row=1, sticky="w")
         self.angle_entry.bind("<Return>", lambda _: self.root.focus())
@@ -164,19 +164,25 @@ class ModGeneratorSection:
             try:
                 rgba_color1 = ImageColor.getcolor(color1, "RGBA")
             except Exception:
-                self.preview_image.configure(image=load_from_image(self.default_image, identifier=f"mod_generator_default_preview", size=(self.Constants.PREVIEW_SIZE, self.Constants.PREVIEW_SIZE)))
-                return
+                try:
+                    rgba_color1 = ImageColor.getcolor(f"#{color1}", "RGBA")
+                except Exception:
+                    self.preview_image.configure(image=load_from_image(self.default_image, identifier=f"mod_generator_default_preview", size=(self.Constants.PREVIEW_SIZE, self.Constants.PREVIEW_SIZE)))
+                    return
         
         if color2:
             try:
                 rgba_color2 = ImageColor.getcolor(color2, "RGBA")
             except Exception:
-                self.preview_image.configure(image=load_from_image(self.default_image, identifier=f"mod_generator_default_preview", size=(self.Constants.PREVIEW_SIZE, self.Constants.PREVIEW_SIZE)))
-                return
+                try:
+                    rgba_color2 = ImageColor.getcolor(f"#{color2}", "RGBA")
+                except Exception:
+                    self.preview_image.configure(image=load_from_image(self.default_image, identifier=f"mod_generator_default_preview", size=(self.Constants.PREVIEW_SIZE, self.Constants.PREVIEW_SIZE)))
+                    return
         else:
             rgba_color2 = None
         
-        if not angle or angle == "None":
+        if not angle or angle == "None" or angle == "-":
             angle = 0
         
         try:
@@ -218,19 +224,25 @@ class ModGeneratorSection:
             try:
                 rgba_color1 = ImageColor.getcolor(color1, "RGBA")
             except Exception as e:
-                messagebox.showwarning(ProjectData.NAME, f"Bad color 1 input!\n{type(e).__name__}: {e}")
-                return
+                try:
+                    rgba_color1 = ImageColor.getcolor(f"#{color1}", "RGBA")
+                except Exception:
+                    messagebox.showwarning(ProjectData.NAME, f"Bad color 1 input!\n{type(e).__name__}: {e}")
+                    return
         
         if color2:
             try:
                 rgba_color2 = ImageColor.getcolor(color2, "RGBA")
             except Exception as e:
-                messagebox.showwarning(ProjectData.NAME, f"Bad color 2 input!\n{type(e).__name__}: {e}")
-                return
+                try:
+                    rgba_color2 = ImageColor.getcolor(f"#{color2}", "RGBA")
+                except Exception:
+                    messagebox.showwarning(ProjectData.NAME, f"Bad color 2 input!\n{type(e).__name__}: {e}")
+                    return
         else:
             rgba_color2 = None
         
-        if not angle or angle == "None":
+        if not angle or angle == "None" or angle == "-":
             angle = 0
         
         try:
