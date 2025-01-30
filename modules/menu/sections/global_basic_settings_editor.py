@@ -121,22 +121,24 @@ class GlobalBasicSettingsSection:
             match element.tag:
                 # region Vector2
                 case "Vector2":
+                    content_frame.grid_columnconfigure((1, 3), weight=1)
+
                     x_value = element.find("X")
                     if x_value is None:
-                        x_value = "N/A"
+                        x_value = ""
                     else:
-                        x_value = "N/A" if x_value.text is None else x_value.text.strip()
+                        x_value = "" if x_value.text is None else x_value.text.strip()
                         
                     y_value = element.find("Y")
                     if y_value is None:
-                        y_value = "N/A"
+                        y_value = ""
                     else:
-                        y_value = "N/A" if y_value.text is None else y_value.text.strip()
+                        y_value = "" if y_value.text is None else y_value.text.strip()
 
                     ctk.CTkLabel(content_frame, text="X: ", anchor="e").grid(column=0, row=0, sticky="nsew")
                     x_entry = ctk.CTkEntry(
                         content_frame, width=40, height=40, validate="key",
-                        validatecommand=(self.root.register(lambda value: value.isdigit() or value == ""), '%P')
+                        validatecommand=(self.root.register(lambda value: value.replace(".", "", 1).isdigit() or value == ""), '%P')
                     )
                     x_entry.insert("end", x_value)
                     x_entry.bind("<Return>", lambda _: self.root.focus())
@@ -147,7 +149,7 @@ class GlobalBasicSettingsSection:
                     ctk.CTkLabel(content_frame, text="Y: ", anchor="e").grid(column=2, row=0, sticky="nsew")
                     y_entry = ctk.CTkEntry(
                         content_frame, width=40, height=40, validate="key",
-                        validatecommand=(self.root.register(lambda value: value.isdigit() or value == ""), '%P')
+                        validatecommand=(self.root.register(lambda value: value.replace(".", "", 1).isdigit() or value == ""), '%P')
                     )
                     y_entry.insert("end", y_value)
                     y_entry.bind("<Return>", lambda _: self.root.focus())
@@ -320,7 +322,7 @@ class GlobalBasicSettingsSection:
             showwarning(ProjectData.NAME, f"Failed to update value for {name}!\nElement not found!")
             return
         
-        x_element = tree.find(f".//*[@name='{name}']")
+        x_element = element.find("X")
         if x_element is None:
             Logger.error(f"Failed to update value for {name}!\nX element not found!", prefix="GlobalBasicSettingsSection._update_boolean_value()")
             showwarning(ProjectData.NAME, f"Failed to update value for {name}!\nX element not found!")
@@ -343,7 +345,7 @@ class GlobalBasicSettingsSection:
             showwarning(ProjectData.NAME, f"Failed to update value for {name}!\nElement not found!")
             return
         
-        y_element = tree.find(f".//*[@name='{name}']")
+        y_element = element.find("Y")
         if y_element is None:
             Logger.error(f"Failed to update value for {name}!\nY element not found!", prefix="GlobalBasicSettingsSection._update_boolean_value()")
             showwarning(ProjectData.NAME, f"Failed to update value for {name}!\nY element not found!")
