@@ -29,7 +29,6 @@ def generate_additional_files(base_directory: Path, color1, color2, angle: int) 
             continue
         
         target: list[str] | None = data.get(filepath.name)
-        print(target)
         if not target or not isinstance(target, list):
             Logger.warning(f"Cannot generate additional file: {filepath.name}! Unknown target path!", prefix="mod_generator.generate_additional_files()")
             continue

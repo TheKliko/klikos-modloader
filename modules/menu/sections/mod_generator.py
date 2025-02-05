@@ -2,6 +2,11 @@ from pathlib import Path
 import re
 from tkinter import messagebox
 from threading import Thread
+import webbrowser
+from tkinter import filedialog
+from typing import Literal
+import uuid
+import re
 
 from modules.info import ProjectData
 from modules.filesystem import Directory, restore_from_meipass
@@ -35,6 +40,8 @@ class ModGeneratorSection:
     default_image: Image.Image
     progress_variable: ctk.StringVar
     is_running: bool = False
+    user_selected_files: list[dict[str, Path | list[str] | str]] = []
+    user_selected_files_container: ctk.CTkFrame
 
 
     def __init__(self, root: ctk.CTk, container: ctk.CTkScrollableFrame) -> None:
@@ -49,6 +56,7 @@ class ModGeneratorSection:
 
     def show(self) -> None:
         self._destroy()
+        self.user_selected_files = []
         self._load_title()
         self._load_content()
 
@@ -112,40 +120,198 @@ class ModGeneratorSection:
         ctk.CTkLabel(angle_frame, text="Angle (optional)", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
         self.angle_entry = ctk.CTkEntry(
             angle_frame, width=120, height=40, validate="key",
-            validatecommand=(self.root.register(lambda value: value.removeprefix("-").isdigit() or value == "" or value == "-"), "%P")
+            validatecommand=(self.root.register(lambda value: value.removeprefix("-").isdigit() or value == ""), "%P")
         )
         self.angle_entry.grid(column=0, row=1, sticky="w")
         self.angle_entry.bind("<Return>", lambda _: self.root.focus())
         self.angle_entry.bind("<Control-s>", lambda _: self.root.focus())
         self.angle_entry.bind("<FocusOut>", lambda _: self._generate_preview())
 
+        possible_colors_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        possible_colors_frame.grid(column=0, row=2, sticky="w", pady=(4, 0))
+        ctk.CTkLabel(possible_colors_frame, text="A list of available color formats can be found at ").grid(column=0, row=0)
+        url: str = r"https://pillow.readthedocs.io/en/stable/reference/ImageColor.html#color-names"
+        unhover_color: str | tuple[str ,str] = ("#0000EE", "#2fa8ff")
+        hover_color: str | tuple[str ,str] = ("#0000CC", "#58bbff")
+        hyperlink: ctk.CTkLabel = ctk.CTkLabel(possible_colors_frame, text=url, cursor="hand2", text_color=unhover_color)
+        hyperlink.bind("<Button-1>", lambda _: self._open_in_browser(url))
+        hyperlink.grid(column=1, row=0)
+        hyperlink.bind("<Enter>", lambda _: hyperlink.configure(text_color=hover_color))
+        hyperlink.bind("<Leave>", lambda _: hyperlink.configure(text_color=unhover_color))
+
         # Preview
         preview_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        preview_frame.grid(column=0, row=2, sticky="nsew", pady=(16, 0))
+        preview_frame.grid(column=0, row=3, sticky="nsew", pady=(16, 0))
 
         ctk.CTkLabel(preview_frame, text="Preview", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
         self.preview_image = ctk.CTkLabel(preview_frame, text="", fg_color="#000", width=self.Constants.PREVIEW_SIZE, height=self.Constants.PREVIEW_SIZE)
         self.preview_image.grid(column=0, row=1, sticky="w")
         self._generate_preview(default=True)
 
-        # Buttons
-        buttons_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        buttons_frame.grid(column=0, row=3, sticky="nsew", pady=(32, 0))
+        # User selected files
+        user_selected_files_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        user_selected_files_frame.grid_columnconfigure(0, weight=1)
+        user_selected_files_frame.grid(column=0, row=4, pady=(16, 0), sticky="nsew")
+        ctk.CTkLabel(user_selected_files_frame, text="Additional files", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
+        ctk.CTkLabel(user_selected_files_frame, text="Select additional files to be generated on top of the default ones. (only PNG files are supported)", anchor="w").grid(column=0, row=1, sticky="nw")
+
+        file_select_icon: Path = (Directory.RESOURCES / "menu" / "common" / "file-select").with_suffix(".png")
+        if not file_select_icon.is_file():
+            restore_from_meipass(file_select_icon)
+        file_select_image = load_image(file_select_icon)
+        
+        ctk.CTkButton(user_selected_files_frame, text="Add files", image=file_select_image, command=self._add_user_selected_files, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=2, sticky="w")
+        self.user_selected_files_container = ctk.CTkFrame(user_selected_files_frame)
+        self.user_selected_files_container.grid_columnconfigure(0, weight=1)
+        self._load_user_selected_files()
+
+        # Run
+        run_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        run_frame.grid(column=0, row=5, sticky="nsew", pady=(32, 0))
+        ctk.CTkLabel(run_frame, text="Run", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
 
         run_icon: Path = (Directory.RESOURCES / "menu" / "common" / "image-run").with_suffix(".png")
         if not run_icon.is_file():
             restore_from_meipass(run_icon)
         run_image = load_image(run_icon)
         
-        ctk.CTkButton(buttons_frame, text="Generate mod", image=run_image, command=self._run, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="w")
+        ctk.CTkButton(run_frame, text="Generate mod", image=run_image, command=self._run, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=1, sticky="w")
         
         # Progress label
-        ctk.CTkLabel(container, textvariable=self.progress_variable, anchor="w", font=self.Fonts.bold).grid(column=0, row=4, sticky="w", pady=(4, 0))
-
+        ctk.CTkLabel(container, textvariable=self.progress_variable, anchor="w", font=self.Fonts.bold).grid(column=0, row=6, sticky="w", pady=(4, 0))
     # endregion
 
 
     # region functions
+    def _add_user_selected_files(self) -> None:
+        initial_dir: Path = Path.home()
+        if (initial_dir / "Downloads").is_dir():
+            initial_dir = initial_dir / "Downloads"
+        
+        roblox_versions_directory: Path = Directory.LOCALAPPDATA / "Roblox" / "Versions"
+        if roblox_versions_directory.is_dir():
+            initial_dir = roblox_versions_directory
+
+        files: tuple[str, ...] | Literal[''] = filedialog.askopenfilenames(
+            title=f"{ProjectData.NAME} | Mod Generator additional files", initialdir=initial_dir,
+            filetypes=[("PNG Files", "*.png")]
+        )
+
+        if files == '':
+            return
+        
+        for file in files:
+            identifier: str = str(uuid.uuid4())
+            source: Path = Path(file)
+            target: list[str] = [source.name]
+            self.user_selected_files.append({
+                "identifier": identifier,
+                "source": source,
+                "target": target
+            })
+
+        self._load_user_selected_files()
+
+
+    def _remove_user_selected_files(self, identifier: str) -> None:
+        new_files: list[dict[str, Path | list[str] | str]] = [
+            item for item in self.user_selected_files
+            if item["identifier"] != identifier
+        ]
+        self.user_selected_files = new_files
+
+        self._load_user_selected_files()
+    
+
+    def _update_user_selected_file_target(self, identifier: str, event) -> None:
+        new_string: str = event.widget.get()
+
+        if new_string:
+            new_target: list[str] | None = re.split(r"[\\/]+", new_string)
+        else:
+            new_target = None
+        
+        for i, item in enumerate(self.user_selected_files):
+            if item["identifier"] == identifier:
+                if new_target:
+                    self.user_selected_files[i]["target"] = new_target
+                else:
+                    new_target_name: str = item["source"].name
+                    self.user_selected_files[i]["target"] = [new_target_name]
+                    event.widget.delete("0", "end")
+                    event.widget.insert("end", new_target_name)
+                break
+
+
+    def _load_user_selected_files(self) -> None:
+        for widget in self.user_selected_files_container.winfo_children():
+            widget.destroy()
+
+        if not self.user_selected_files:
+            self.user_selected_files_container.grid_remove()
+            return
+
+        bin_icon: Path = (Directory.RESOURCES / "menu" / "common" / "bin").with_suffix(".png")
+        if not bin_icon.is_file():
+            restore_from_meipass(bin_icon)
+        bin_image = load_image(bin_icon)
+
+        index_frame: ctk.CTkFrame = ctk.CTkFrame(self.user_selected_files_container, fg_color="transparent")
+        index_frame.grid_columnconfigure(3, weight=1)
+        index_frame.grid(column=0, row=0, sticky="nsew")
+        ctk.CTkLabel(index_frame, text="File:", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w", padx=(48,0))
+        ctk.CTkLabel(index_frame, text="Target:", anchor="w", font=self.Fonts.bold).grid(column=1, row=0, sticky="w", padx=(285,0))
+        ctk.CTkLabel(index_frame, text="(example: content/textures/ui/mouseLock_off.png)", anchor="w").grid(column=2, row=0, sticky="w", padx=(4,0))
+
+        for i, item in enumerate(self.user_selected_files, 1):
+            identifier: str = item["identifier"]
+            source: Path = item["source"]
+            target: list[str] = item["target"]
+            target_string: str = "/".join(target)
+
+            frame: ctk.CTkFrame = ctk.CTkFrame(self.user_selected_files_container, fg_color="transparent")
+            frame.grid_columnconfigure(3, weight=1)
+            frame.grid(column=0, row=i, sticky="nsew", pady=(8,0))
+
+            # Delete button
+            ctk.CTkButton(
+                frame, image=bin_image, width=1, height=40, text="", anchor="w", compound=ctk.LEFT,
+                command=lambda identifier=identifier: self._remove_user_selected_files(identifier)
+            ).grid(column=0, row=0, sticky="w")
+
+            # Preview
+            preview_image = load_image(source, size=(40, 40), squared=True)
+            ctk.CTkLabel(frame, image=preview_image, text=None, width=40, height=40).grid(column=1, row=0, padx=(8, 0))
+
+            # Filename
+            name: str = source.name.removesuffix(source.suffix)
+            max_filename_length: int = 16
+            if len(name) - 3 > max_filename_length:
+                name = f"{name[:max_filename_length//2]}...{name[-(max_filename_length//2):]}"
+            name = name+source.suffix
+            ctk.CTkLabel(frame, text=name).grid(column=2, row=0, padx=(4, 0))
+
+            # Target
+            target_frame: ctk.CTkFrame = ctk.CTkFrame(frame, fg_color="transparent")
+            target_frame.grid(column=3, row=0, sticky="e", padx=(8, 0))
+
+            target_path_entry: ctk.CTkEntry = ctk.CTkEntry(
+                target_frame, width=462, height=40, validate="key",
+                validatecommand=(self.root.register(lambda value: not re.search(r'[:*?"<>|]', value)), "%P")
+            )
+            target_path_entry.insert("end", target_string)
+            target_path_entry.bind("<Return>", lambda _: self.root.focus())
+            target_path_entry.bind("<Control-s>", lambda _: self.root.focus())
+            target_path_entry.bind("<FocusOut>", lambda event, identifier=identifier: self._update_user_selected_file_target(identifier, event))
+            target_path_entry.grid(column=1, row=0, sticky="e")
+            
+        self.user_selected_files_container.grid(column=0, row=3, sticky="nsew", pady=(8, 0))
+
+
+    def _open_in_browser(self, url: str) -> None:
+        webbrowser.open_new_tab(url)
+
+
     def _generate_preview(self, default: bool = False) -> None:
         if default:
             self.default_image: Image.Image = get_mask(ImageColor.getcolor("black", "RGBA"), None, 0, size=(self.Constants.PREVIEW_SIZE, self.Constants.PREVIEW_SIZE))
