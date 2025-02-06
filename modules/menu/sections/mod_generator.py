@@ -160,7 +160,10 @@ class ModGeneratorSection:
             restore_from_meipass(file_select_icon)
         file_select_image = load_image(file_select_icon)
         
-        ctk.CTkButton(user_selected_files_frame, text="Add files", image=file_select_image, command=self._add_user_selected_files, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=2, sticky="w")
+        user_selected_files_buttons: ctk.CTkFrame = ctk.CTkFrame(user_selected_files_frame, fg_color="transparent")
+        user_selected_files_buttons.grid(column=0, row=2, sticky="w")
+        ctk.CTkButton(user_selected_files_buttons, text="Add files", image=file_select_image, command=self._add_user_selected_files, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=0, sticky="w")
+        ctk.CTkButton(user_selected_files_buttons, text="Add folder", image=file_select_image, command=self._add_user_selected_folder, width=1, anchor="w", compound=ctk.LEFT).grid(column=1, row=0, sticky="w", padx=(4,0))
         self.user_selected_files_container = ctk.CTkFrame(user_selected_files_frame)
         self.user_selected_files_container.grid_columnconfigure(0, weight=1)
         self._load_user_selected_files()
@@ -209,6 +212,37 @@ class ModGeneratorSection:
                 "source": source,
                 "target": target
             })
+
+        self._load_user_selected_files()
+    
+
+    def _add_user_selected_folder(self) -> None:
+        initial_dir: Path = Path.home()
+        if (initial_dir / "Downloads").is_dir():
+            initial_dir = initial_dir / "Downloads"
+        
+        roblox_versions_directory: Path = Directory.LOCALAPPDATA / "Roblox" / "Versions"
+        if roblox_versions_directory.is_dir():
+            initial_dir = roblox_versions_directory
+
+        directory: str | Literal[''] = filedialog.askdirectory(title=f"{ProjectData.NAME} | Mod Generator additional files", initialdir=initial_dir)
+
+        if directory == '':
+            return
+        
+        directory_as_path: Path = Path(directory)
+        for root, dirs, files in directory_as_path.walk():
+            for file in files:
+                if not file.endswith(".png"):
+                    continue
+                identifier: str = str(uuid.uuid4())
+                source: Path = root / file
+                target: list[str] = re.split(r"[\\/]+", str(source.relative_to(directory_as_path)))
+                self.user_selected_files.append({
+                    "identifier": identifier,
+                    "source": source,
+                    "target": target
+                })
 
         self._load_user_selected_files()
 
@@ -304,6 +338,8 @@ class ModGeneratorSection:
             target_path_entry.bind("<Control-s>", lambda _: self.root.focus())
             target_path_entry.bind("<FocusOut>", lambda event, identifier=identifier: self._update_user_selected_file_target(identifier, event))
             target_path_entry.grid(column=1, row=0, sticky="e")
+
+            self.user_selected_files_container.update_idletasks()
             
         self.user_selected_files_container.grid(column=0, row=3, sticky="nsew", pady=(8, 0))
 
