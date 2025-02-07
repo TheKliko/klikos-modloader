@@ -83,9 +83,24 @@ class ModGeneratorSection:
         container.grid_columnconfigure(0, weight=1)
         container.grid(column=0, row=1, sticky="nsew", padx=(0,4))
 
+        # Run
+        run_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        run_frame.grid(column=0, row=0, sticky="nsew", pady=(0, 16))
+        ctk.CTkLabel(run_frame, text="Run", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
+
+        run_icon: Path = (Directory.RESOURCES / "menu" / "common" / "image-run").with_suffix(".png")
+        if not run_icon.is_file():
+            restore_from_meipass(run_icon)
+        run_image = load_image(run_icon)
+        
+        ctk.CTkButton(run_frame, text="Generate mod", image=run_image, command=self._run, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=1, sticky="w")
+        
+        # Progress label
+        ctk.CTkLabel(run_frame, textvariable=self.progress_variable, anchor="w", font=self.Fonts.bold).grid(column=1, row=1, sticky="w", padx=(4, 0))
+
         # name input
         name_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        name_frame.grid(column=0, row=0, sticky="nsew")
+        name_frame.grid(column=0, row=1, sticky="nsew")
         ctk.CTkLabel(name_frame, text="Mod name", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
         self.mod_name_entry = ctk.CTkEntry(
             name_frame, width=256, height=40, validate="key",
@@ -95,7 +110,7 @@ class ModGeneratorSection:
         
         # color/angle inputs
         color_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        color_frame.grid(column=0, row=1, sticky="nsew", pady=(16, 0))
+        color_frame.grid(column=0, row=2, sticky="nsew", pady=(16, 0))
 
         color1_frame: ctk.CTkFrame = ctk.CTkFrame(color_frame, fg_color="transparent")
         color1_frame.grid(column=0, row=1)
@@ -127,8 +142,9 @@ class ModGeneratorSection:
         self.angle_entry.bind("<Control-s>", lambda _: self.root.focus())
         self.angle_entry.bind("<FocusOut>", lambda _: self._generate_preview())
 
+        # Possible colors
         possible_colors_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        possible_colors_frame.grid(column=0, row=2, sticky="w", pady=(4, 0))
+        possible_colors_frame.grid(column=0, row=3, sticky="w", pady=(4, 0))
         ctk.CTkLabel(possible_colors_frame, text="A list of available color formats can be found at ").grid(column=0, row=0)
         url: str = r"https://pillow.readthedocs.io/en/stable/reference/ImageColor.html#color-names"
         unhover_color: str | tuple[str ,str] = ("#0000EE", "#2fa8ff")
@@ -139,9 +155,9 @@ class ModGeneratorSection:
         hyperlink.bind("<Enter>", lambda _: hyperlink.configure(text_color=hover_color))
         hyperlink.bind("<Leave>", lambda _: hyperlink.configure(text_color=unhover_color))
 
-        # Preview
+        # Color Preview
         preview_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        preview_frame.grid(column=0, row=3, sticky="nsew", pady=(16, 0))
+        preview_frame.grid(column=0, row=4, sticky="nsew", pady=(12, 0))
 
         ctk.CTkLabel(preview_frame, text="Preview", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="w")
         self.preview_image = ctk.CTkLabel(preview_frame, text="", fg_color="#000", width=self.Constants.PREVIEW_SIZE, height=self.Constants.PREVIEW_SIZE)
@@ -151,7 +167,7 @@ class ModGeneratorSection:
         # User selected files
         user_selected_files_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
         user_selected_files_frame.grid_columnconfigure(0, weight=1)
-        user_selected_files_frame.grid(column=0, row=4, pady=(16, 0), sticky="nsew")
+        user_selected_files_frame.grid(column=0, row=5, pady=(16, 0), sticky="nsew")
         ctk.CTkLabel(user_selected_files_frame, text="Additional files", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
         ctk.CTkLabel(user_selected_files_frame, text="Select additional files to be generated on top of the default ones. (only PNG files are supported)", anchor="w").grid(column=0, row=1, sticky="nw")
 
@@ -167,21 +183,6 @@ class ModGeneratorSection:
         self.user_selected_files_container = ctk.CTkFrame(user_selected_files_frame)
         self.user_selected_files_container.grid_columnconfigure(0, weight=1)
         self._load_user_selected_files()
-
-        # Run
-        run_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
-        run_frame.grid(column=0, row=5, sticky="nsew", pady=(32, 0))
-        ctk.CTkLabel(run_frame, text="Run", anchor="w", font=self.Fonts.bold).grid(column=0, row=0, sticky="nw")
-
-        run_icon: Path = (Directory.RESOURCES / "menu" / "common" / "image-run").with_suffix(".png")
-        if not run_icon.is_file():
-            restore_from_meipass(run_icon)
-        run_image = load_image(run_icon)
-        
-        ctk.CTkButton(run_frame, text="Generate mod", image=run_image, command=self._run, width=1, anchor="w", compound=ctk.LEFT).grid(column=0, row=1, sticky="w")
-        
-        # Progress label
-        ctk.CTkLabel(container, textvariable=self.progress_variable, anchor="w", font=self.Fonts.bold).grid(column=0, row=6, sticky="w", pady=(4, 0))
     # endregion
 
 
