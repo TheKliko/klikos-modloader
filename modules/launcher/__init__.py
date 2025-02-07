@@ -1,45 +1,105 @@
-import os
-import sys
-import subprocess
-from typing import Literal
-from threading import Thread
+from typing import Literal, Callable
+from tkinter import messagebox
 from queue import Queue
+from pathlib import Path
+import time
+import shutil
 
 from modules import Logger
-from modules.config import integrations
-from modules import activity_watcher
+from modules.info import ProjectData
+from modules.filesystem import Directory
+from modules.config import settings, mods, integrations
+from modules.mod_updater import check_for_mod_updates, update_mods
+from modules.functions.process_exists import process_exists
+from modules.functions.kill_process import kill_process
 
-from .interface import MainWindow
-from . import tasks
+from ..deployment_info import Deployment
+from .check_downloaded_files import check_downloaded_files
+from .download_missing_files import download_missing_files
+from .restore_default_files import restore_default_files
+from .apply_fastflags import apply_fastflags
+from .apply_mods import apply_mods
+from .launch_roblox import launch_roblox
+from .start_launch_apps import start_launch_apps
 
-IS_FROZEN: bool = getattr(sys, "frozen", False)
+from customtkinter import StringVar
 
 
-def run(mode: Literal["Player", "Studio"]) -> None:
-    Logger.info(f"Running launcher in mode: {mode}")
+def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfovariable: StringVar, end_signal: Callable, exception_queue: Queue) -> None:
+    try:
+        # Get deployment info
+        Logger.info("Getting deployment info...")
+        textvariable.set("Getting deployment info...")
+        deployment: Deployment = Deployment(mode)
+        if settings.get_value("show_deployment_info_on_launch"):
+            versioninfovariable.set(f"{deployment.version} ({deployment.channel})")
 
-    exception_queue: Queue = Queue(1)
+        # Forced Roblox reinstallation
+        if settings.get_value("force_roblox_reinstallation"):
+            Logger.debug("Forced Roblox reinstallation")
+            textvariable.set("Forced Roblox reinstallation")
+            settings.set_value("force_roblox_reinstallation", False)
+            shutil.rmtree(Directory.DOWNLOADS / mode, ignore_errors=True)
 
-    interface: MainWindow = MainWindow(mode)
-    Thread(
-        name="launcher.tasks.run()_Thread",
-        target=tasks.run,
-        args=(mode, interface.textvariable, interface.versioninfovariable, interface._on_close, exception_queue),
-        daemon=True
-    ).start()
+        # Check for downloaded files
+        Logger.info("Checking Downloads folder...")
+        textvariable.set("Checking downloaded files...")
+        missing_file_hashes: list[str] = check_downloaded_files(deployment, mode)
 
-    interface.bring_to_top()
-    interface.mainloop()
+        # Download missing files
+        if missing_file_hashes:
+            Logger.info("Downloading missing files...")
+            textvariable.set(f"Downloading Roblox {mode}...")
+            download_missing_files(deployment, mode, missing_file_hashes)
 
-    if interface.canceled:
-        return
+        # Check if Roblox is already running
+        if process_exists(deployment.executable_name):
+            if settings.get_value("confirm_launch_if_roblox_running"):
+                if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
+                    return
+            kill_process(deployment.executable_name)
+        
+        disable_all_mods: bool = settings.get_value("disable_all_mods")
+        
+        # Restore default files, if needed
+        if settings.get_value("restore_default_files") or missing_file_hashes or disable_all_mods:
+            Logger.info("Restoring default files...")
+            textvariable.set(f"Installing Roblox {mode}...")
+            restore_default_files(deployment, mode)
 
-    if not exception_queue.empty():
-        raise exception_queue.get()
+        # Update mods, if needed
+        if integrations.get_value("mod_updater"):
+            active_mods: list[str] = mods.get_active(mode)
+            check: dict[str, list[Path]] | Literal[False] = check_for_mod_updates(Directory.MODS, active_mods, deployment.version)
+            if check:
+                Logger.info("Updating mods...")
+                textvariable.set("Updating mods...")
+                update_mods(check, deployment.version, Directory.MODS)
 
-    if not integrations.get_value("discord_rpc"):
-        Logger.info("Discord RPC is disabled!")
-        return
+        # Apply modifications
+        disable_all_fastflags: bool = settings.get_value("disable_all_fastflags")
+        if not disable_all_mods or not disable_all_fastflags:
+            Logger.info("Applying modifications...")
+            textvariable.set("Applying modifications...")
+        if not disable_all_mods:
+            apply_mods(deployment.base_directory, mode)
+        if not disable_all_fastflags:
+            apply_fastflags(deployment.base_directory, mode)
+
+        # Launch Roblox
+        Logger.info(f"Launching Roblox {mode}...")
+        textvariable.set(f"Launching Roblox {mode}...")
+        launch_roblox(str(deployment.executable_path.resolve()))
+
+        # Start launch apps
+        Logger.info("Starting launch apps...")
+        start_launch_apps(mode)
+
+        # It takes a second or two for Roblox to appear after it's launched
+        time.sleep(2)
     
-    Logger.info("Starting Discord RPC")
-    activity_watcher.run(mode)
+    except Exception as e:
+        exception_queue.put(e)
+    
+    finally:
+        end_signal()
