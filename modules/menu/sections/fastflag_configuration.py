@@ -169,8 +169,8 @@ class FastFlagConfigurationSection:
             if (initial_dir / "Downloads").is_dir():
                 initial_dir = initial_dir / "Downloads"
 
-            filepath: str | Literal[''] = filedialog.askopenfilename(
-                title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
+            filepath: str | Literal[''] = filedialog.asksaveasfilename(
+                title=f"{ProjectData.NAME} | Export data", initialdir=initial_dir,
                 filetypes=[("JSON Files", "*.json")],
                 initialfile="ClientAppSettings.json"
             )
@@ -194,7 +194,7 @@ class FastFlagConfigurationSection:
                 initial_dir = initial_dir / "Downloads"
 
             filepath: str | Literal[''] = filedialog.askopenfilename(
-                title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
+                title=f"{ProjectData.NAME} | Import data", initialdir=initial_dir,
                 filetypes=[("JSON Files", "*.json")],
                 initialfile="ClientAppSettings.json"
             )
