@@ -1,10 +1,4 @@
 {
-    "eurotrucks": {
-        "name": "NVIDIA game filter",
-        "description": "Renames RobloxPlayerBeta.exe to eurotrucks2.exe (Supported graphics card required)",
-        "value": false,
-        "default": false
-    },
     "mod_updater": {
         "name": "Kliko's mod updater",
         "description": "Enables automatic mod updates",

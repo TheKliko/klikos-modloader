@@ -63,8 +63,6 @@ def get_rpc_mode(attempts: int = 5) -> Literal["Player", "Studio"] | None:
     for _ in range(attempts):
         if process_exists("RobloxPlayerBeta.exe"):
             return "Player"
-        elif process_exists("eurotrucks2.exe"):
-            return "Player"
         elif process_exists("RobloxStudioBeta.exe"):
             return "Studio"
         time.sleep(1)
