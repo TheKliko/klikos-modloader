@@ -39,7 +39,7 @@ class Api:
             @staticmethod
             def latest(binaryType: str, channel: Optional[str] = None) -> str:
                 if channel is None:
-                    rf"https://clientsettingscdn.roblox.com/v2/client-version/{binaryType}"
+                    return rf"https://clientsettingscdn.roblox.com/v2/client-version/{binaryType}"
                 return rf"https://clientsettingscdn.roblox.com/v2/client-version/{binaryType}/channel/{channel}"
             @staticmethod
             def manifest(version: str) -> str:
