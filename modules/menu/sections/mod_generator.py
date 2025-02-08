@@ -2,7 +2,6 @@ from pathlib import Path
 import re
 from tkinter import messagebox
 from threading import Thread
-import webbrowser
 from tkinter import filedialog
 from typing import Literal
 import uuid
@@ -10,6 +9,7 @@ import re
 
 from modules.info import ProjectData
 from modules.filesystem import Directory, restore_from_meipass
+from modules.functions.interface.CTkHyperlink import CTkHyperlink
 from modules.functions.interface.image import load as load_image, load_from_image
 from modules import mod_generator
 from modules.mod_generator.get_mask import get_mask
@@ -147,13 +147,9 @@ class ModGeneratorSection:
         possible_colors_frame.grid(column=0, row=3, sticky="w", pady=(4, 0))
         ctk.CTkLabel(possible_colors_frame, text="A list of available color formats can be found at ").grid(column=0, row=0)
         url: str = r"https://pillow.readthedocs.io/en/stable/reference/ImageColor.html#color-names"
-        unhover_color: str | tuple[str ,str] = ("#0000EE", "#2fa8ff")
-        hover_color: str | tuple[str ,str] = ("#0000CC", "#58bbff")
-        hyperlink: ctk.CTkLabel = ctk.CTkLabel(possible_colors_frame, text=url, cursor="hand2", text_color=unhover_color)
-        hyperlink.bind("<Button-1>", lambda _: self._open_in_browser(url))
+        
+        hyperlink: CTkHyperlink = CTkHyperlink(possible_colors_frame, url)
         hyperlink.grid(column=1, row=0)
-        hyperlink.bind("<Enter>", lambda _: hyperlink.configure(text_color=hover_color))
-        hyperlink.bind("<Leave>", lambda _: hyperlink.configure(text_color=unhover_color))
 
         # Color Preview
         preview_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
@@ -343,10 +339,6 @@ class ModGeneratorSection:
             self.user_selected_files_container.update_idletasks()
             
         self.user_selected_files_container.grid(column=0, row=3, sticky="nsew", pady=(8, 0))
-
-
-    def _open_in_browser(self, url: str) -> None:
-        webbrowser.open_new_tab(url)
 
 
     def _generate_preview(self, default: bool = False) -> None:
