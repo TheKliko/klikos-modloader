@@ -1,9 +1,10 @@
 import webbrowser
 from pathlib import Path
 
-from modules.info import Help, LICENSES
+from modules.info import Help, LICENSES, CONTRIBUTORS, FEATURE_SUGGESTIONS, SPECIAL_THANKS
 from modules.filesystem import Directory, restore_from_meipass
 from modules.functions.interface.image import load as load_image
+from modules.functions.interface.CTkHyperlink import CTkHyperlink
 
 import customtkinter as ctk
 
@@ -13,6 +14,9 @@ class AboutSection:
         LICENSES_PER_ROW: int = 3
         LICENSE_GAP: int = 8
         LICENSE_PADDING: int = 8
+
+        ROW_2_PADX: int = 12
+        ROW_2_PADY: int = 12
 
 
     class Fonts:
@@ -120,13 +124,101 @@ class AboutSection:
                 widget.bind("<Button-1>", lambda event, url=license["url"]: webbrowser.open_new_tab(url))
         # endregion
 
-        
+
+        row_2_frame: ctk.CTkFrame = ctk.CTkFrame(container, fg_color="transparent")
+        row_2_frame.grid(column=0, row=1, sticky="nsew", pady=(0, 24))
+
         # region contributors
-        # no contributors yet so I'll add this later
+        if CONTRIBUTORS:
+            contributors_container: ctk.CTkFrame = ctk.CTkFrame(row_2_frame, fg_color="transparent")
+            contributors_container.grid(column=0, row=0, sticky="w")
+            ctk.CTkLabel(contributors_container, text="Contributors", font=self.Fonts.title, anchor="w").grid(column=0, row=0, columnspan=3, sticky="w")
+
+            contributors_frame: ctk.CTkFrame = ctk.CTkFrame(contributors_container, width=268)
+            contributors_frame.grid(column=0, row=1, sticky="w", pady=(8,0))
+
+            total_contributors: int = len(CONTRIBUTORS)
+            for i, contributor in enumerate(CONTRIBUTORS):
+                text: str | None = contributor.get("text")
+                if not text:
+                    continue
+                url: str | None = contributor.get("url")
+                
+                if url:
+                    hyperlink: CTkHyperlink = CTkHyperlink(contributors_frame, url, text=text)
+                    hyperlink.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_contributors == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_contributors-1 else 0)
+                else:
+                    label = ctk.CTkLabel(contributors_frame, text=text)
+                    label.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_contributors == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_contributors-1 else 0)
+            
+            contributors_frame.grid_propagate(True)
+            contributors_frame.update_idletasks()
+
+            required_height = contributors_frame.winfo_reqheight()
+            contributors_frame.grid_propagate(False)
+            contributors_frame.configure(height=required_height)
         # endregion
 
+        # region feature suggestions
+        if FEATURE_SUGGESTIONS:
+            feature_suggestions_container: ctk.CTkFrame = ctk.CTkFrame(row_2_frame, fg_color="transparent")
+            feature_suggestions_container.grid(column=1, row=0, sticky="w", padx=(8, 0) if CONTRIBUTORS else 0)
+            ctk.CTkLabel(feature_suggestions_container, text="Feature Suggestions", font=self.Fonts.title, anchor="w").grid(column=0, row=0, columnspan=3, sticky="w")
 
-        # idk what else to add
+            feature_suggestions_frame: ctk.CTkFrame = ctk.CTkFrame(feature_suggestions_container, width=269)
+            feature_suggestions_frame.grid(column=0, row=1, sticky="w", pady=(8,0))
+
+            total_feature_suggestions: int = len(FEATURE_SUGGESTIONS)
+            for i, feature_suggestion in enumerate(FEATURE_SUGGESTIONS):
+                text = feature_suggestion.get("text")
+                if not text:
+                    continue
+                url = feature_suggestion.get("url")
+                
+                if url:
+                    hyperlink = CTkHyperlink(feature_suggestions_frame, url, text=text)
+                    hyperlink.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_feature_suggestions == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_feature_suggestions-1 else 0)
+                else:
+                    label = ctk.CTkLabel(feature_suggestions_frame, text=text)
+                    label.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_feature_suggestions == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_feature_suggestions-1 else 0)
+            
+            feature_suggestions_frame.grid_propagate(True)
+            feature_suggestions_frame.update_idletasks()
+
+            required_height = feature_suggestions_frame.winfo_reqheight()
+            feature_suggestions_frame.grid_propagate(False)
+            feature_suggestions_frame.configure(height=required_height)
+
+        # region special thanks
+        if SPECIAL_THANKS:
+            special_thanks_container: ctk.CTkFrame = ctk.CTkFrame(row_2_frame, fg_color="transparent")
+            special_thanks_container.grid(column=2, row=0, sticky="w", padx=(8, 0) if (CONTRIBUTORS or SPECIAL_THANKS) else 0)
+            ctk.CTkLabel(special_thanks_container, text="Special thanks", font=self.Fonts.title, anchor="w").grid(column=0, row=0, columnspan=3, sticky="w")
+
+            special_thanks_frame: ctk.CTkFrame = ctk.CTkFrame(special_thanks_container, width=268)
+            special_thanks_frame.grid(column=0, row=1, sticky="w", pady=(8,0))
+
+            total_special_thanks: int = len(SPECIAL_THANKS)
+            for i, item in enumerate(SPECIAL_THANKS):
+                text = item.get("text")
+                if not text:
+                    continue
+                url = item.get("url")
+                
+                if url:
+                    hyperlink = CTkHyperlink(special_thanks_frame, url, text=text)
+                    hyperlink.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_special_thanks == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_special_thanks-1 else 0)
+                else:
+                    label = ctk.CTkLabel(special_thanks_frame, text=text)
+                    label.grid(column=0, row=i, sticky="w", padx=self.Constants.ROW_2_PADX, pady=self.Constants.ROW_2_PADY if total_special_thanks == 1 else (self.Constants.ROW_2_PADY,0) if i == 0 else (0,self.Constants.ROW_2_PADY) if i == total_special_thanks-1 else 0)
+            
+            special_thanks_frame.grid_propagate(True)
+            special_thanks_frame.update_idletasks()
+
+            required_height = special_thanks_frame.winfo_reqheight()
+            special_thanks_frame.grid_propagate(False)
+            special_thanks_frame.configure(height=required_height)
+        # endregion
     # endregion
 
 

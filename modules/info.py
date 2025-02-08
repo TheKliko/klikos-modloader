@@ -143,3 +143,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
     }
 ]
+
+
+CONTRIBUTORS: list[dict[str, str]] = []
+
+
+FEATURE_SUGGESTIONS: list[dict[str, str]] = [
+    {
+        "text": "Vortex",
+        "url": r"https://github.com/VolVortex"
+    },
+    {
+        "text": "return_request",
+        "url": r"https://github.com/returnrqt"
+    },
+    {
+        "text": "kw_roblox"
+    }
+]
+
+
+SPECIAL_THANKS: list[dict[str, str]] = []
