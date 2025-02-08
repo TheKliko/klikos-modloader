@@ -5,6 +5,12 @@
         "value": true,
         "default": true
     },
+    "multi_roblox": {
+        "name": "Allow multiple Roblox instances",
+        "description": "Allow multiple Roblox instances to run at the same time",
+        "value": false,
+        "default": false
+    },
     "discord_rpc": {
         "name": "Discord RPC",
         "description": "Replace the default Discord RPC to show more details",
