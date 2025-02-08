@@ -1,14 +1,14 @@
 {
   "CTk": {
-    "fg_color": ["#f8f8f8", "#1c1c1c"]
+    "fg_color": ["#f3f3f3", "#272727"]
   },
   "CTkToplevel": {
-    "fg_color": ["#f8f8f8", "#1c1c1c"]
+    "fg_color": ["#f3f3f3", "#272727"]
   },
   "CTkFrame": {
     "corner_radius": 6,
     "border_width": 0,
-    "fg_color": ["#f0f0f0", "#191919"],
+    "fg_color": ["#fbfbfb", "#202020"],
     "top_fg_color": ["gray85", "gray16"],
     "border_color": ["gray65", "gray28"]
   },
