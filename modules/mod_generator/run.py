@@ -5,6 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from modules import Logger
+from modules.functions.roblox import latest_version
 from modules.launcher.deployment_info import Deployment
 
 from .deploy_history import DeployHistory, DeployHistoryError, get_deploy_history
