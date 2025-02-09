@@ -68,7 +68,7 @@
   "CTkProgressBar": {
     "corner_radius": 1000,
     "border_width": 0,
-    "fg_color": ["#e6e6e6", "#2a2a2a"],
+    "fg_color": ["#e6e6e6", "#353535"],
     "progress_color": ["#cc0037", "#cc0037"],
     "border_color": ["gray", "gray"]
   },
