@@ -15,6 +15,8 @@ class SettingsSection:
         ENTRY_INNER_PADDING: int = 0
         ENTRY_OUTER_PADDING: int = 8
         ENTRY_GAP: int = 8
+        DROPDOWN_WIDTH: int = 218
+        DROPDOWN_HEIGHT: int = 32
     
     class Fonts:
         title: ctk.CTkFont
@@ -97,7 +99,7 @@ class SettingsSection:
         variable: ctk.StringVar = ctk.StringVar()
         options: list[str] = ["system", "light", "dark"]
         
-        dropdown: ctk.CTkComboBox = ctk.CTkComboBox(frame, values=options, variable=variable, command=lambda selected_value: self._change_appearance_mode(selected_value))
+        dropdown: ctk.CTkComboBox = ctk.CTkComboBox(frame, values=options, variable=variable, command=lambda selected_value: self._change_appearance_mode(selected_value), width=self.Constants.DROPDOWN_WIDTH, height=self.Constants.DROPDOWN_HEIGHT)
         dropdown.set(value)
         dropdown.grid(column=0, row=1, sticky="w", padx=self.Constants.ENTRY_OUTER_PADDING, pady=(self.Constants.ENTRY_INNER_PADDING, self.Constants.ENTRY_OUTER_PADDING))
         
@@ -125,7 +127,7 @@ class SettingsSection:
         
         options = list(dict.fromkeys(default_options + extra_options))
         
-        dropdown = ctk.CTkComboBox(frame, values=options, variable=variable, command=lambda selected_value: special_settings.set_value(key="theme", value=selected_value))
+        dropdown = ctk.CTkComboBox(frame, values=options, variable=variable, command=lambda selected_value: special_settings.set_value(key="theme", value=selected_value), width=self.Constants.DROPDOWN_WIDTH, height=self.Constants.DROPDOWN_HEIGHT)
         dropdown.set(value)
         dropdown.grid(column=0, row=1, sticky="w", padx=self.Constants.ENTRY_OUTER_PADDING, pady=(self.Constants.ENTRY_INNER_PADDING, self.Constants.ENTRY_OUTER_PADDING))
 
