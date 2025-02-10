@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from modules.filesystem import Directory, restore_from_meipass
@@ -116,7 +117,13 @@ class SettingsSection:
         # Dropdown
         value = special_settings.get_value("theme")
         variable = ctk.StringVar()
-        options = [file.with_suffix("").name for file in Directory.THEMES.iterdir() if file.is_file() and file.suffix == ".json"]
+        if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+            default_options: list[str] = [file.with_suffix("").name for file in (Path(sys._MEIPASS) / "resources" / "themes").iterdir() if file.is_file() and file.suffix == ".json"]
+        else:
+            default_options = []
+        extra_options: list[str] = [file.with_suffix("").name for file in Directory.THEMES.iterdir() if file.is_file() and file.suffix == ".json"]
+        
+        options = list(dict.fromkeys(default_options + extra_options))
         
         dropdown = ctk.CTkComboBox(frame, values=options, variable=variable, command=lambda selected_value: special_settings.set_value(key="theme", value=selected_value))
         dropdown.set(value)
