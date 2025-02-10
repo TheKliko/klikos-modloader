@@ -5,6 +5,17 @@
   "CTkToplevel": {
     "fg_color": ["#f3f3f3", "#272727"]
   },
+  "NavigationFrame": {
+    "main": {
+      "fg_color": ["#fbfbfb", "#202020"],
+      "text_color": ["gray14", "gray84"]
+    },
+    "buttons": {
+      "fg_color": "transparent",
+      "text_color": ["#000", "#DCE4EE"],
+      "hover_color": ["#eaeaea", "#2d2d2d"]
+    }
+  },
   "CTkFrame": {
     "corner_radius": 6,
     "border_width": 0,
