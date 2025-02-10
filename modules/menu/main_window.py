@@ -4,7 +4,9 @@ import json
 from modules import Logger
 from modules import exception_handler
 from modules.info import ProjectData
+from modules.config import special_settings
 from modules.filesystem import Directory, restore_from_meipass
+from modules.filesystem.exceptions import FileRestoreError
 
 from .navigation import NavigationFrame
 from .sections.mods import ModsSection
@@ -29,7 +31,6 @@ class MainWindow(ctk.CTk):
     class Constants:
         WIDTH: int = 1100
         HEIGHT: int = 600
-        THEME: Path = Directory.RESOURCES / "theme.json"
         FAVICON: Path = Directory.RESOURCES / "favicon.ico"
 
 
@@ -56,10 +57,21 @@ class MainWindow(ctk.CTk):
 
 
     def __init__(self) -> None:
-        ctk.set_appearance_mode("System")
-        if not self.Constants.THEME.is_file():
-            restore_from_meipass(self.Constants.THEME)
-        ctk.set_default_color_theme(self.Constants.THEME.resolve())
+        selected_appearance: str = special_settings.get_value("appearance")
+        ctk.set_appearance_mode(selected_appearance)
+        
+        selected_theme: str = special_settings.get_value("theme")
+        theme_file: Path = Directory.THEMES / f"{selected_theme}.json"
+        if not theme_file.is_file() and selected_theme != "default":
+                try:
+                    restore_from_meipass(theme_file)
+                except FileRestoreError:
+                    Logger.info("Theme file not found, reverting to default theme!", prefix="NavigationFrame.__init__()")
+                    special_settings.set_value("theme", "default")
+                    theme_file = Directory.THEMES / "default.json"
+        if not theme_file.is_file():
+            restore_from_meipass(theme_file)
+        ctk.set_default_color_theme(theme_file.resolve())
 
         super().__init__()
         self.title(ProjectData.NAME)
@@ -69,11 +81,11 @@ class MainWindow(ctk.CTk):
         self.iconbitmap(self.Constants.FAVICON.resolve())
 
         try:
-            with open(self.Constants.THEME, "r") as file:
+            with open(theme_file, "r") as file:
                 data: dict[str, dict] = json.load(file)
             self.background_color = data["CTk"]["fg_color"]
         except Exception as e:
-            Logger.error(f"Failed to load custom theme! {type(e).__name__}: {e}")
+            Logger.error(f"Failed to load custom theme! {type(e).__name__}: {e}", prefix="MainWindow.__init__()")
 
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)

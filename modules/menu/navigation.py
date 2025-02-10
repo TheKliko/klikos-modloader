@@ -3,8 +3,10 @@ from typing import Callable
 import json
 
 from modules import Logger
+from modules.config import special_settings
 from modules.info import ProjectData
 from modules.filesystem import Directory, restore_from_meipass
+from modules.filesystem.exceptions import FileRestoreError
 from modules.functions.interface.image import load as load_image
 
 from .commands import launch_roblox_player, launch_roblox_studio
@@ -112,7 +114,15 @@ class NavigationFrame(ctk.CTkFrame):
     def __init__(self, root) -> None:
         # Load NavigationFrame theme
         try:
-            theme_file: Path = Directory.RESOURCES / "theme.json"
+            selected_theme: str = special_settings.get_value("theme")
+            theme_file: Path = Directory.THEMES / f"{selected_theme}.json"
+            if not theme_file.is_file() and selected_theme != "default":
+                try:
+                    restore_from_meipass(theme_file)
+                except FileRestoreError:
+                    Logger.info("Theme file not found, reverting to default theme!", prefix="NavigationFrame.__init__()")
+                    special_settings.set_value("theme", "default")
+                    theme_file = Directory.THEMES / "default.json"
             if not theme_file.is_file():
                 restore_from_meipass(theme_file)
             with open(theme_file, "r") as file:
@@ -186,7 +196,7 @@ class NavigationFrame(ctk.CTkFrame):
         logo: ctk.CTkLabel = ctk.CTkLabel(frame, text="", image=load_image(light=self.Constants.HEADER_LOGO_LIGHT, dark=self.Constants.HEADER_LOGO_DARK, size=(64, 64)), fg_color="transparent")
         logo.grid(column=0, row=0, rowspan=2, sticky="w", padx=(0,8))
 
-        container: ctk.CTkFrame = ctk.CTkFrame(frame, height=64)
+        container: ctk.CTkFrame = ctk.CTkFrame(frame, height=64, fg_color="transparent")
         container.grid(column=1, row=0, sticky="w")
 
         name: ctk.CTkLabel = ctk.CTkLabel(container, font=ctk.CTkFont(weight="bold"), text=ProjectData.NAME, justify="left", fg_color="transparent", text_color=self.Colors.main_text_color)

@@ -9,6 +9,7 @@ class Directory:
     DOWNLOADS: Path = ROOT / "Downloads"
     CONFIG: Path = ROOT / "config"
     RESOURCES: Path = ROOT / "resources"
+    THEMES: Path = RESOURCES / "themes"
     VERSIONS: Path = ROOT / "Versions"
     MODS: Path = ROOT / "Mods"
 

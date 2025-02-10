@@ -5,6 +5,7 @@ from .directories import Directory
 
 class File:
     SETTINGS: Path = Directory.CONFIG / "settings.json"
+    SPECIAL_SETTINGS: Path = Directory.CONFIG / "special_settings.json"
     INTEGRATIONS: Path = Directory.CONFIG / "integrations.json"
     MODS: Path = Directory.CONFIG / "mods.json"
     FASTFLAGS: Path = Directory.CONFIG / "fastflags.json"
