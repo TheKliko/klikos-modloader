@@ -44,7 +44,7 @@
     "restore_default_files": {
         "name": "Always restore default files",
         "description": "Always restores Roblox's default files before applying mods",
-        "value": true,
-        "default": true
+        "value": false,
+        "default": false
     }
 }
