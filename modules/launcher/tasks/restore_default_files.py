@@ -17,7 +17,13 @@ def restore_default_files(deployment: Deployment, mode: Literal["Player","Studio
                 continue
 
             executable_path: Path = directory / deployment.executable_name
+            eurotrucks_path: Path = directory / "eurotrucks2.exe"
+
             if executable_path.is_file():
+                Logger.info(f"Removing directory: {directory}...")
+                shutil.rmtree(directory, ignore_errors=True)
+
+            elif eurotrucks_path.is_file():
                 Logger.info(f"Removing directory: {directory}...")
                 shutil.rmtree(directory, ignore_errors=True)
 

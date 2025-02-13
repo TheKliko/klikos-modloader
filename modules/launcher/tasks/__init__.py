@@ -91,11 +91,20 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             apply_mods(deployment.base_directory, mode)
         if not disable_all_fastflags:
             apply_fastflags(deployment.base_directory, mode)
+        
+        # NVIDIA Game Filter
+        executable_path: Path = deployment.executable_path
+        eurotrucks_path: Path = deployment.executable_path.parent / "eurotrucks2.exe"
+        eurotrucks: bool = integrations.get_value("eurotrucks")
+        if eurotrucks and executable_path.is_file():
+            executable_path.rename(eurotrucks_path)
+        elif not eurotrucks and eurotrucks_path.is_file():
+            eurotrucks_path.rename(executable_path)
 
         # Launch Roblox
         Logger.info(f"Launching Roblox {mode}...")
         textvariable.set(f"Launching Roblox {mode}...")
-        launch_roblox(str(deployment.executable_path.resolve()))
+        launch_roblox(str((eurotrucks_path if eurotrucks else executable_path).resolve()))
 
         # Start launch apps
         Logger.info("Starting launch apps...")
