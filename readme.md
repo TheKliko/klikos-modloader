@@ -44,19 +44,16 @@ Kliko's modloader is an open-source modloader for <a href="https://www.roblox.co
 Each mod can be toggled on or off, change the load order to make sure your mods are applied in the right order.
 
 <h3>Automatic mod updates</h3>
-I have integrated <a href="https://github.com/TheKliko/klikos-modding-tool">my modding tool</a> to automatically update compatible mods.
+I have integrated my <a href="https://github.com/TheKliko/klikos-modding-tool">modding tool</a> to automatically update compatible mods.
 
 <h3>Community mods</h3>
-Download mods with the press of a button. Of course you can also add mods manually.
+Download community-made mods with the press of a button.
 
 <h3>Mod generator</h3>
-Don't know how to make mods yourself? Try out our mod generator!
+Don't know how to make mods yourself? Try out our mod generator, capable of generating mods with a 2-color gradient!
 
 <h3>Discord RPC and BloxstrapRPC SDK</h3>
 Replace Roblox's default rich presence to show more details. The <a href="https://github.com/pizzaboxer/bloxstrap/wiki/Integrating-Bloxstrap-functionality-into-your-game">BloxstrapRPC</a> allows games to set custom RPC data.
-
-<h3>Studio Support</h3>
-Kliko's modloader is available for both the Roblox Player and Roblox Studio.
 
 
 

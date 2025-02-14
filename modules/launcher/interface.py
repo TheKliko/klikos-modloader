@@ -3,8 +3,11 @@ from pathlib import Path
 import ctypes
 import json
 
+from modules import Logger
 from modules.info import ProjectData
+from modules.config import special_settings
 from modules.filesystem import Directory, restore_from_meipass
+from modules.filesystem.exceptions import FileRestoreError
 from modules.functions.interface.image import load as load_image
 
 import customtkinter as ctk
@@ -14,7 +17,6 @@ class MainWindow(ctk.CTk):
     class Constants:
         WIDTH: int = 520
         HEIGHT: int = 320
-        THEME: Path = Directory.RESOURCES / "theme.json"
         FAVICON: Path = Directory.RESOURCES / "favicon.ico"
         PLAYER_LOGO: Path = Directory.RESOURCES / "launcher" / "player.png"
         STUDIO_LOGO: Path = Directory.RESOURCES / "launcher" / "studio.png"
@@ -24,6 +26,7 @@ class MainWindow(ctk.CTk):
         start_y: int
     
     mode: Literal["Player", "Studio"]
+    theme_file: Path
     canceled: bool = False
     border: ctk.CTkFrame
     fg_color: str | tuple[str, str]
@@ -32,10 +35,23 @@ class MainWindow(ctk.CTk):
 
     def __init__(self, mode: Literal["Player", "Studio"]) -> None:
         self.mode = mode
-        ctk.set_appearance_mode("System")
-        if not self.Constants.THEME.is_file():
-            restore_from_meipass(self.Constants.THEME)
-        ctk.set_default_color_theme(self.Constants.THEME.resolve())
+
+        selected_appearance: str = special_settings.get_value("appearance")
+        ctk.set_appearance_mode(selected_appearance)
+        
+        selected_theme: str = special_settings.get_value("theme")
+        theme_file: Path = Directory.THEMES / f"{selected_theme}.json"
+        if not theme_file.is_file() and selected_theme != "default":
+                try:
+                    restore_from_meipass(theme_file)
+                except FileRestoreError:
+                    Logger.info("Theme file not found, reverting to default theme!", prefix="interface.MainWindow.__init__()")
+                    special_settings.set_value("theme", "default")
+                    theme_file = Directory.THEMES / "default.json"
+        if not theme_file.is_file():
+            restore_from_meipass(theme_file)
+        ctk.set_default_color_theme(theme_file.resolve())
+        self.theme_file = theme_file
 
         super().__init__()
         self.title(ProjectData.NAME)
@@ -59,7 +75,7 @@ class MainWindow(ctk.CTk):
 
     def _set_fg_bg_color(self) -> None:
         try:
-            with open(self.Constants.THEME) as file:
+            with open(self.theme_file) as file:
                 data: dict = json.load(file)
             self.fg_color = data["CTk"]["fg_color"]
             self.border_color = data["CTkFrame"]["border_color"]

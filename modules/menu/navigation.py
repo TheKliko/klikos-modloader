@@ -1,8 +1,12 @@
 from pathlib import Path
 from typing import Callable
+import json
 
+from modules import Logger
+from modules.config import special_settings
 from modules.info import ProjectData
 from modules.filesystem import Directory, restore_from_meipass
+from modules.filesystem.exceptions import FileRestoreError
 from modules.functions.interface.image import load as load_image
 
 from .commands import launch_roblox_player, launch_roblox_studio
@@ -92,6 +96,15 @@ class NavigationFrame(ctk.CTkFrame):
                 }
             }
         ]
+    
+
+    class Colors:
+        main_fg_color: str | tuple[str, str] = ("#fbfbfb", "#202020")
+        main_text_color: str | tuple[str, str] = ("gray14", "gray84")
+        button_fg_color: str | tuple[str, str] = "transparent"
+        button_hover_color: str | tuple[str, str] = ("#eaeaea", "#2d2d2d")
+        button_text_color: str | tuple[str, str] = ("#000", "#DCE4EE")
+
 
     header: ctk.CTkFrame
     buttons: ctk.CTkFrame
@@ -99,10 +112,52 @@ class NavigationFrame(ctk.CTkFrame):
 
 
     def __init__(self, root) -> None:
-        super().__init__(root, width=self.Constants.WIDTH, corner_radius=0)
+        # Load NavigationFrame theme
+        try:
+            selected_theme: str = special_settings.get_value("theme")
+            theme_file: Path = Directory.THEMES / f"{selected_theme}.json"
+            if not theme_file.is_file() and selected_theme != "default":
+                try:
+                    restore_from_meipass(theme_file)
+                except FileRestoreError:
+                    Logger.info("Theme file not found, reverting to default theme!", prefix="NavigationFrame.__init__()")
+                    special_settings.set_value("theme", "default")
+                    theme_file = Directory.THEMES / "default.json"
+            if not theme_file.is_file():
+                restore_from_meipass(theme_file)
+            with open(theme_file, "r") as file:
+                theme_data: dict = json.load(file)
+            navigation_frame: dict[str, dict[str, str | list[str]]] | None = theme_data.get("NavigationFrame")
+            if navigation_frame:
+                main_data: dict[str, str | list[str]] = navigation_frame.get("main", {})
+                button_data: dict[str, str | list[str]] = navigation_frame.get("buttons", {})
+
+                main_fg_color: str | tuple[str, str] | None = self._get_color(main_data, "fg_color")
+                main_text_color: str | tuple[str, str] | None = self._get_color(main_data, "text_color")
+                button_fg_color: str | tuple[str, str] | None = self._get_color(button_data, "fg_color")
+                button_text_color: str | tuple[str, str] | None = self._get_color(button_data, "text_color")
+                button_hover_color: str | tuple[str, str] | None = self._get_color(button_data, "hover_color")
+
+                if main_fg_color:
+                    self.Colors.main_fg_color = main_fg_color
+                if main_text_color:
+                    self.Colors.main_text_color = main_text_color
+                if button_fg_color:
+                    self.Colors.button_fg_color = button_fg_color
+                if button_text_color:
+                    self.Colors.button_text_color = button_text_color
+                if button_hover_color:
+                    self.Colors.button_hover_color = button_hover_color
+
+        except Exception as e:
+            Logger.warning(f"Failed to load NavigationFrame theme! {type(e).__name__}: {e}", prefix="NavigationFrame.__init__()")
+        
+        
+        super().__init__(root, width=self.Constants.WIDTH, corner_radius=0, fg_color=self.Colors.main_fg_color)
         self.grid_propagate(False)
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
+        
 
         self.header = self._create_header_frame()
         self.header.grid(column=0, row=0, padx=self.Constants.PADDING, pady=self.Constants.PADDING, sticky="nsew")
@@ -112,16 +167,22 @@ class NavigationFrame(ctk.CTkFrame):
 
         self.footer = self._create_footer_frame()
         self.footer.grid(column=0, row=2, padx=self.Constants.PADDING, pady=self.Constants.PADDING, sticky="sw")
+    
+
+    def _get_color(self, data: dict[str, str | list[str]], attribute: str) -> str | tuple[str, str] | None:
+        value: str | list[str] | None = data.get(attribute)
+        if isinstance(value, list) and len(value) == 2:
+            return (value[0], value[1])
+        if isinstance(value, str):
+            return value
+        return None
 
 
     def _create_button(self, master, text: str, image, command: Callable) -> ctk.CTkButton:
         width: int = self.Constants.WIDTH - 2 * self.Constants.PADDING
         height: int = 36
-        fg_color: str | tuple[str, str] = "transparent"
-        hover_color: str | tuple[str, str] = ("#eaeaea", "#2d2d2d")
-        text_color: str | tuple[str, str] = ("#000","#DCE4EE")
 
-        return ctk.CTkButton(master, text=text, image=image, command=command, width=width, height=height, fg_color=fg_color, hover_color=hover_color, text_color=text_color, compound="left", anchor="w", corner_radius=4)
+        return ctk.CTkButton(master, text=text, image=image, command=command, width=width, height=height, fg_color=self.Colors.button_fg_color, hover_color=self.Colors.button_hover_color, text_color=self.Colors.button_text_color, compound="left", anchor="w", corner_radius=4)
     
     
     def _create_header_frame(self) -> ctk.CTkFrame:
@@ -135,13 +196,13 @@ class NavigationFrame(ctk.CTkFrame):
         logo: ctk.CTkLabel = ctk.CTkLabel(frame, text="", image=load_image(light=self.Constants.HEADER_LOGO_LIGHT, dark=self.Constants.HEADER_LOGO_DARK, size=(64, 64)), fg_color="transparent")
         logo.grid(column=0, row=0, rowspan=2, sticky="w", padx=(0,8))
 
-        container: ctk.CTkFrame = ctk.CTkFrame(frame, height=64)
+        container: ctk.CTkFrame = ctk.CTkFrame(frame, height=64, fg_color="transparent")
         container.grid(column=1, row=0, sticky="w")
 
-        name: ctk.CTkLabel = ctk.CTkLabel(container, font=ctk.CTkFont(weight="bold"), text=ProjectData.NAME, justify="left", fg_color="transparent")
+        name: ctk.CTkLabel = ctk.CTkLabel(container, font=ctk.CTkFont(weight="bold"), text=ProjectData.NAME, justify="left", fg_color="transparent", text_color=self.Colors.main_text_color)
         name.pack(anchor="w")
 
-        version: ctk.CTkLabel = ctk.CTkLabel(container, font=ctk.CTkFont(size=12), text=f"Version {ProjectData.VERSION}", justify="left", fg_color="transparent")
+        version: ctk.CTkLabel = ctk.CTkLabel(container, font=ctk.CTkFont(size=12), text=f"Version {ProjectData.VERSION}", justify="left", fg_color="transparent", text_color=self.Colors.main_text_color)
         version.pack(anchor="w", pady=0)
 
         return frame

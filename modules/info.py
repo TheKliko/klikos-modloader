@@ -3,7 +3,7 @@ class ProjectData:
     DESCRIPTION: str = "Roblox mods made easy"
     AUTHOR: str = "TheKliko"
     REPOSITORY: str = r"https://github.com/TheKliko/klikos-modloader"
-    VERSION: str = "1.7.6"
+    VERSION: str = "1.7.7"
 
 class Help:
     DISCORD: str = r"https://discord.gg/nEjUwdSP9P"
@@ -143,3 +143,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."""
     }
 ]
+
+
+CONTRIBUTORS: list[dict[str, str]] = []
+
+
+FEATURE_SUGGESTIONS: list[dict[str, str]] = [
+    {
+        "text": "Vortex",
+        "url": r"https://github.com/VolVortex"
+    },
+    {
+        "text": "return_request",
+        "url": r"https://github.com/returnrqt"
+    },
+    {
+        "text": "kw_roblox"
+    }
+]
+
+
+SPECIAL_THANKS: list[dict[str, str]] = []

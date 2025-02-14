@@ -16,6 +16,7 @@ from modules.functions.kill_process import kill_process
 from ..deployment_info import Deployment
 from .check_downloaded_files import check_downloaded_files
 from .download_missing_files import download_missing_files
+from .create_singleton_mutex import create_singleton_mutex
 from .restore_default_files import restore_default_files
 from .apply_fastflags import apply_fastflags
 from .apply_mods import apply_mods
@@ -51,19 +52,18 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             Logger.info("Downloading missing files...")
             textvariable.set(f"Downloading Roblox {mode}...")
             download_missing_files(deployment, mode, missing_file_hashes)
+        
+        # Multi roblox
+        multi_roblox: bool = integrations.get_value("multi_roblox")
+        if multi_roblox:
+            create_singleton_mutex()
 
         # Check if Roblox is already running
-        if process_exists(deployment.executable_name):
+        if not multi_roblox and process_exists(deployment.executable_name):
             if settings.get_value("confirm_launch_if_roblox_running"):
                 if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
                     return
             kill_process(deployment.executable_name)
-
-        elif process_exists("eurotrucks2.exe"):
-            if settings.get_value("confirm_launch_if_roblox_running"):
-                if not messagebox.askyesno(ProjectData.NAME, "Another Roblox instance is already running!\nDo you still wish to continue?"):
-                    return
-            kill_process("eurotrucks2.exe")
         
         disable_all_mods: bool = settings.get_value("disable_all_mods")
         
@@ -91,19 +91,20 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             apply_mods(deployment.base_directory, mode)
         if not disable_all_fastflags:
             apply_fastflags(deployment.base_directory, mode)
-
-        # NVIDIA game filter support
-        eurotruckstoggle: bool = integrations.get_value("eurotrucks")
-        euro_trucks_path: Path = deployment.executable_path.with_name("eurotrucks2.exe")
-        if eurotruckstoggle and deployment.executable_path.is_file():
-            deployment.executable_path.rename(euro_trucks_path)
-        elif not eurotruckstoggle and euro_trucks_path.is_file():
-            euro_trucks_path.rename(deployment.executable_path)
+        
+        # NVIDIA Game Filter
+        executable_path: Path = deployment.executable_path
+        eurotrucks_path: Path = deployment.executable_path.parent / "eurotrucks2.exe"
+        eurotrucks: bool = integrations.get_value("eurotrucks")
+        if eurotrucks and executable_path.is_file():
+            executable_path.rename(eurotrucks_path)
+        elif not eurotrucks and eurotrucks_path.is_file():
+            eurotrucks_path.rename(executable_path)
 
         # Launch Roblox
         Logger.info(f"Launching Roblox {mode}...")
         textvariable.set(f"Launching Roblox {mode}...")
-        launch_roblox(str(deployment.executable_path.resolve()) if not (eurotruckstoggle and mode == "Player") else str(euro_trucks_path.resolve()))
+        launch_roblox(str((eurotrucks_path if eurotrucks else executable_path).resolve()))
 
         # Start launch apps
         Logger.info("Starting launch apps...")

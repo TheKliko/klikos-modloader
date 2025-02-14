@@ -131,6 +131,23 @@ class FastFlagConfigurationSection:
 
     def _change_profile_name(self) -> None:
         dialog: ctk.CTkInputDialog = ctk.CTkInputDialog(text="Profile name:", title=ProjectData.NAME)
+
+        # Set the icon
+        icon_path: Path = Directory.RESOURCES / "favicon.ico"
+        if not icon_path.is_file():
+            restore_from_meipass(icon_path)
+        dialog.after(200, dialog.iconbitmap, str(icon_path.resolve()))
+
+        # Center the dialog
+        root_geometry: str = self.root.winfo_geometry()
+        root_size, root_x, root_y = root_geometry.split("+")
+        root_width, root_height = map(int, root_size.split("x"))
+        width = 340
+        height = 164
+        x: int = int(root_x) + ((root_width - width) // 2)
+        y: int = int(root_y) + ((root_height - height) // 2)
+        dialog.geometry(f"{width}x{height}+{x}+{y}")
+
         response: str = dialog.get_input()
 
         if not response:
@@ -147,6 +164,23 @@ class FastFlagConfigurationSection:
 
     def _change_profile_description(self) -> None:
         dialog: ctk.CTkInputDialog = ctk.CTkInputDialog(text="Profile name:", title=ProjectData.NAME)
+
+        # Set the icon
+        icon_path: Path = Directory.RESOURCES / "favicon.ico"
+        if not icon_path.is_file():
+            restore_from_meipass(icon_path)
+        dialog.after(200, dialog.iconbitmap, str(icon_path.resolve()))
+
+        # Center the dialog
+        root_geometry: str = self.root.winfo_geometry()
+        root_size, root_x, root_y = root_geometry.split("+")
+        root_width, root_height = map(int, root_size.split("x"))
+        width = 340
+        height = 164
+        x: int = int(root_x) + ((root_width - width) // 2)
+        y: int = int(root_y) + ((root_height - height) // 2)
+        dialog.geometry(f"{width}x{height}+{x}+{y}")
+
         response: str = dialog.get_input()
 
         if response is None:
@@ -169,8 +203,8 @@ class FastFlagConfigurationSection:
             if (initial_dir / "Downloads").is_dir():
                 initial_dir = initial_dir / "Downloads"
 
-            filepath: str | Literal[''] = filedialog.askopenfilename(
-                title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
+            filepath: str | Literal[''] = filedialog.asksaveasfilename(
+                title=f"{ProjectData.NAME} | Export data", initialdir=initial_dir,
                 filetypes=[("JSON Files", "*.json")],
                 initialfile="ClientAppSettings.json"
             )
@@ -194,7 +228,7 @@ class FastFlagConfigurationSection:
                 initial_dir = initial_dir / "Downloads"
 
             filepath: str | Literal[''] = filedialog.askopenfilename(
-                title=f"{ProjectData.NAME} | Import mods", initialdir=initial_dir,
+                title=f"{ProjectData.NAME} | Import data", initialdir=initial_dir,
                 filetypes=[("JSON Files", "*.json")],
                 initialfile="ClientAppSettings.json"
             )

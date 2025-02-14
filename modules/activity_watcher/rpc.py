@@ -69,7 +69,7 @@ class RichPresenceClient:
                     Logger.warning("Discord RPC turned off!", prefix="activity_watcher.RichPresenceClient.mainloop()")
                     break
 
-                if not process_exists(f"Roblox{self.mode}Beta.exe") and (not process_exists("eurotrucks2.exe") if self.mode == "Player" else True):
+                if not process_exists(f"Roblox{self.mode}Beta.exe") and not process_exists("eurotrucks2.exe"):
                     Logger.info("Roblox process not found!", prefix="activity_watcher.RichPresenceClient.mainloop()")
                     break
 
