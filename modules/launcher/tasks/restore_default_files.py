@@ -9,25 +9,6 @@ from ..deployment_info import Deployment
 
 
 def restore_default_files(deployment: Deployment, mode: Literal["Player","Studio"]) -> None:
-    # Remove older and current version(s)
-    if Directory.VERSIONS.is_dir():
-        for directory in Directory.VERSIONS.iterdir():
-
-            if not directory.is_dir():
-                continue
-
-            executable_path: Path = directory / deployment.executable_name
-            eurotrucks_path: Path = directory / "eurotrucks2.exe"
-
-            if executable_path.is_file():
-                Logger.info(f"Removing directory: {directory}...")
-                shutil.rmtree(directory, ignore_errors=True)
-
-            elif eurotrucks_path.is_file():
-                Logger.info(f"Removing directory: {directory}...")
-                shutil.rmtree(directory, ignore_errors=True)
-
-    # Restore files for current version
     for item in deployment.package_manifest:
         file: str = item["file"]
         hash: str = item["hash"]

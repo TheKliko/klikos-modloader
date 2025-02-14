@@ -16,6 +16,7 @@ from modules.functions.kill_process import kill_process
 from ..deployment_info import Deployment
 from .check_downloaded_files import check_downloaded_files
 from .download_missing_files import download_missing_files
+from .remove_older_versions import remove_older_versions
 from .create_singleton_mutex import create_singleton_mutex
 from .restore_default_files import restore_default_files
 from .apply_fastflags import apply_fastflags
@@ -31,7 +32,9 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
         # Get deployment info
         Logger.info("Getting deployment info...")
         textvariable.set("Getting deployment info...")
-        deployment: Deployment = Deployment(mode)
+        player_deployment: Deployment = Deployment("Player")
+        studio_deployment: Deployment = Deployment("Studio")
+        deployment: Deployment = studio_deployment if mode == "Studio" else player_deployment
         if settings.get_value("show_deployment_info_on_launch"):
             versioninfovariable.set(f"{deployment.version} ({deployment.channel})")
 
@@ -66,9 +69,17 @@ def run(mode: Literal["Player", "Studio"], textvariable: StringVar, versioninfov
             kill_process(deployment.executable_name)
         
         disable_all_mods: bool = settings.get_value("disable_all_mods")
+
+        # Remove older Roblox versions
+        remove_older_versions(player_deployment.version, studio_deployment.version)
+
+        # Check if current Roblox version is present in the Versions folder
+        current_version_installed: bool = False
+        if (Directory.VERSIONS / deployment.version / deployment.executable_name).is_file() or (Directory.VERSIONS / deployment.version / "eurotrucks2.exe").is_file():
+            current_version_installed = True
         
         # Restore default files, if needed
-        if settings.get_value("restore_default_files") or missing_file_hashes or disable_all_mods:
+        if settings.get_value("restore_default_files") or missing_file_hashes or disable_all_mods or not current_version_installed:
             Logger.info("Restoring default files...")
             textvariable.set(f"Installing Roblox {mode}...")
             restore_default_files(deployment, mode)
