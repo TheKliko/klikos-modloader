@@ -1,0 +1,18 @@
+<svg width="628" height="628" viewBox="-314 -314 628 628" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <mask id="cutout" >
+            <rect x="-256" y="-256" width="229" height="229" fill="white"/>
+            <rect x="27" y="-256" width="229" height="229" fill="white"/>
+            <rect x="-256" y="27" width="229" height="229" fill="white"/>
+            <rect x="27" y="27" width="229" height="229" fill="white"/>
+            <circle cx="0" cy="0" r="81" fill="black"/>
+			<circle cx="0" cy="0" r="54" fill="white"/>
+        </mask>
+        <linearGradient id="gradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#990000"/>
+            <stop offset="100%" stop-color="#ff006e"/>
+        </linearGradient>
+    </defs>
+	
+    <rect transform="rotate(15)" x="-256" y="-256" width="512" height="512" fill="url(#gradient)" mask="url(#cutout)"/>
+</svg>
