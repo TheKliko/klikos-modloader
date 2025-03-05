@@ -462,3 +462,16 @@ header nav .button > svg {
         align-items: center;
     }
 }
+
+/* mobile 2 */
+@media screen and (max-width: 575px) {
+    .cta {
+        padding: 12px;
+    }
+    #hero .cta:last-of-type {
+        margin-left: 0px;
+    }
+    #header-branding h1 {
+        font-size: 1rem;
+    }
+}
