@@ -11,12 +11,6 @@
         "value": false,
         "default": false
     },
-    "eurotrucks": {
-        "name": "NVIDIA Game Filter",
-        "description": "Enables the use of NVIDIA Game Filter by renaming RobloxPlayerBeta.exe (Supported graphics card required)",
-        "value": false,
-        "default": false
-    },
     "discord_rpc": {
         "name": "Discord RPC",
         "description": "Replace the default Discord RPC to show more details",
