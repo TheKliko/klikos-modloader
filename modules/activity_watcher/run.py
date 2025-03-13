@@ -68,18 +68,6 @@ def get_rpc_mode(attempts: int = 5) -> Literal["Player", "Studio"] | None:
         
         elif process_exists("RobloxStudioBeta.exe"):
             return "Studio"
-        
-        elif process_exists("eurotrucks2.exe"):
-            log_files: list[Path] = [
-                item
-                for item in Directory.ROBLOX_LOGS.iterdir()
-                if item.is_file()
-            ]
-            latest: Path = max(log_files, key=os.path.getmtime)
-            if "Player" in latest.name:
-                return "Player"
-            elif "Studio" in latest.name:
-                return "Studio"
 
         time.sleep(1)
     return None
